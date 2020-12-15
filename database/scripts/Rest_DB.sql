@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE city
 (
 	id_city SERIAL PRIMARY KEY,
-	name_ciy VARCHAR(100) NOT NULL
+	name_city VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE theater
@@ -21,7 +21,7 @@ CREATE TABLE movie
 	duration VARCHAR(10) NOT NULL,
 	min_age INT NOT NULL,
 	director VARCHAR(100)
-)
+);
 
 CREATE TABLE movie_display
 (
@@ -38,9 +38,9 @@ CREATE TABLE schedule
 	id_movie INTEGER NOT NULL,
 	id_theater INTEGER NOT NULL,
 	time_day TIME NOT NULL,
-	day_of_week DAY NOT NULL,
+	day_of_week VARCHAR(10) NOT NULL,
 	PRIMARY KEY (id_movie, id_theater)
-)
+);
 
 CREATE TABLE actor 
 (
@@ -52,8 +52,8 @@ CREATE TABLE actors_playing
 (
 	id_actor INTEGER NOT NULL,
 	id_movie INTEGER NOT NULL,
-	PRIMARY KEY (id_movie, actor)
-)
+	PRIMARY KEY (id_movie, id_actor)
+);
 
 
 ALTER TABLE theater
@@ -76,3 +76,7 @@ ALTER TABLE actors_playing
 	
 ALTER TABLE actors_playing
 	ADD FOREIGN KEY(id_actor) REFERENCES actor(id_actor);
+	
+
+GRANT ALL PRIVILEGES ON DATABASE aiws_db TO admin_rest;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public to admin_rest;
