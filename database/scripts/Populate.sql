@@ -6,19 +6,19 @@ INSERT INTO city (id_city, name_city) VALUES
 	(5,'Les Sables'),
 	(6,'Bordeaux');
 	
-INSERT INTO theater (id_city, name_theater) VALUES
-	(1,'MK2 Bibliothèque'),
-	(1,'UGC Les Halles'),
-	(1,'Pathé Les Gobelins'),
-	(2,'Pathé Bellecour'),
-	(2,'UGC Cité Internationale'),
-	(2,'UGC Lyon Part Dieu'),
-	(3,'Le Prado'),
-	(3,'Pathé Madeleine'),
-	(4,'Le Cézanne'),
+INSERT INTO theater (id_theater, id_city, name_theater) VALUES
+	(1,1,'MK2 Bibliothèque'),
+	(2,1,'UGC Les Halles'),
+	(3,1,'Pathé Les Gobelins'),
+	(4,2,'Pathé Bellecour'),
+	(5,2,'UGC Cité Internationale'),
+	(6,2,'UGC Lyon Part Dieu'),
+	(7,3,'Le Prado'),
+	(8,3,'Pathé Madeleine'),
+	(9,4,'Le Cézanne'),
 	-- We let Les Sables empty, just to see
-	(6,'Mégarama'),
-	(6,'CGR Le Français');
+	(10,6,'Mégarama'),
+	(11,6,'CGR Le Français');
 	
 INSERT INTO movie (id_movie, title, duration, min_age, director) VALUES 
 	(1,'Joker', '2h02',12,'Todd Phillips'),
@@ -61,4 +61,34 @@ INSERT INTO actors_playing (id_movie, id_actor) VALUES
 	(6,12),
 	(6,13);
 	
+INSERT INTO movie_display(id_movie, id_theater, lang, start_date, end_date) VALUES
+	(1,1,'VOSTF',to_date('16-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(1,2,'VF',to_date('16-12-2020', 'DD-MM-YYYY'), to_date('27-01-2021', 'DD-MM-YYYY')),
+	(1,4,'VOSTF',to_date('16-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(1,8,'VF',to_date('16-12-2020', 'DD-MM-YYYY'), to_date('02-01-2021', 'DD-MM-YYYY')),
+	(1,10,'VF',to_date('16-12-2020', 'DD-MM-YYYY'), to_date('03-02-2021', 'DD-MM-YYYY')),
+	(2,1,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(2,3,'VF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('02-01-2021', 'DD-MM-YYYY')),
+	(2,4,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('13-01-2021', 'DD-MM-YYYY')),
+	(2,7,'VF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(2,8,'VF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('27-01-2021', 'DD-MM-YYYY')),
+	(2,9,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(2,11,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(3,6,'VF',to_date('23-12-2020', 'DD-MM-YYYY'), to_date('30-12-2020', 'DD-MM-YYYY')),
+	(4,2,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('20-01-2021', 'DD-MM-YYYY')),
+	(4,5,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('27-01-2021', 'DD-MM-YYYY')),
+	(4,6,'VOSTF',to_date('09-12-2020', 'DD-MM-YYYY'), to_date('03-02-2021', 'DD-MM-YYYY')),
+	(5,1,'VOSTF',to_date('30-12-2020', 'DD-MM-YYYY'), to_date('03-02-2021', 'DD-MM-YYYY')),
+	(5,3,'VOSTF',to_date('30-12-2020', 'DD-MM-YYYY'), to_date('10-02-2021', 'DD-MM-YYYY')),
+	(5,7,'VOSTF',to_date('30-12-2020', 'DD-MM-YYYY'), to_date('10-02-2021', 'DD-MM-YYYY')),
+	(5,8,'VOSTF',to_date('30-12-2020', 'DD-MM-YYYY'), to_date('03-02-2021', 'DD-MM-YYYY')),
+	(5,10,'VOSTF',to_date('30-12-2020', 'DD-MM-YYYY'), to_date('17-02-2021', 'DD-MM-YYYY')),
+	(5,11,'VOSTF',to_date('30-12-2020', 'DD-MM-YYYY'), to_date('03-02-2021', 'DD-MM-YYYY')),
+	(6,3,'VOSTF',to_date('20-01-2021', 'DD-MM-YYYY'), to_date('24-02-2021', 'DD-MM-YYYY')),
+	(6,4,'VOSTF',to_date('20-01-2021', 'DD-MM-YYYY'), to_date('24-02-2021', 'DD-MM-YYYY')),
+	(6,5,'VOSTF',to_date('20-01-2021', 'DD-MM-YYYY'), to_date('17-02-2021', 'DD-MM-YYYY')),
+	(6,7,'VOSTF',to_date('20-01-2021', 'DD-MM-YYYY'), to_date('24-02-2021', 'DD-MM-YYYY'));
 	
+
+
+

@@ -28,18 +28,19 @@ CREATE TABLE movie_display
 	id_movie INTEGER NOT NULL,
 	id_theater INTEGER NOT NULL,
 	lang VARCHAR(20) NOT NULL,
-	start_date TIME NOT NULL,
-	end_date TIME NOT NULL,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL,
 	PRIMARY KEY (id_movie, id_theater)
 );
 
 CREATE TABLE schedule
 (
+	id_schedule SERIAL PRIMARY KEY,
 	id_movie INTEGER NOT NULL,
 	id_theater INTEGER NOT NULL,
 	time_day TIME NOT NULL,
-	day_of_week VARCHAR(10) NOT NULL,
-	PRIMARY KEY (id_movie, id_theater)
+	day_of_week VARCHAR(10) NOT NULL--,
+	--PRIMARY KEY (id_movie, id_theater)
 );
 
 CREATE TABLE actor 
