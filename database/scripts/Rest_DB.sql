@@ -39,7 +39,8 @@ CREATE TABLE schedule
 	id_movie INTEGER NOT NULL,
 	id_theater INTEGER NOT NULL,
 	time_day TIME NOT NULL,
-	day_of_week VARCHAR(10) NOT NULL--,
+	-- The day of the week (0 - 6; Sunday is 0) 
+	day_of_week INTEGER NOT NULL--,
 	--PRIMARY KEY (id_movie, id_theater)
 );
 
