@@ -1,4 +1,4 @@
-package rest.todo.dao;
+package rest.dao;
 
 /**
  * Function to implement for any Dao

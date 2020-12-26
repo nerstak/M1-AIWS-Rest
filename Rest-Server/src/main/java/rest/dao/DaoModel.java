@@ -1,4 +1,6 @@
-package rest.todo.dao;
+package rest.dao;
+
+import rest.utils.Constants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,8 +11,6 @@ import java.sql.Statement;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static rest.todo.utils.Constants.DB_PROPERTIES;
 
 /**
  * Model for any Dao class (with common elements)
@@ -58,7 +58,7 @@ public abstract class DaoModel {
         try {
             System.out.println(System.getProperty("user.dir"));
             ClassLoader classLoader = getClass().getClassLoader();
-            input = classLoader.getResourceAsStream(DB_PROPERTIES);
+            input = classLoader.getResourceAsStream(Constants.DB_PROPERTIES);
             //input = new FileInputStream(DB_PROPERTIES);
             properties.load(input);
         } catch (IOException e) {

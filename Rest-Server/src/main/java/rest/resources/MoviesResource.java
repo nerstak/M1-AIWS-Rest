@@ -1,8 +1,7 @@
-package rest.todo.resources;
+package rest.resources;
 
-import jdk.nashorn.internal.objects.annotations.Setter;
-import rest.todo.dao.MovieDAO;
-import rest.todo.model.Movie;
+import rest.dao.MovieDAO;
+import rest.model.Movie;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

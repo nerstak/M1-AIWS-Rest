@@ -1,6 +1,7 @@
-package rest.todo.dao;
+package rest.dao;
 
-import rest.todo.model.Movie;
+import rest.model.Movie;
+import rest.utils.Constants;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         List<Movie> movies = new ArrayList<>();
 
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM movie");
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIES_SELECT_ALL);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 Movie m = new Movie();
@@ -40,6 +41,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
                 m.setDirection(rs.getString("director"));
                 m.setDuration(rs.getString("duration"));
                 m.setMinimumAge(rs.getInt("min_age"));
+                m.setTitle(rs.getString("title"));
 
                 movies.add(m);
             }
