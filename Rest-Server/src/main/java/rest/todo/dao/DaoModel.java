@@ -1,7 +1,7 @@
 package rest.todo.dao;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,15 +16,15 @@ import static rest.todo.utils.Constants.DB_PROPERTIES;
  * Model for any Dao class (with common elements)
  */
 public abstract class DaoModel {
-    protected Properties properties;
-    protected FileInputStream input;
+    private Properties properties;
+    private InputStream input;
 
-    protected String dbUrl;
-    protected String dbUser;
-    protected String dbPwd;
+    private String dbUrl = "jdbc:postgresql://localhost:5432/aiws_db";
+    private String dbUser = "admin_rest";
+    private String dbPwd = "admin_rest";
 
-    private Connection conn;
-    private Statement stmt;
+    protected Connection conn;
+    protected Statement stmt;
 
     public DaoModel() {
         init();
@@ -34,20 +34,18 @@ public abstract class DaoModel {
      * Initialise DB connection
      */
     private void init() {
-        getPropertiesFile();
-
-        dbUrl = properties.getProperty("DB.URL");
-        dbUser = properties.getProperty("DB.USER");
-        dbPwd = properties.getProperty("DB.PWD");
+//        getPropertiesFile();
+//
+//        dbUrl = properties.getProperty("DB.URL");
+//        dbUser = properties.getProperty("DB.USER");
+//        dbPwd = properties.getProperty("DB.PWD");
 
         try {
             // Setting up database connection
-            Class.forName(properties.getProperty("DB.JDBC"));
+            Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
             stmt = conn.createStatement();
-            // May have to be removed later
-            // dataServices = new DataServices(dbUser, dbPwd, dbUrl);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             Logger.getLogger(DaoModel.class.getName()).log(Level.SEVERE, null, e);
         }
     }
@@ -58,7 +56,10 @@ public abstract class DaoModel {
     private void getPropertiesFile() {
         properties = new Properties();
         try {
-            input = new FileInputStream(DB_PROPERTIES);
+            System.out.println(System.getProperty("user.dir"));
+            ClassLoader classLoader = getClass().getClassLoader();
+            input = classLoader.getResourceAsStream(DB_PROPERTIES);
+            //input = new FileInputStream(DB_PROPERTIES);
             properties.load(input);
         } catch (IOException e) {
             Logger.getLogger(DaoModel.class.getName()).log(Level.SEVERE, null, e);
