@@ -34,6 +34,7 @@ public abstract class DaoModel {
      * Initialise DB connection
      */
     private void init() {
+        // TODO: Read values from file
 //        getPropertiesFile();
 //
 //        dbUrl = properties.getProperty("DB.URL");

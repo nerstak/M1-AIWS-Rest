@@ -13,14 +13,17 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
+/**
+ * Movies handling
+ */
 @Path("/movies")
 public class MoviesResource {
     @Context
-    UriInfo uriInfo;
+    private UriInfo uriInfo;
     @Context
-    Request request;
+    private Request request;
 
-    private static MovieDAO movieDAO = new MovieDAO();
+    private static final MovieDAO movieDAO = new MovieDAO();
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -37,7 +40,7 @@ public class MoviesResource {
     }
 
     @Path("{movie}")
-    public MovieResource getTodo(@PathParam("movie") String id) {
+    public MovieResource getMovie(@PathParam("movie") String id) {
         return new MovieResource(uriInfo, request, id);
     }
 }

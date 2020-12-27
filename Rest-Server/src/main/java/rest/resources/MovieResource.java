@@ -13,12 +13,12 @@ import javax.ws.rs.core.UriInfo;
 
 public class MovieResource {
     @Context
-    UriInfo uriInfo;
+    private final UriInfo uriInfo;
     @Context
-    Request request;
-    int id;
+    private final Request request;
+    private int id;
 
-    private static MovieDAO movieDAO = new MovieDAO();
+    private static final MovieDAO movieDAO = new MovieDAO();
 
     public MovieResource(UriInfo uriInfo, Request request, String id) {
         this.uriInfo = uriInfo;

@@ -9,21 +9,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO dedicated to movie handling
+ */
 public class MovieDAO extends DaoModel implements Dao<Movie> {
     public MovieDAO() {
         super();
     }
 
     @Override
-    public void insert(Movie movie) {
-
+    public boolean insert(Movie movie) {
+        return false;
     }
 
     @Override
     public boolean delete(Movie movie) {
         try {
+            // Query
             PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_DELETE);
             ps.setInt(1, movie.getIdMovie());
+
+            // Result
             int r = ps.executeUpdate();
             return r > 0;
         } catch (SQLException throwables) {
@@ -33,15 +39,20 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
     }
 
     @Override
-    public void update(Movie movie) {
-
+    public boolean update(Movie movie) {
+        return false;
     }
 
+    @Override
     public Movie selectID(int id) {
         try {
+            // Query
             PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_SELECT_ID);
             ps.setInt(1, id);
+
             ResultSet rs = ps.executeQuery();
+
+            // Result
             if(rs != null && rs.next()) {
                 return extractMovie(rs);
             }
@@ -53,6 +64,12 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         return null;
     }
 
+    /**
+     * Create a movie from a row in the database
+     * @param rs ResultSet
+     * @return Movie created
+     * @throws SQLException Error with ResultSet
+     */
     private Movie extractMovie(ResultSet rs) throws SQLException {
         Movie m = new Movie();
 
@@ -65,6 +82,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         return m;
     }
 
+    @Override
     public List<Movie> selectAll() {
         List<Movie> movies = new ArrayList<>();
 
@@ -78,7 +96,6 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-            return null;
         }
 
         return movies;
