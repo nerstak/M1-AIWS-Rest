@@ -59,25 +59,32 @@ CREATE TABLE actors_playing
 
 
 ALTER TABLE theater
-	ADD FOREIGN KEY(id_city) REFERENCES city(id_city);
+	ADD FOREIGN KEY(id_city) REFERENCES city(id_city)
+	ON DELETE CASCADE;
 	
 ALTER TABLE movie_display
-	ADD FOREIGN KEY(id_theater) REFERENCES theater(id_theater);
+	ADD FOREIGN KEY(id_theater) REFERENCES theater(id_theater)
+	ON DELETE CASCADE;
 	
 ALTER TABLE movie_display
-	ADD FOREIGN KEY(id_movie) REFERENCES movie(id_movie);
+	ADD FOREIGN KEY(id_movie) REFERENCES movie(id_movie)
+	ON DELETE CASCADE;
 	
 ALTER TABLE schedule
-	ADD FOREIGN KEY(id_theater) REFERENCES theater(id_theater);
+	ADD FOREIGN KEY(id_theater) REFERENCES theater(id_theater)
+	ON DELETE CASCADE;
 	
 ALTER TABLE schedule
-	ADD FOREIGN KEY(id_movie) REFERENCES movie(id_movie);
+	ADD FOREIGN KEY(id_movie) REFERENCES movie(id_movie)
+	ON DELETE CASCADE;
 	
 ALTER TABLE actors_playing
-	ADD FOREIGN KEY(id_movie) REFERENCES movie(id_movie);
+	ADD FOREIGN KEY(id_movie) REFERENCES movie(id_movie)
+	ON DELETE CASCADE;
 	
 ALTER TABLE actors_playing
-	ADD FOREIGN KEY(id_actor) REFERENCES actor(id_actor);
+	ADD FOREIGN KEY(id_actor) REFERENCES actor(id_actor)
+	ON DELETE CASCADE;
 	
 
 GRANT ALL PRIVILEGES ON DATABASE aiws_db TO admin_rest;
