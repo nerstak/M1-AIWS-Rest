@@ -29,6 +29,34 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
 
     }
 
+    public Movie selectID(int id) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_SELECT_ID);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs != null && rs.next()) {
+                return extractMovie(rs);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    private Movie extractMovie(ResultSet rs) throws SQLException {
+        Movie m = new Movie();
+
+        m.setIdMovie(rs.getInt("id_movie"));
+        m.setDirection(rs.getString("director"));
+        m.setDuration(rs.getString("duration"));
+        m.setMinimumAge(rs.getInt("min_age"));
+        m.setTitle(rs.getString("title"));
+
+        return m;
+    }
+
     public List<Movie> selectAll() {
         List<Movie> movies = new ArrayList<>();
 
@@ -36,12 +64,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIES_SELECT_ALL);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
-                Movie m = new Movie();
-                m.setIdMovie(rs.getInt("id_movie"));
-                m.setDirection(rs.getString("director"));
-                m.setDuration(rs.getString("duration"));
-                m.setMinimumAge(rs.getInt("min_age"));
-                m.setTitle(rs.getString("title"));
+                Movie m = extractMovie(rs);
 
                 movies.add(m);
             }
