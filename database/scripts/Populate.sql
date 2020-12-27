@@ -199,5 +199,11 @@ INSERT INTO schedule (id_movie, id_theater, time_day, day_of_week) VALUES
 	(6,7,'13:00:00',2),
 	(6,7,'13:00:00',3),
 	(6,7,'13:00:00',4);
+	
+SELECT setval(pg_get_serial_sequence('city', 'id_city'), coalesce(max(id_city)+1, 1), false) FROM city;
+SELECT setval(pg_get_serial_sequence('theater', 'id_theater'), coalesce(max(id_theater)+1, 1), false) FROM theater;
+SELECT setval(pg_get_serial_sequence('movie', 'id_movie'), coalesce(max(id_movie)+1, 1), false) FROM movie;
+SELECT setval(pg_get_serial_sequence('actor', 'id_actor'), coalesce(max(id_actor)+1, 1), false) FROM actor;
+
 
 

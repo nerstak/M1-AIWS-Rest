@@ -19,6 +19,20 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
 
     @Override
     public boolean insert(Movie movie) {
+        try {
+            // Query
+            int i = 1;
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_INSERT);
+            ps.setString(i++, movie.getTitle());
+            ps.setString(i++, movie.getDuration());
+            ps.setInt(i++, movie.getMinimumAge());
+            ps.setString(i, movie.getDirection());
+
+            // Result
+            return ps.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 

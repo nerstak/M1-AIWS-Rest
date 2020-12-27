@@ -86,6 +86,9 @@ ALTER TABLE actors_playing
 	ADD FOREIGN KEY(id_actor) REFERENCES actor(id_actor)
 	ON DELETE CASCADE;
 	
+	
 
 GRANT ALL PRIVILEGES ON DATABASE aiws_db TO admin_rest;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public to admin_rest;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to admin_rest;
+

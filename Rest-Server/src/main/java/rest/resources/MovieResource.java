@@ -3,13 +3,9 @@ package rest.resources;
 import rest.dao.MovieDAO;
 import rest.model.Movie;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.xml.bind.JAXBElement;
 
 public class MovieResource {
     @Context
@@ -41,5 +37,20 @@ public class MovieResource {
         if(!movieDAO.delete(movieDAO.selectID(id))) {
             throw new RuntimeException("Delete: Movie with " + id + " not found");
         }
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response putMovie(JAXBElement<Movie> movie) {
+        return putAndGetResponse(movie.getValue());
+
+    }
+
+    private Response putAndGetResponse(Movie movie) {
+        Response res;
+        res = Response.noContent().build();
+
+        movieDAO.insert(movie);
+        return res;
     }
 }
