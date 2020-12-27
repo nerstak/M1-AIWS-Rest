@@ -20,8 +20,16 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
     }
 
     @Override
-    public void delete(Movie movie) {
-
+    public boolean delete(Movie movie) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_DELETE);
+            ps.setInt(1, movie.getIdMovie());
+            int r = ps.executeUpdate();
+            return r > 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
     }
 
     @Override

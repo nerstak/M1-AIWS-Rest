@@ -3,6 +3,7 @@ package rest.resources;
 import rest.dao.MovieDAO;
 import rest.model.Movie;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -33,5 +34,12 @@ public class MovieResource {
         if (m == null)
             throw new RuntimeException("Get: Movie with " + id + " not found");
         return m;
+    }
+
+    @DELETE
+    public void deleteMovie() {
+        if(!movieDAO.delete(movieDAO.selectID(id))) {
+            throw new RuntimeException("Delete: Movie with " + id + " not found");
+        }
     }
 }

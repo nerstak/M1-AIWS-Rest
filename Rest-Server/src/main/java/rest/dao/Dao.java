@@ -7,7 +7,7 @@ package rest.dao;
 public interface Dao<T> {
     public void insert(T t);
 
-    public void delete(T t);
+    public boolean delete(T t);
 
     public void update(T t);
 }
