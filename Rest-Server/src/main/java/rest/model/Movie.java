@@ -1,23 +1,32 @@
 package rest.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
-public class Movie {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Movie implements Serializable {
     private int idMovie;
     private String duration;
     private String direction;
     private int minimumAge;
     private String title;
 
+    @XmlElementWrapper(name = "actors")
+    @XmlElement(name = "actor")
+    private List<Actor> actors = new ArrayList<>();
+
     public Movie() {}
 
-    public Movie(int idMovie, String duration, String direction, int minimumAge, String title) {
+    public Movie(int idMovie, String duration, String direction, int minimumAge, String title, ArrayList<Actor> actors) {
         this.idMovie = idMovie;
         this.duration = duration;
         this.direction = direction;
         this.minimumAge = minimumAge;
         this.title = title;
+        this.actors = actors;
     }
 
     public int getIdMovie() {
@@ -60,5 +69,13 @@ public class Movie {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(ArrayList<Actor> actors) {
+        this.actors = actors;
     }
 }
