@@ -1,9 +1,6 @@
 package rest.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 
 @XmlRootElement (name = "actor")
@@ -12,11 +9,15 @@ public class Actor implements Serializable {
     @XmlValue
     private String name;
 
+    @XmlAttribute(name = "id")
+    private int idActor;
+
     public Actor() {
     }
 
-    public Actor(String name) {
+    public Actor(String name, int idActor) {
         this.name = name;
+        this.idActor = idActor;
     }
 
     public String getName() {
@@ -25,5 +26,13 @@ public class Actor implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getIdActor() {
+        return idActor;
+    }
+
+    public void setIdActor(int idActor) {
+        this.idActor = idActor;
     }
 }

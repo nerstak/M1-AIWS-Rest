@@ -1,5 +1,6 @@
 package rest.dao;
 
+import rest.model.Actor;
 import rest.model.Movie;
 import rest.utils.Constants;
 
@@ -68,7 +69,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
 
             // Result
             if(rs != null && rs.next()) {
-                return extractMovie(rs);
+                return extractObj(rs);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -84,7 +85,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
      * @return Movie created
      * @throws SQLException Error with ResultSet
      */
-    private Movie extractMovie(ResultSet rs) throws SQLException {
+    private Movie extractObj(ResultSet rs) throws SQLException {
         Movie m = new Movie();
 
         m.setIdMovie(rs.getInt("id_movie"));
@@ -104,7 +105,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIES_SELECT_ALL);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
-                Movie m = extractMovie(rs);
+                Movie m = extractObj(rs);
 
                 movies.add(m);
             }
@@ -113,5 +114,11 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         }
 
         return movies;
+    }
+
+    public boolean insertActor(Movie movie, Actor actor) {
+        
+        return false;
+        // Should insert in actors playing
     }
 }

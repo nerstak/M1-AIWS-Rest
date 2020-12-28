@@ -1,6 +1,8 @@
 package rest.resources;
 
+import rest.dao.ActorDAO;
 import rest.dao.MovieDAO;
+import rest.model.Actor;
 import rest.model.Movie;
 
 import javax.ws.rs.*;
@@ -15,6 +17,7 @@ public class MovieResource {
     private int id;
 
     private static final MovieDAO movieDAO = new MovieDAO();
+    private static final ActorDAO actorDAO = new ActorDAO();
 
     public MovieResource(UriInfo uriInfo, Request request, String id) {
         this.uriInfo = uriInfo;
@@ -51,6 +54,9 @@ public class MovieResource {
         res = Response.noContent().build();
 
         movieDAO.insert(movie);
+        for (Actor a: movie.getActors()) {
+            actorDAO.insert(a);
+        }
         return res;
     }
 }

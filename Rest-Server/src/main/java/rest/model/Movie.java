@@ -8,6 +8,7 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Movie implements Serializable {
+    @XmlAttribute
     private int idMovie;
     private String duration;
     private String direction;
