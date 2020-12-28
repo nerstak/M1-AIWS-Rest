@@ -107,12 +107,14 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
     @Override
     public List<Movie> selectAll() {
         List<Movie> movies = new ArrayList<>();
+        ActorDAO actorDAO = new ActorDAO();
 
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIES_SELECT_ALL);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 Movie m = extractObj(rs);
+                m.setActors(actorDAO.selectAllActorInMovie(m));
 
                 movies.add(m);
             }
