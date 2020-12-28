@@ -30,7 +30,12 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
             ps.setString(i, movie.getDirection());
 
             // Result
-            return ps.execute();
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs != null && rs.next()) {
+                movie.setIdMovie(rs.getInt(1));
+                return true;
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -117,8 +122,41 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
     }
 
     public boolean insertActor(Movie movie, Actor actor) {
-        
+        if(!checkActorInMovie(movie, actor)) {
+            return insertActorInMovie(movie, actor);
+        }
         return false;
         // Should insert in actors playing
+    }
+
+    private boolean checkActorInMovie(Movie movie, Actor actor) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_ACTOR_PLAYING_SELECT_ID);
+            ps.setInt(1, actor.getIdActor());
+            ps.setInt(2,movie.getIdMovie());
+
+            ResultSet rs = ps.executeQuery();
+            if(rs != null && rs.next()) {
+                return true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private boolean insertActorInMovie(Movie movie, Actor actor) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_ACTOR_PLAYING_INSERT);
+            ps.setInt(1, actor.getIdActor());
+            ps.setInt(2,movie.getIdMovie());
+
+            return ps.executeUpdate() == 1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return false;
     }
 }

@@ -18,7 +18,12 @@ public class ActorDAO extends DaoModel implements Dao<Actor> {
             ps.setString(i, actor.getName());
 
             // Result
-            return ps.execute();
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs != null && rs.next()) {
+                actor.setIdActor(rs.getInt(1));
+                return true;
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
