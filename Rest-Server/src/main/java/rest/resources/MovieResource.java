@@ -56,7 +56,7 @@ public class MovieResource {
         movieDAO.insert(movie);
         for (Actor a: movie.getActors()) {
             actorDAO.insert(a);
-            movieDAO.insertActor(movie, a);
+            movieDAO.addActorToMovie(movie, a);
         }
         return res;
     }

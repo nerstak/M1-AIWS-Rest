@@ -121,7 +121,7 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         return movies;
     }
 
-    public boolean insertActor(Movie movie, Actor actor) {
+    public boolean addActorToMovie(Movie movie, Actor actor) {
         if(!checkActorInMovie(movie, actor)) {
             return insertActorInMovie(movie, actor);
         }

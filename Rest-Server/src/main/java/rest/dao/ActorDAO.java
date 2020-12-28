@@ -11,6 +11,13 @@ import java.util.List;
 public class ActorDAO extends DaoModel implements Dao<Actor> {
     @Override
     public boolean insert(Actor actor) {
+        // Checking if actor is not already inserted
+        Actor tmp = selectName(actor.getName());
+        if(tmp != null) {
+            actor.setIdActor(tmp.getIdActor());
+            return false;
+        }
+
         try {
             // Query
             int i = 1;
