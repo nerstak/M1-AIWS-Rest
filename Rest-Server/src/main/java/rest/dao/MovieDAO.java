@@ -74,7 +74,9 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
 
             // Result
             if(rs != null && rs.next()) {
-                return extractObj(rs);
+                Movie m = extractObj(rs);
+                m.setActors(new ActorDAO().selectAllActorInMovie(m));
+                return m;
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -121,6 +123,12 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         return movies;
     }
 
+    /**
+     * Add an actor to a movie
+     * @param movie Movie
+     * @param actor Actor
+     * @return Assertion
+     */
     public boolean addActorToMovie(Movie movie, Actor actor) {
         if(!checkActorInMovie(movie, actor)) {
             return insertActorInMovie(movie, actor);
@@ -129,6 +137,12 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         // Should insert in actors playing
     }
 
+    /**
+     * Check if an actor is in a movie
+     * @param movie Movie
+     * @param actor Actor
+     * @return If actor is in movie
+     */
     private boolean checkActorInMovie(Movie movie, Actor actor) {
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_ACTOR_PLAYING_SELECT_ID);
@@ -146,6 +160,12 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
         return false;
     }
 
+    /**
+     * Insert actor in movie
+     * @param movie Movie
+     * @param actor Actor
+     * @return Assertion
+     */
     private boolean insertActorInMovie(Movie movie, Actor actor) {
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_ACTOR_PLAYING_INSERT);
@@ -159,4 +179,5 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
 
         return false;
     }
+
 }

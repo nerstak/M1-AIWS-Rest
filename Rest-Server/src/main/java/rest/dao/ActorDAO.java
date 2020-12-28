@@ -1,11 +1,13 @@
 package rest.dao;
 
 import rest.model.Actor;
+import rest.model.Movie;
 import rest.utils.Constants;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ActorDAO extends DaoModel implements Dao<Actor> {
@@ -100,5 +102,29 @@ public class ActorDAO extends DaoModel implements Dao<Actor> {
         actor.setIdActor(rs.getInt("id_actor"));
 
         return actor;
+    }
+
+    /**
+     * Select all actors in a movie
+     * @param movie Movie
+     * @return List of actors
+     */
+    public List<Actor> selectAllActorInMovie(Movie movie) {
+        List<Actor> actors = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_ACTOR_PLAYING_SELECT_ALL);
+            ps.setInt(1,movie.getIdMovie());
+            ResultSet rs = ps.executeQuery();
+            while(rs != null && rs.next()) {
+                Actor a = extractObj(rs);
+
+                actors.add(a);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return actors;
     }
 }

@@ -20,10 +20,10 @@ public class Constants {
 
     // Actor playing
     public static final String RES_ACTOR_PLAYING_SELECT_ID = "SELECT * FROM actors_playing WHERE id_actor = ? AND id_movie = ?";
-    public static final String RES_ACTOR_PLAYING_SELECT_ALL = "SELECT a.id_actor, a.name_actor" +
-                                                                "FROM actor AS a" +
-                                                                "    inner join actors_playing AS p" +
-                                                                "        ON p.id_actor = a.id_actor" +
+    public static final String RES_ACTOR_PLAYING_SELECT_ALL = "SELECT a.id_actor, a.name_actor " +
+                                                                "FROM actor AS a " +
+                                                                "    inner join actors_playing AS p " +
+                                                                "        ON p.id_actor = a.id_actor " +
                                                                 "        WHERE p.id_movie = ?";
     public static final String RES_ACTOR_PLAYING_INSERT = "INSERT INTO actors_playing(id_actor, id_movie) VALUES (?,?)";
 }

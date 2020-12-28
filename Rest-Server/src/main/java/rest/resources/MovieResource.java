@@ -28,7 +28,7 @@ public class MovieResource {
     //Application integration
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Movie getTodo() {
+    public Movie getMovie() {
         Movie m = movieDAO.selectID(id);
         if (m == null)
             throw new RuntimeException("Get: Movie with " + id + " not found");
