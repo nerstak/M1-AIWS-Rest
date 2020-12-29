@@ -35,17 +35,21 @@ public class MovieResource {
     }
 
     @DELETE
-    public void deleteMovie() {
+    public Response deleteMovie() {
+        Movie m = movieDAO.selectID(id);
+
+        if(m == null) return Response.status(Response.Status.NOT_FOUND).build();
+
         if(!movieDAO.delete(movieDAO.selectID(id))) {
-            throw new RuntimeException("Delete: Movie with " + id + " not found");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+        return Response.status(Response.Status.OK).build();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
     public Response putMovie(JAXBElement<Movie> movie) {
         return putAndGetResponse(movie.getValue());
-
     }
 
     private Response putAndGetResponse(Movie movie) {
