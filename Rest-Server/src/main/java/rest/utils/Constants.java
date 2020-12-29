@@ -3,6 +3,8 @@ package rest.utils;
 public class Constants {
     /* Properties */
     public static final String DB_PROPERTIES = "/WEB-INF/db.properties";
+    public static final int PROP_TOKEN_VALIDITY = 600000;
+    public static final String PROP_TOKEN_ISSUER = "JWT_M1_SE2";
 
     /* Errors */
     public static final String ERROR_CONNECTION_ERROR = "Error during authentication";

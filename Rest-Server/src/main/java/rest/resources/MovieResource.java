@@ -4,6 +4,7 @@ import rest.dao.ActorDAO;
 import rest.dao.MovieDAO;
 import rest.model.Actor;
 import rest.model.Movie;
+import rest.resources.filter.Secured;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
