@@ -5,6 +5,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
+/**
+ * Authentication Response
+ */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AuthResponse implements Serializable {

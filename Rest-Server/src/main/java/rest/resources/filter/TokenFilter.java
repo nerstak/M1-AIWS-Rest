@@ -12,6 +12,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
+/**
+ * Filter for "Secured" annotation
+ */
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -45,6 +48,11 @@ public class TokenFilter implements ContainerRequestFilter {
 
     }
 
+    /**
+     * Verify if the token is a Bearer one
+     * @param authorizationHeader Header
+     * @return Assertion
+     */
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
         // Check if the Authorization header is valid
         // It must not be null and must be prefixed with "Bearer" plus a whitespace
@@ -53,6 +61,10 @@ public class TokenFilter implements ContainerRequestFilter {
                 .startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
     }
 
+    /**
+     * Abort authentication
+     * @param requestContext Contet
+     */
     private void abortWithUnauthorized(ContainerRequestContext requestContext) {
         // Abort the filter chain with a 401 status code response
         // The WWW-Authenticate header is sent along with the response
@@ -63,6 +75,11 @@ public class TokenFilter implements ContainerRequestFilter {
                         .build());
     }
 
+    /**
+     * Validate a token
+     * @param token Token
+     * @return Assertion
+     */
     private boolean validateToken(String token)  {
         // Check if the token was issued by the server and if it's not expired
         return JWTToken.validity(token);

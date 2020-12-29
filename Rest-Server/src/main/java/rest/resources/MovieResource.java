@@ -4,7 +4,6 @@ import rest.dao.ActorDAO;
 import rest.dao.MovieDAO;
 import rest.model.Actor;
 import rest.model.Movie;
-import rest.resources.filter.Secured;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -26,7 +25,6 @@ public class MovieResource {
         this.id = Integer.parseInt(id);
     }
 
-    //Application integration
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Movie getMovie() {
