@@ -6,19 +6,34 @@ INSERT INTO city (id_city, name_city) VALUES
 	(5,'Les Sables'),
 	(6,'Bordeaux');
 	
-INSERT INTO theater (id_theater, id_city, name_theater, password) VALUES
-	(1,1,'MK2 Bibliothèque', 'password'),
-	(2,1,'UGC Les Halles', 'password'),
-	(3,1,'Pathé Les Gobelins', 'password'),
-	(4,2,'Pathé Bellecour', 'password'),
-	(5,2,'UGC Cité Internationale', 'password'),
-	(6,2,'UGC Lyon Part Dieu', 'password'),
-	(7,3,'Le Prado', 'password'),
-	(8,3,'Pathé Madeleine', 'password'),
-	(9,4,'Le Cézanne', 'password'),
+INSERT INTO theater (id_theater, id_city, name_theater) VALUES
+	(1,1,'MK2 Bibliothèque'),
+	(2,1,'UGC Les Halles'),
+	(3,1,'Pathé Les Gobelins'),
+	(4,2,'Pathé Bellecour'),
+	(5,2,'UGC Cité Internationale'),
+	(6,2,'UGC Lyon Part Dieu'),
+	(7,3,'Le Prado'),
+	(8,3,'Pathé Madeleine'),
+	(9,4,'Le Cézanne'),
 	-- We let Les Sables empty, just to see
-	(10,6,'Mégarama', 'password'),
-	(11,6,'CGR Le Français', 'password');
+	(10,6,'Mégarama'),
+	(11,6,'CGR Le Français');
+	
+INSERT INTO manager(id_theater, username, password) VALUES 
+	(1,'MK2_Manager', 'password'),
+	(2,'UGC_Paris_Manager', 'password'),
+	(3, 'gob_mana', 'password'),
+	(4, 'bellecour', 'password'),
+	(5, 'ugc_cite','password'),
+	(6, 'ugc_partdieu', 'password'),
+	(7, 'prado', 'password'),
+	(8, 'madeleine', 'password'),
+	(9, 'cezanne', 'password'),
+	(10, 'megaramanager', 'password'),
+	(11, 'cgr', 'password');
+	
+
 	
 INSERT INTO movie (id_movie, title, duration, min_age, director) VALUES 
 	(1,'Joker', '2h02',12,'Todd Phillips'),

@@ -32,4 +32,8 @@ public class Constants {
 
     // Movie Theater
     public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
+
+    // Manager
+    public static final String RES_MANAGER_SELECT_ID = "SELECT * FROM manager WHERE id_manager = ?";
+    public static final String RES_MANAGER_SELECT_USERNAME = "SELECT * FROM manager WHERE username = ?";
 }

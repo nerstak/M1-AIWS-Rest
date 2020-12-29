@@ -14,16 +14,13 @@ public class MovieTheater implements Serializable {
     private String name;
     @XmlAttribute
     private int idCity;
-    // Todo : convert to a hashed password
-    private String password;
 
     public MovieTheater() {}
 
-    public MovieTheater(int id, String name, int idCity, String password) {
+    public MovieTheater(int id, String name, int idCity) {
         this.id = id;
         this.name = name;
         this.idCity = idCity;
-        this.password = password;
     }
 
     public int getId() {
@@ -48,13 +45,5 @@ public class MovieTheater implements Serializable {
 
     public void setIdCity(int idCity) {
         this.idCity = idCity;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

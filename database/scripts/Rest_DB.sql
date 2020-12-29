@@ -11,7 +11,14 @@ CREATE TABLE theater
 (
 	id_theater SERIAL PRIMARY KEY,
 	id_city INTEGER NOT NULL,
-	name_theater VARCHAR(100) NOT NULL,
+	name_theater VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE manager
+(
+	id_manager SERIAL PRIMARY KEY,
+	id_theater INTEGER NOT NULL,
+	username VARCHAR(100) NOT NULL UNIQUE,
 	password VARCHAR(100) NOT NULL
 );
 
@@ -61,6 +68,10 @@ CREATE TABLE actors_playing
 
 ALTER TABLE theater
 	ADD FOREIGN KEY(id_city) REFERENCES city(id_city)
+	ON DELETE CASCADE;
+	
+ALTER TABLE manager
+	ADD FOREIGN KEY(id_theater) REFERENCES theater(id_theater)
 	ON DELETE CASCADE;
 	
 ALTER TABLE movie_display

@@ -55,7 +55,6 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
 
         mt.setId(rs.getInt("id_theater"));
         mt.setName(rs.getString("name_theater"));
-        mt.setPassword(rs.getString("password"));
 
         return mt;
     }

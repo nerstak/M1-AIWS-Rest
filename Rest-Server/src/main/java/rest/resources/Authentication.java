@@ -1,6 +1,8 @@
 package rest.resources;
 
+import rest.dao.ManagerDAO;
 import rest.dao.MovieTheaterDAO;
+import rest.model.Manager;
 import rest.model.Movie;
 import rest.model.MovieTheater;
 import rest.model.utils.AuthResponse;
@@ -22,17 +24,17 @@ public class Authentication {
     @Context
     private Request request;
 
-    MovieTheaterDAO movieTheaterDAO = new MovieTheaterDAO();
+    ManagerDAO managerDAO = new ManagerDAO();
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response authenticate(JAXBElement<MovieTheater> mt) {
+    public Response authenticate(JAXBElement<Manager> m) {
         AuthResponse res = new AuthResponse();
-        MovieTheater mtDB = movieTheaterDAO.selectID(mt.getValue().getId());
+        Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
 
-        if(mtDB.getPassword().equals(mt.getValue().getPassword())) {
-            String authString = mtDB.getId() + ":" + mtDB.getPassword();
+        if(mDB.getPassword().equals(m.getValue().getPassword())) {
+            String authString = mDB.getIdManager() + ":" + mDB.getUsername() + ":" + mDB.getPassword();
             res.setToken(new BASE64Encoder().encode(authString.getBytes()));
             return Response.ok().entity(res).build();
         } else {
