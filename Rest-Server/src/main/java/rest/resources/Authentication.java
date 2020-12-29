@@ -6,6 +6,7 @@ import rest.model.Manager;
 import rest.model.Movie;
 import rest.model.MovieTheater;
 import rest.model.utils.AuthResponse;
+import rest.utils.JWTToken;
 import sun.misc.BASE64Encoder;
 
 import javax.ws.rs.Consumes;
@@ -34,8 +35,7 @@ public class Authentication {
         Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
 
         if(mDB.getPassword().equals(m.getValue().getPassword())) {
-            String authString = mDB.getIdManager() + ":" + mDB.getUsername() + ":" + mDB.getPassword();
-            res.setToken(new BASE64Encoder().encode(authString.getBytes()));
+            res.setToken(JWTToken.create(String.valueOf(mDB.getIdManager()), mDB.getUsername()));
             return Response.ok().entity(res).build();
         } else {
             res.setError(ERROR_CONNECTION_ERROR);
