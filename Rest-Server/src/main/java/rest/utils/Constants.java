@@ -4,6 +4,9 @@ public class Constants {
     /* Properties */
     public static final String DB_PROPERTIES = "/WEB-INF/db.properties";
 
+    /* Errors */
+    public static final String ERROR_CONNECTION_ERROR = "Error during authentication";
+
     /* Resources */
     // Movies
     public static final String RES_MOVIES_SELECT_ALL = "SELECT * FROM movie";
@@ -26,4 +29,7 @@ public class Constants {
                                                                 "        ON p.id_actor = a.id_actor " +
                                                                 "        WHERE p.id_movie = ?";
     public static final String RES_ACTOR_PLAYING_INSERT = "INSERT INTO actors_playing(id_actor, id_movie) VALUES (?,?)";
+
+    // Movie Theater
+    public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
 }
