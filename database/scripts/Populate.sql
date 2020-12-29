@@ -20,6 +20,21 @@ INSERT INTO theater (id_theater, id_city, name_theater) VALUES
 	(10,6,'Mégarama'),
 	(11,6,'CGR Le Français');
 	
+INSERT INTO manager(id_theater, username, password) VALUES 
+	(1,'MK2_Manager', 'password'),
+	(2,'UGC_Paris_Manager', 'password'),
+	(3, 'gob_mana', 'password'),
+	(4, 'bellecour', 'password'),
+	(5, 'ugc_cite','password'),
+	(6, 'ugc_partdieu', 'password'),
+	(7, 'prado', 'password'),
+	(8, 'madeleine', 'password'),
+	(9, 'cezanne', 'password'),
+	(10, 'megaramanager', 'password'),
+	(11, 'cgr', 'password');
+	
+
+	
 INSERT INTO movie (id_movie, title, duration, min_age, director) VALUES 
 	(1,'Joker', '2h02',12,'Todd Phillips'),
 	(2,'Tenet', '2h30',0,'Christopher Nolan'),

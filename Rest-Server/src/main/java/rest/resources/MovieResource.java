@@ -25,7 +25,6 @@ public class MovieResource {
         this.id = Integer.parseInt(id);
     }
 
-    //Application integration
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Movie getMovie() {

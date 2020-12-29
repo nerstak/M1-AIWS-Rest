@@ -1,0 +1,85 @@
+package rest.dao;
+
+import rest.model.Actor;
+import rest.model.Manager;
+import rest.model.Movie;
+import rest.utils.Constants;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+public class ManagerDAO  extends DaoModel implements Dao<Manager>{
+    @Override
+    public boolean insert(Manager manager) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(Manager manager) {
+        return false;
+    }
+
+    @Override
+    public boolean update(Manager manager) {
+        return false;
+    }
+
+    @Override
+    public List<Manager> selectAll() {
+        return null;
+    }
+
+    @Override
+    public Manager selectID(int id) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MANAGER_SELECT_ID);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            // Result
+            if(rs != null && rs.next()) {
+                return extractObj(rs);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    public Manager selectUsername(String username) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MANAGER_SELECT_USERNAME);
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            // Result
+            if(rs != null && rs.next()) {
+                return extractObj(rs);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    private Manager extractObj(ResultSet rs) throws SQLException {
+        Manager m = new Manager();
+
+        m.setIdManager(rs.getInt("id_manager"));
+        m.setIdTheater(rs.getInt("id_theater"));
+        m.setUsername(rs.getString("username"));
+        m.setPassword(rs.getString("password"));
+
+        return m;
+    }
+}

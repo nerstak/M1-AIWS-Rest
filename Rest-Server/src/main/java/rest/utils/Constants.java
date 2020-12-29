@@ -3,6 +3,11 @@ package rest.utils;
 public class Constants {
     /* Properties */
     public static final String DB_PROPERTIES = "/WEB-INF/db.properties";
+    public static final int PROP_TOKEN_VALIDITY = 600000;
+    public static final String PROP_TOKEN_ISSUER = "JWT_M1_SE2";
+
+    /* Errors */
+    public static final String ERROR_CONNECTION_ERROR = "Error during authentication";
 
     /* Resources */
     // Movies
@@ -26,4 +31,11 @@ public class Constants {
                                                                 "        ON p.id_actor = a.id_actor " +
                                                                 "        WHERE p.id_movie = ?";
     public static final String RES_ACTOR_PLAYING_INSERT = "INSERT INTO actors_playing(id_actor, id_movie) VALUES (?,?)";
+
+    // Movie Theater
+    public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
+
+    // Manager
+    public static final String RES_MANAGER_SELECT_ID = "SELECT * FROM manager WHERE id_manager = ?";
+    public static final String RES_MANAGER_SELECT_USERNAME = "SELECT * FROM manager WHERE username = ?";
 }

@@ -2,6 +2,7 @@
 echo "Restarting container...";
 docker restart pg-docker;
 
+sleep .5
 echo "Sending files...";
 for f in scripts/*; 
 do 
