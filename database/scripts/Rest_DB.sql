@@ -11,7 +11,8 @@ CREATE TABLE theater
 (
 	id_theater SERIAL PRIMARY KEY,
 	id_city INTEGER NOT NULL,
-	name_theater VARCHAR(100) NOT NULL
+	name_theater VARCHAR(100) NOT NULL,
+	password VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE movie 
