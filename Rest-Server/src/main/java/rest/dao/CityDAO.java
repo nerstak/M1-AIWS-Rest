@@ -96,6 +96,12 @@ public class CityDAO extends DaoModel implements Dao<City> {
         return null;
     }
 
+    /**
+     * Extract City from ResultSet
+     * @param rs ResultSet
+     * @return City
+     * @throws SQLException Exception
+     */
     private City extractObj(ResultSet rs) throws SQLException {
         City c = new City();
 

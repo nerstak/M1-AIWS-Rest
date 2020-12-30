@@ -1,9 +1,8 @@
 package rest.resources;
 
 import rest.dao.CityDAO;
-import rest.model.Actor;
 import rest.model.City;
-import rest.model.Movie;
+import rest.resources.filter.Secured;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -34,6 +33,7 @@ public class CityResource {
     }
 
     @DELETE
+    @Secured
     public Response deleteCity() {
         City c = cityDAO.selectID(idCity);
 
@@ -46,6 +46,7 @@ public class CityResource {
     }
 
     @PUT
+    @Secured
     @Consumes(MediaType.APPLICATION_XML)
     public Response putCity(JAXBElement<City> city) {
         return putAndGetResponse(city.getValue());

@@ -1,7 +1,6 @@
 package rest.dao;
 
 import rest.model.City;
-import rest.model.Movie;
 import rest.model.MovieTheater;
 import rest.utils.Constants;
 
@@ -66,6 +65,11 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
         return null;
     }
 
+    /**
+     * Select all MovieTheaters from a city
+     * @param city City
+     * @return List of MovieTheaters
+     */
     public List<MovieTheater> selectAllFromCity(City city) {
         List<MovieTheater> theaters = new ArrayList<>();
 
@@ -85,6 +89,12 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
         return theaters;
     }
 
+    /**
+     * Extract a MovieTheater from a ResultSet
+     * @param rs ResultSet
+     * @return MovieTheater
+     * @throws SQLException Exception
+     */
     private MovieTheater extractObj(ResultSet rs) throws SQLException {
         MovieTheater mt = new MovieTheater();
 
