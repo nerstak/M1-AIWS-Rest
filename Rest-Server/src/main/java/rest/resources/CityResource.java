@@ -10,12 +10,15 @@ import javax.xml.bind.JAXBElement;
 
 public class CityResource {
     @Context
-    private final UriInfo uriInfo;
+    private UriInfo uriInfo;
     @Context
-    private final Request request;
+    private Request request;
     private int idCity;
 
     private static final CityDAO cityDAO = new CityDAO();
+
+    public CityResource() {
+    }
 
     public CityResource(UriInfo uriInfo, Request request, int idCity) {
         this.uriInfo = uriInfo;
@@ -59,5 +62,10 @@ public class CityResource {
         cityDAO.insert(city);
 
         return res;
+    }
+
+    @Path("theaters")
+    public MovieTheatersResource getTheaters() {
+        return new MovieTheatersResource(uriInfo, request, idCity);
     }
 }

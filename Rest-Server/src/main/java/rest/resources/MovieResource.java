@@ -11,13 +11,16 @@ import javax.xml.bind.JAXBElement;
 
 public class MovieResource {
     @Context
-    private final UriInfo uriInfo;
+    private UriInfo uriInfo;
     @Context
-    private final Request request;
+    private Request request;
     private int id;
 
     private static final MovieDAO movieDAO = new MovieDAO();
     private static final ActorDAO actorDAO = new ActorDAO();
+
+    public MovieResource() {
+    }
 
     public MovieResource(UriInfo uriInfo, Request request, String id) {
         this.uriInfo = uriInfo;

@@ -1,6 +1,5 @@
 package rest.dao;
 
-import rest.model.City;
 import rest.model.MovieTheater;
 import rest.utils.Constants;
 
@@ -13,6 +12,23 @@ import java.util.List;
 public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
     @Override
     public boolean insert(MovieTheater movieTheater) {
+        try {
+            // Query
+            int i = 1;
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_INSERT);
+            ps.setInt(i++, movieTheater.getIdCity());
+            ps.setString(i, movieTheater.getName());
+
+            // Result
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs != null && rs.next()) {
+                movieTheater.setIdCity(rs.getInt(1));
+                return true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
@@ -67,15 +83,15 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
 
     /**
      * Select all MovieTheaters from a city
-     * @param city City
+     * @param idCity City
      * @return List of MovieTheaters
      */
-    public List<MovieTheater> selectAllFromCity(City city) {
+    public List<MovieTheater> selectAllFromCity(int idCity) {
         List<MovieTheater> theaters = new ArrayList<>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_ALL_CITY);
-            ps.setInt(1,city.getIdCity());
+            ps.setInt(1, idCity);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 MovieTheater m = extractObj(rs);

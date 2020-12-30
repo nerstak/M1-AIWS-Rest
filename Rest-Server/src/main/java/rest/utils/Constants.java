@@ -39,6 +39,7 @@ public class Constants {
     public static final String RES_CITIES_SELECT_ALL = "SELECT * FROM city";
 
     // Movie Theater
+    public static final String RES_THEATER_INSERT = "INSERT INTO theater(id_city, name_theater) VALUES (?, ?) RETURNING id_theater";
     public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
     public static final String RES_THEATERS_SELECT_ALL = "SELECT * FROM theater";
     public static final String RES_THEATERS_SELECT_ALL_CITY = "SELECT * FROM theater WHERE id_city = ?";
