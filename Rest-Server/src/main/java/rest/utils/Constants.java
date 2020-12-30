@@ -32,13 +32,16 @@ public class Constants {
     public static final String RES_ACTOR_PLAYING_INSERT = "INSERT INTO actors_playing(id_actor, id_movie) VALUES (?,?)";
 
     // City
-    public static final String RES_CITY_INSERT = "INSERT INTO city(name_city) VALUES (?)";
+    public static final String RES_CITY_INSERT = "INSERT INTO city(name_city) VALUES (?) RETURNING id_city";
     public static final String RES_CITY_SELECT_ID = "SELECT * FROM city WHERE id_city = ?";
+    public static final String RES_CITY_DELETE = "DELETE FROM city WHERE id_city = ?";
     public static final String RES_CITY_SELECT_NAME = "SELECT * FROM city WHERE name_city = ?";
     public static final String RES_CITIES_SELECT_ALL = "SELECT * FROM city";
 
     // Movie Theater
     public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
+    public static final String RES_THEATERS_SELECT_ALL = "SELECT * FROM theater";
+    public static final String RES_THEATERS_SELECT_ALL_CITY = "SELECT * FROM theater WHERE id_city = ?";
 
     // Manager
     public static final String RES_MANAGER_SELECT_ID = "SELECT * FROM manager WHERE id_manager = ?";

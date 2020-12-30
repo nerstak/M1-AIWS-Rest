@@ -1,8 +1,6 @@
 package rest.dao;
 
 import rest.model.City;
-import rest.model.Movie;
-import rest.model.MovieTheater;
 import rest.utils.Constants;
 
 import java.sql.PreparedStatement;
@@ -34,6 +32,19 @@ public class CityDAO extends DaoModel implements Dao<City> {
 
     @Override
     public boolean delete(City city) {
+        if(new MovieTheaterDAO().selectAllFromCity(city).size() == 0) {
+            try {
+                // Query
+                PreparedStatement ps = conn.prepareStatement(Constants.RES_CITY_DELETE);
+                ps.setInt(1, city.getIdCity());
+
+                // Result
+                int r = ps.executeUpdate();
+                return r > 0;
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
         return false;
     }
 
@@ -45,14 +56,13 @@ public class CityDAO extends DaoModel implements Dao<City> {
     @Override
     public List<City> selectAll() {
         List<City> cities = new ArrayList<>();
-        //ActorDAO actorDAO = new ActorDAO();
 
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_CITIES_SELECT_ALL);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 City c = extractObj(rs);
-                //c.setActors(actorDAO.selectAllActorInMovie(m));
+                c.setTheaters(new MovieTheaterDAO().selectAllFromCity(c));
 
                 cities.add(c);
             }
@@ -75,7 +85,7 @@ public class CityDAO extends DaoModel implements Dao<City> {
             // Result
             if(rs != null && rs.next()) {
                 City c = extractObj(rs);
-                // m.setActors(new ActorDAO().selectAllActorInMovie(m));
+                c.setTheaters(new MovieTheaterDAO().selectAllFromCity(c));
                 return c;
             }
         } catch (SQLException throwables) {

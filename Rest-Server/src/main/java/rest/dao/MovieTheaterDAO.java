@@ -1,5 +1,6 @@
 package rest.dao;
 
+import rest.model.City;
 import rest.model.Movie;
 import rest.model.MovieTheater;
 import rest.utils.Constants;
@@ -7,6 +8,7 @@ import rest.utils.Constants;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
@@ -27,7 +29,21 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
 
     @Override
     public List<MovieTheater> selectAll() {
-        return null;
+        List<MovieTheater> theaters = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_ALL);
+            ResultSet rs = ps.executeQuery();
+            while(rs != null && rs.next()) {
+                MovieTheater m = extractObj(rs);
+
+                theaters.add(m);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return theaters;
     }
 
     @Override
@@ -50,11 +66,31 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
         return null;
     }
 
+    public List<MovieTheater> selectAllFromCity(City city) {
+        List<MovieTheater> theaters = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_ALL_CITY);
+            ps.setInt(1,city.getIdCity());
+            ResultSet rs = ps.executeQuery();
+            while(rs != null && rs.next()) {
+                MovieTheater m = extractObj(rs);
+
+                theaters.add(m);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return theaters;
+    }
+
     private MovieTheater extractObj(ResultSet rs) throws SQLException {
         MovieTheater mt = new MovieTheater();
 
         mt.setId(rs.getInt("id_theater"));
         mt.setName(rs.getString("name_theater"));
+        mt.setIdCity(rs.getInt("id_city"));
 
         return mt;
     }
