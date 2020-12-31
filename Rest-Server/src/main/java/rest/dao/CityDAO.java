@@ -32,7 +32,7 @@ public class CityDAO extends DaoModel implements Dao<City> {
 
     @Override
     public boolean delete(City city) {
-        if(new MovieTheaterDAO().selectAllFromCity(city.getIdCity()).size() == 0) {
+        if(new TheaterDAO().selectAllFromCity(city.getIdCity()).size() == 0) {
             try {
                 // Query
                 PreparedStatement ps = conn.prepareStatement(Constants.RES_CITY_DELETE);
@@ -62,7 +62,7 @@ public class CityDAO extends DaoModel implements Dao<City> {
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 City c = extractObj(rs);
-                c.setTheaters(new MovieTheaterDAO().selectAllFromCity(c.getIdCity()));
+                c.setTheaters(new TheaterDAO().selectAllFromCity(c.getIdCity()));
 
                 cities.add(c);
             }
@@ -85,7 +85,7 @@ public class CityDAO extends DaoModel implements Dao<City> {
             // Result
             if(rs != null && rs.next()) {
                 City c = extractObj(rs);
-                c.setTheaters(new MovieTheaterDAO().selectAllFromCity(c.getIdCity()));
+                c.setTheaters(new TheaterDAO().selectAllFromCity(c.getIdCity()));
                 return c;
             }
         } catch (SQLException throwables) {

@@ -8,16 +8,16 @@ import java.io.Serializable;
 
 @XmlRootElement(name = "theater")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MovieTheater implements Serializable {
+public class Theater implements Serializable {
     @XmlAttribute
     private int id;
     private String name;
     @XmlAttribute
     private int idCity;
 
-    public MovieTheater() {}
+    public Theater() {}
 
-    public MovieTheater(int id, String name, int idCity) {
+    public Theater(int id, String name, int idCity) {
         this.id = id;
         this.name = name;
         this.idCity = idCity;

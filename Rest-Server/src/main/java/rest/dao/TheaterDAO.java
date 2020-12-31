@@ -1,6 +1,6 @@
 package rest.dao;
 
-import rest.model.MovieTheater;
+import rest.model.Theater;
 import rest.utils.Constants;
 
 import java.sql.PreparedStatement;
@@ -9,21 +9,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
+public class TheaterDAO extends DaoModel implements Dao<Theater> {
     @Override
-    public boolean insert(MovieTheater movieTheater) {
+    public boolean insert(Theater theater) {
         try {
             // Query
             int i = 1;
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_INSERT);
-            ps.setInt(i++, movieTheater.getIdCity());
-            ps.setString(i, movieTheater.getName());
+            ps.setInt(i++, theater.getIdCity());
+            ps.setString(i, theater.getName());
 
             // Result
             ps.execute();
             ResultSet rs = ps.getResultSet();
             if(rs != null && rs.next()) {
-                movieTheater.setIdCity(rs.getInt(1));
+                theater.setIdCity(rs.getInt(1));
                 return true;
             }
         } catch (SQLException throwables) {
@@ -33,11 +33,11 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
     }
 
     @Override
-    public boolean delete(MovieTheater movieTheater) {
+    public boolean delete(Theater theater) {
         try {
             // Query
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_DELETE);
-            ps.setInt(1, movieTheater.getId());
+            ps.setInt(1, theater.getId());
 
             // Result
             int r = ps.executeUpdate();
@@ -49,19 +49,19 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
     }
 
     @Override
-    public boolean update(MovieTheater movieTheater) {
+    public boolean update(Theater theater) {
         return false;
     }
 
     @Override
-    public List<MovieTheater> selectAll() {
-        List<MovieTheater> theaters = new ArrayList<>();
+    public List<Theater> selectAll() {
+        List<Theater> theaters = new ArrayList<>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_ALL);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
-                MovieTheater m = extractObj(rs);
+                Theater m = extractObj(rs);
 
                 theaters.add(m);
             }
@@ -73,7 +73,7 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
     }
 
     @Override
-    public MovieTheater selectID(int id) {
+    public Theater selectID(int id) {
         try {
             // Query
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_SELECT_ID);
@@ -83,8 +83,7 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
 
             // Result
             if(rs != null && rs.next()) {
-                MovieTheater mt = extractObj(rs);
-                return mt;
+                return extractObj(rs);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -97,17 +96,17 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
      * @param idCity City
      * @return List of MovieTheaters
      */
-    public List<MovieTheater> selectAllFromCity(int idCity) {
-        List<MovieTheater> theaters = new ArrayList<>();
+    public List<Theater> selectAllFromCity(int idCity) {
+        List<Theater> theaters = new ArrayList<>();
 
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_ALL_CITY);
             ps.setInt(1, idCity);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
-                MovieTheater m = extractObj(rs);
+                Theater t = extractObj(rs);
 
-                theaters.add(m);
+                theaters.add(t);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -122,13 +121,13 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
      * @return MovieTheater
      * @throws SQLException Exception
      */
-    private MovieTheater extractObj(ResultSet rs) throws SQLException {
-        MovieTheater mt = new MovieTheater();
+    private Theater extractObj(ResultSet rs) throws SQLException {
+        Theater t = new Theater();
 
-        mt.setId(rs.getInt("id_theater"));
-        mt.setName(rs.getString("name_theater"));
-        mt.setIdCity(rs.getInt("id_city"));
+        t.setId(rs.getInt("id_theater"));
+        t.setName(rs.getString("name_theater"));
+        t.setIdCity(rs.getInt("id_city"));
 
-        return mt;
+        return t;
     }
 }

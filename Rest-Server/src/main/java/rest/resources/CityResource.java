@@ -65,7 +65,7 @@ public class CityResource {
     }
 
     @Path("theaters")
-    public MovieTheatersResource getTheaters() {
-        return new MovieTheatersResource(uriInfo, request, idCity);
+    public TheatersResource getTheaters() {
+        return new TheatersResource(uriInfo, request, idCity);
     }
 }

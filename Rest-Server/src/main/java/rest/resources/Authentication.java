@@ -1,13 +1,9 @@
 package rest.resources;
 
 import rest.dao.ManagerDAO;
-import rest.dao.MovieTheaterDAO;
 import rest.model.Manager;
-import rest.model.Movie;
-import rest.model.MovieTheater;
 import rest.model.utils.AuthResponse;
 import rest.utils.JWTToken;
-import sun.misc.BASE64Encoder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

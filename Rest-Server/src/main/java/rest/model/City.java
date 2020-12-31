@@ -15,11 +15,11 @@ public class City implements Serializable {
 
     @XmlElementWrapper(name = "theaters")
     @XmlElement(name = "theater")
-    private List<MovieTheater> theaters = new ArrayList<>();
+    private List<Theater> theaters = new ArrayList<>();
 
     public City() {}
 
-    public City(int idCity, String name, List<MovieTheater> theaters) {
+    public City(int idCity, String name, List<Theater> theaters) {
         this.idCity = idCity;
         this.name = name;
         this.theaters = theaters;
@@ -41,11 +41,11 @@ public class City implements Serializable {
         this.name = name;
     }
 
-    public List<MovieTheater> getTheaters() {
+    public List<Theater> getTheaters() {
         return theaters;
     }
 
-    public void setTheaters(List<MovieTheater> theaters) {
+    public void setTheaters(List<Theater> theaters) {
         this.theaters = theaters;
     }
 }
