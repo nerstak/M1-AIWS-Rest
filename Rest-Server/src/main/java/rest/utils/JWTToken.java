@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import rest.dao.ManagerDAO;
+import rest.model.Manager;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -14,6 +16,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 
+import static com.auth0.jwt.JWT.decode;
 import static rest.utils.Constants.PROP_TOKEN_ISSUER;
 import static rest.utils.Constants.PROP_TOKEN_VALIDITY;
 
@@ -25,19 +28,25 @@ public class JWTToken {
     private static final String SECRET = generateSecret();
     private static final Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes(StandardCharsets.UTF_8));
 
+    private static final String AUTHENTICATION_SCHEME = "Bearer";
+    private static final String CLAIM_DB_ID = "id";
+    private static final String CLAIM_DB_USERNAME = "username";
+
+
     /**
      * Create a token
      * @param id Id of user
      * @param username Username of user
      * @return Token
      */
-    public static String create(String id, String username) {
+    public static String create(int id, String username) {
         try {
+            // Creating token
             return JWT.create()
                     .withIssuer(PROP_TOKEN_ISSUER)
                     .withExpiresAt(new Date(new Date().getTime() + PROP_TOKEN_VALIDITY))
-                    .withClaim("username",username)
-                    .withClaim("id",id)
+                    .withClaim(CLAIM_DB_USERNAME,username)
+                    .withClaim(CLAIM_DB_ID,id)
                     .sign(algorithm);
         } catch (JWTCreationException e) {
             e.printStackTrace();
@@ -52,11 +61,13 @@ public class JWTToken {
      */
     public static DecodedJWT verify(String token) {
         try {
+            // Creating verifier
             JWTVerifier v = JWT.require(algorithm)
                     .withIssuer(PROP_TOKEN_ISSUER)
                     .build();
             return v.verify(token);
-        } catch (JWTCreationException|IllegalArgumentException e) {
+        } catch (Exception e) {
+            // Exception means that the token was NOT verified
             e.printStackTrace();
         }
         return null;
@@ -71,18 +82,6 @@ public class JWTToken {
         return verify(token) != null;
     }
 
-    /**
-     * Decode a token
-     * @param token Token
-     * @return Decoded token
-     */
-    public static String decode(String token) {
-        DecodedJWT d = verify(token);
-        if(d != null) {
-            return d.getToken();
-        }
-        return null;
-    }
 
     /**
      * Generate a secret key
@@ -100,6 +99,35 @@ public class JWTToken {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+
+        // In case something fails, we have a static key
         return ERROR_STRING;
+    }
+
+    /**
+     * Generate manager from extracted token
+     * @param token Token
+     * @return Manager (may be null)
+     */
+    public static Manager generateManager(String token) {
+        // Decoding
+        DecodedJWT decoded = decode(token);
+
+        // Verifying that the claim is here
+        if(decoded.getClaim(CLAIM_DB_ID).isNull()) return null;
+        int userID = decoded.getClaim(CLAIM_DB_ID).asInt();
+
+        // Selecting manager
+        return new ManagerDAO().selectID(userID);
+    }
+
+    /**
+     * Extract token from header
+     * @param authorizationHeader header
+     * @return Token
+     */
+    public static String extractToken(String authorizationHeader) {
+        return authorizationHeader
+                .substring(AUTHENTICATION_SCHEME.length()).trim();
     }
 }

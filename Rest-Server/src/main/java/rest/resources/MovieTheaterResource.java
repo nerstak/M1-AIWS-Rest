@@ -2,9 +2,11 @@ package rest.resources;
 
 import rest.dao.MovieTheaterDAO;
 import rest.model.Actor;
+import rest.model.Manager;
 import rest.model.Movie;
 import rest.model.MovieTheater;
 import rest.resources.filter.Secured;
+import rest.utils.JWTToken;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -41,12 +43,14 @@ public class MovieTheaterResource {
     @DELETE
     @Secured
     public Response deleteMovieTheater(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        // Todo: Check if user is linked to movie theater
-        MovieTheater m = movieTheaterDAO.selectID(idCity);
+        MovieTheater m = movieTheaterDAO.selectID(idMovieTheater);
+        Manager manager = JWTToken.generateManager(JWTToken.extractToken(authorizationHeader));
 
         if(m == null || m.getIdCity() != idCity) return Response.status(Response.Status.NOT_FOUND).build();
 
-        if(!movieTheaterDAO.delete(movieTheaterDAO.selectID(idCity))) {
+        if(manager == null || m.getId() != manager.getIdTheater())  return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        if(!movieTheaterDAO.delete(movieTheaterDAO.selectID(idMovieTheater))) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.status(Response.Status.OK).build();
@@ -56,7 +60,7 @@ public class MovieTheaterResource {
     @Secured
     @Consumes(MediaType.APPLICATION_XML)
     public Response putMovieTheater(JAXBElement<MovieTheater> movieTheater) {
-        // Todo: Check if user is linked to movie theater
+        // Todo: Maybe a verification of super user or something?
         return putAndGetResponse(movieTheater.getValue());
     }
 

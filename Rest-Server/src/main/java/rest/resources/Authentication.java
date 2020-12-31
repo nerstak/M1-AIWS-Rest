@@ -35,7 +35,7 @@ public class Authentication {
         Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
 
         if(mDB.getPassword().equals(m.getValue().getPassword())) {
-            res.setToken(JWTToken.create(String.valueOf(mDB.getIdManager()), mDB.getUsername()));
+            res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
             return Response.ok().entity(res).build();
         } else {
             res.setError(ERROR_CONNECTION_ERROR);

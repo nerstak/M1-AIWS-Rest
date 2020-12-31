@@ -1,6 +1,6 @@
 package rest.resources.filter;
 
-import rest.resources.Authentication;
+
 import rest.utils.JWTToken;
 
 import javax.annotation.Priority;
@@ -36,8 +36,7 @@ public class TokenFilter implements ContainerRequestFilter {
         }
 
         // Extract the token from the Authorization header
-        String token = authorizationHeader
-                .substring(AUTHENTICATION_SCHEME.length()).trim();
+        String token = JWTToken.extractToken(authorizationHeader);
 
 
         // Validate the token

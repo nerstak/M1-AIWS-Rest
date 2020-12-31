@@ -34,6 +34,17 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
 
     @Override
     public boolean delete(MovieTheater movieTheater) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_DELETE);
+            ps.setInt(1, movieTheater.getId());
+
+            // Result
+            int r = ps.executeUpdate();
+            return r > 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
