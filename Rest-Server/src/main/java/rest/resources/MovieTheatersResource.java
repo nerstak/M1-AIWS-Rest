@@ -5,12 +5,15 @@ import rest.model.MovieTheater;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 public class MovieTheatersResource {
     @Context
@@ -42,7 +45,12 @@ public class MovieTheatersResource {
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCount() {
-        int count = movieTheaterDAO.selectAll().size();
+        int count = movieTheaterDAO.selectAllFromCity(idCity).size();
         return String.valueOf(count);
+    }
+
+    @Path("{movieTheater}")
+    public MovieTheaterResource getMovieTheater(@PathParam("movieTheater") String id) {
+        return new MovieTheaterResource(uriInfo, request, idCity, parseInt(id));
     }
 }

@@ -65,7 +65,7 @@ public class MovieTheaterDAO extends DaoModel implements Dao<MovieTheater> {
     public MovieTheater selectID(int id) {
         try {
             // Query
-            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_SELECT_ID);
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_SELECT_ID);
             ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
