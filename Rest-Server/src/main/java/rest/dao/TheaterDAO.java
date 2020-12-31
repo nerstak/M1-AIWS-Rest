@@ -23,7 +23,7 @@ public class TheaterDAO extends DaoModel implements Dao<Theater> {
             ps.execute();
             ResultSet rs = ps.getResultSet();
             if(rs != null && rs.next()) {
-                theater.setIdCity(rs.getInt(1));
+                theater.setId(rs.getInt(1));
                 return true;
             }
         } catch (SQLException throwables) {

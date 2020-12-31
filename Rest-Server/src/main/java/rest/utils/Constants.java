@@ -46,6 +46,7 @@ public class Constants {
     public static final String RES_THEATERS_SELECT_ALL_CITY = "SELECT * FROM theater WHERE id_city = ?";
 
     // Manager
+    public static final String RES_MANAGER_INSERT = "INSERT INTO manager(id_theater, username, password) VALUES (?, ?, ?) RETURNING id_manager";
     public static final String RES_MANAGER_SELECT_ID = "SELECT * FROM manager WHERE id_manager = ?";
     public static final String RES_MANAGER_SELECT_USERNAME = "SELECT * FROM manager WHERE username = ?";
 }

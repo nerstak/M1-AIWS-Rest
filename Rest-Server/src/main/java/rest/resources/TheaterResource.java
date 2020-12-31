@@ -1,8 +1,10 @@
 package rest.resources;
 
+import rest.dao.ManagerDAO;
 import rest.dao.TheaterDAO;
 import rest.model.Manager;
 import rest.model.Theater;
+import rest.model.TheaterWithManager;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
 
@@ -20,6 +22,7 @@ public class TheaterResource {
     private int idTheater;
 
     private TheaterDAO theaterDAO = new TheaterDAO();
+    private ManagerDAO managerDAO = new ManagerDAO();
 
     public TheaterResource(UriInfo uriInfo, Request request, int idCity, int idTheater) {
         this.uriInfo = uriInfo;
@@ -55,22 +58,21 @@ public class TheaterResource {
     }
 
     @PUT
-    @Secured
     @Consumes(MediaType.APPLICATION_XML)
-    public Response putTheater(JAXBElement<Theater> theater) {
-        // Todo: Maybe a verification of super user or something?
-        return putAndGetResponse(theater.getValue());
+    public Response putTheater(JAXBElement<TheaterWithManager> theaterWithManager) {
+        return putAndGetResponse(theaterWithManager.getValue());
     }
 
-    private Response putAndGetResponse(Theater theater) {
+    private Response putAndGetResponse(TheaterWithManager theaterWithManager) {
         Response res;
         res = Response.noContent().build();
-/*
-        movieDAO.insert(movie);
-        for (Actor a: movie.getActors()) {
-            actorDAO.insert(a);
-            movieDAO.addActorToMovie(movie, a);
-        }*/
+
+        if(theaterDAO.insert(theaterWithManager.getTheater())) {
+            theaterWithManager.getManager().setIdTheater(theaterWithManager.getTheater().getId());
+            managerDAO.insert(theaterWithManager.getManager());
+        } else {
+            res = Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return res;
     }
 }

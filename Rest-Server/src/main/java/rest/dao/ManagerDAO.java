@@ -13,6 +13,24 @@ import java.util.List;
 public class ManagerDAO  extends DaoModel implements Dao<Manager>{
     @Override
     public boolean insert(Manager manager) {
+        try {
+            // Query
+            int i = 1;
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MANAGER_INSERT);
+            ps.setInt(i++, manager.getIdTheater());
+            ps.setString(i++, manager.getUsername());
+            ps.setString(i, manager.getPassword());
+
+            // Result
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs != null && rs.next()) {
+                manager.setIdManager(rs.getInt(1));
+                return true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
