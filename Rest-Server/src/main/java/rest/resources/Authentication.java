@@ -1,13 +1,9 @@
 package rest.resources;
 
 import rest.dao.ManagerDAO;
-import rest.dao.MovieTheaterDAO;
 import rest.model.Manager;
-import rest.model.Movie;
-import rest.model.MovieTheater;
 import rest.model.utils.AuthResponse;
 import rest.utils.JWTToken;
-import sun.misc.BASE64Encoder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -35,7 +31,7 @@ public class Authentication {
         Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
 
         if(mDB.getPassword().equals(m.getValue().getPassword())) {
-            res.setToken(JWTToken.create(String.valueOf(mDB.getIdManager()), mDB.getUsername()));
+            res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
             return Response.ok().entity(res).build();
         } else {
             res.setError(ERROR_CONNECTION_ERROR);

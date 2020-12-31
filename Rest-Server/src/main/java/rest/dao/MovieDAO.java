@@ -136,7 +136,6 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
             return insertActorInMovie(movie, actor);
         }
         return false;
-        // Should insert in actors playing
     }
 
     /**
