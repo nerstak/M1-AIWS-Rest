@@ -37,6 +37,10 @@ public class Constants {
     public static final String RES_CITY_DELETE = "DELETE FROM city WHERE id_city = ?";
     public static final String RES_CITY_SELECT_NAME = "SELECT * FROM city WHERE name_city = ?";
     public static final String RES_CITIES_SELECT_ALL = "SELECT * FROM city";
+    public static final String RES_CITIES_SELECT_MOVIE = "SELECT DISTINCT city.id_city, city.name_city FROM city " +
+            "    INNER JOIN theater t on city.id_city = t.id_city " +
+            "    INNER JOIN movie_display mv ON mv.id_theater = t.id_theater " +
+            "    WHERE id_movie = ?";
 
     // Movie Theater
     public static final String RES_THEATER_INSERT = "INSERT INTO theater(id_city, name_theater) VALUES (?, ?) RETURNING id_theater";

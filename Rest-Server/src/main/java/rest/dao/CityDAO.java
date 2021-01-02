@@ -1,6 +1,7 @@
 package rest.dao;
 
 import rest.model.City;
+import rest.model.Movie;
 import rest.utils.Constants;
 
 import java.sql.PreparedStatement;
@@ -109,5 +110,25 @@ public class CityDAO extends DaoModel implements Dao<City> {
         c.setName(rs.getString("name_city"));
 
         return c;
+    }
+
+    public List<City> selectAll(Movie m) {
+        List<City> cities = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_CITIES_SELECT_MOVIE);
+            ps.setInt(1,m.getIdMovie());
+            ResultSet rs = ps.executeQuery();
+            while(rs != null && rs.next()) {
+                City c = extractObj(rs);
+                c.setTheaters(new TheaterDAO().selectAllFromCity(c.getIdCity()));
+
+                cities.add(c);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return cities;
     }
 }
