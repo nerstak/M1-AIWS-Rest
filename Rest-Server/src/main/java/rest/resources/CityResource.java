@@ -14,6 +14,7 @@ public class CityResource {
     @Context
     private Request request;
     private int idCity;
+    private int idMovie = -1;
 
     private static final CityDAO cityDAO = new CityDAO();
 
@@ -24,6 +25,13 @@ public class CityResource {
         this.uriInfo = uriInfo;
         this.request = request;
         this.idCity = idCity;
+    }
+
+    public CityResource(UriInfo uriInfo, Request request, int idCity, int idMovie) {
+        this.uriInfo = uriInfo;
+        this.request = request;
+        this.idCity = idCity;
+        this.idMovie = idMovie;
     }
 
     @GET

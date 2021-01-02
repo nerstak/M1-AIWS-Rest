@@ -66,4 +66,9 @@ public class MovieResource {
         }
         return res;
     }
+
+    @Path("cities")
+    public CitiesResource getCities() {
+        return new CitiesResource(uriInfo, request, id);
+    }
 }

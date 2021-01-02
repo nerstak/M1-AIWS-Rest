@@ -42,12 +42,15 @@ public class Constants {
             "    INNER JOIN movie_display mv ON mv.id_theater = t.id_theater " +
             "    WHERE id_movie = ?";
 
-    // Movie Theater
+    // Theater
     public static final String RES_THEATER_INSERT = "INSERT INTO theater(id_city, name_theater) VALUES (?, ?) RETURNING id_theater";
     public static final String RES_THEATER_DELETE = "DELETE FROM theater WHERE id_theater = ?";
     public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
     public static final String RES_THEATERS_SELECT_ALL = "SELECT * FROM theater";
     public static final String RES_THEATERS_SELECT_ALL_CITY = "SELECT * FROM theater WHERE id_city = ?";
+    public static final String RES_THEATERS_SELECT_MOVIE = "SELECT theater.id_city, theater.id_theater, theater.name_theater FROM theater " +
+            "    INNER JOIN movie_display md ON theater.id_theater = md.id_theater " +
+            "    WHERE id_city = ? AND id_movie = ?";
 
     // Manager
     public static final String RES_MANAGER_INSERT = "INSERT INTO manager(id_theater, username, password) VALUES (?, ?, ?) RETURNING id_manager";

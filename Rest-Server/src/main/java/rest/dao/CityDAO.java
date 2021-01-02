@@ -121,7 +121,7 @@ public class CityDAO extends DaoModel implements Dao<City> {
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 City c = extractObj(rs);
-                c.setTheaters(new TheaterDAO().selectAllFromCity(c.getIdCity()));
+                c.setTheaters(new TheaterDAO().selectAllFromCityMovie(c.getIdCity(),m.getIdMovie()));
 
                 cities.add(c);
             }
