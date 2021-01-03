@@ -3,9 +3,11 @@ package rest.model;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
-public class MovieDisplaying {
+public class MovieDisplay {
     private int idMovie;
     private int idTheater;
     private String language;
@@ -13,9 +15,11 @@ public class MovieDisplaying {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public MovieDisplaying() {}
+    private List<Schedule> schedules = new ArrayList<>();
 
-    public MovieDisplaying(int idMovie, int idTheater, String language, LocalDateTime startDate, LocalDateTime endDate) {
+    public MovieDisplay() {}
+
+    public MovieDisplay(int idMovie, int idTheater, String language, LocalDateTime startDate, LocalDateTime endDate) {
         this.idMovie = idMovie;
         this.idTheater = idTheater;
         this.language = language;
@@ -65,5 +69,13 @@ public class MovieDisplaying {
         if(endDate.isAfter(this.startDate)) {
             this.endDate = endDate;
         }
+    }
+
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
     }
 }

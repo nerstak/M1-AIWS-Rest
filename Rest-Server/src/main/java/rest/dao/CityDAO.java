@@ -97,6 +97,28 @@ public class CityDAO extends DaoModel implements Dao<City> {
         return null;
     }
 
+    public City selectID(int id, Movie m) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_CITY_SELECT_ID);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            // Result
+            if(rs != null && rs.next()) {
+                City c = extractObj(rs);
+                c.setTheaters(new TheaterDAO().selectAllFromCityMovie(c.getIdCity(),m.getIdMovie()));
+                return c;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
     /**
      * Extract City from ResultSet
      * @param rs ResultSet

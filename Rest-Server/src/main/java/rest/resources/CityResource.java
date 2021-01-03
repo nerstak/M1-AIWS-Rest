@@ -1,7 +1,9 @@
 package rest.resources;
 
 import rest.dao.CityDAO;
+import rest.dao.MovieDAO;
 import rest.model.City;
+import rest.model.Movie;
 import rest.resources.filter.Secured;
 
 import javax.ws.rs.*;
@@ -14,7 +16,8 @@ public class CityResource {
     @Context
     private Request request;
     private int idCity;
-    private int idMovie = -1;
+    private Movie movie;
+
 
     private static final CityDAO cityDAO = new CityDAO();
 
@@ -31,13 +34,20 @@ public class CityResource {
         this.uriInfo = uriInfo;
         this.request = request;
         this.idCity = idCity;
-        this.idMovie = idMovie;
+        this.movie = new MovieDAO().selectID(idMovie);
+    }
+
+    private City select(int idCity) {
+        if(movie != null) {
+            return cityDAO.selectID(idCity, movie);
+        }
+        return cityDAO.selectID(idCity);
     }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public City getCity() {
-        City c = cityDAO.selectID(idCity);
+        City c = select(idCity);
         if (c == null)
             throw new RuntimeException("Get: City with " + idCity + " not found");
         return c;
@@ -46,7 +56,7 @@ public class CityResource {
     @DELETE
     @Secured
     public Response deleteCity() {
-        City c = cityDAO.selectID(idCity);
+        City c = select(idCity);
 
         if(c == null) return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -76,4 +86,5 @@ public class CityResource {
     public TheatersResource getTheaters() {
         return new TheatersResource(uriInfo, request, idCity);
     }
+
 }

@@ -54,6 +54,9 @@ public class CitiesResource {
 
     @Path("{city}")
     public CityResource getCity(@PathParam("city") String id) {
+        if(movie != null) {
+            return new CityResource(uriInfo, request, Integer.parseInt(id), movie.getIdMovie());
+        }
         return new CityResource(uriInfo, request, Integer.parseInt(id));
     }
 }
