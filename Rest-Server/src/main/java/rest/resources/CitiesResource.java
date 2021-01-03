@@ -39,8 +39,6 @@ public class CitiesResource {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<City> getCities() {
-        // Todo: Change this so it takes into account possible movies/id/cities/id and only select cities where the film is playing
-
         return selectAll;
     }
 

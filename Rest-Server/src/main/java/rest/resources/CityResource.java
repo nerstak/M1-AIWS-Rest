@@ -84,7 +84,9 @@ public class CityResource {
 
     @Path("theaters")
     public TheatersResource getTheaters() {
+        if(movie != null) {
+            return new TheatersResource(uriInfo, request, idCity, movie.getIdMovie());
+        }
         return new TheatersResource(uriInfo, request, idCity);
     }
-
 }
