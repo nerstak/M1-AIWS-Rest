@@ -6,7 +6,6 @@ import rest.utils.Constants;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.List;
 
 public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
@@ -47,7 +46,7 @@ public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
             // Result
             if(rs != null && rs.next()) {
                 MovieDisplay md = extractObj(rs);
-                // md.setSchedules();
+                md.setSchedules(new ScheduleDAO().selectAll(idMovie,idTheater));
                 return md;
             }
         } catch (SQLException throwables) {
@@ -64,8 +63,8 @@ public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
         md.setIdMovie(rs.getInt("id_movie"));
         md.setIdTheater(rs.getInt("id_theater"));
         md.setLanguage(rs.getString("lang"));
-        md.setStartDate(rs.getDate("start_date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-        md.setEndDate(rs.getDate("end_date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        md.setStartDate(MovieDisplay.getDateFormat().format(rs.getTimestamp("start_date")));
+        md.setEndDate(MovieDisplay.getDateFormat().format(rs.getTimestamp("end_date")));
 
         return md;
     }

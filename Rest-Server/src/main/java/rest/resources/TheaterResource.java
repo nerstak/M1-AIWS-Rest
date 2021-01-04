@@ -1,10 +1,7 @@
 package rest.resources;
 
-import rest.dao.ManagerDAO;
-import rest.dao.TheaterDAO;
-import rest.model.Manager;
-import rest.model.Theater;
-import rest.model.TheaterWithManager;
+import rest.dao.*;
+import rest.model.*;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
 
@@ -20,9 +17,14 @@ public class TheaterResource {
 
     private int idCity;
     private int idTheater;
+    private Movie movie;
 
-    private TheaterDAO theaterDAO = new TheaterDAO();
-    private ManagerDAO managerDAO = new ManagerDAO();
+    private static TheaterDAO theaterDAO = new TheaterDAO();
+    private static ManagerDAO managerDAO = new ManagerDAO();
+    private static MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
+
+    public TheaterResource() {
+    }
 
     public TheaterResource(UriInfo uriInfo, Request request, int idCity, int idTheater) {
         this.uriInfo = uriInfo;
@@ -31,6 +33,13 @@ public class TheaterResource {
         this.idTheater = idTheater;
     }
 
+    public TheaterResource(UriInfo uriInfo, Request request, int idCity, int idTheater, int idMovie) {
+        this.uriInfo = uriInfo;
+        this.request = request;
+        this.idCity = idCity;
+        this.idTheater = idTheater;
+        this.movie = new MovieDAO().selectID(idMovie);
+    }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -74,5 +83,16 @@ public class TheaterResource {
             res = Response.status(Response.Status.BAD_REQUEST).build();
         }
         return res;
+    }
+
+    @Path("/schedules")
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public MovieDisplay getSchedules() {
+        if(movie != null) {
+            return movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
+        } else {
+            throw new RuntimeException("No movie selected");
+        }
     }
 }

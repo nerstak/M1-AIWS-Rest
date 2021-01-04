@@ -68,6 +68,9 @@ public class TheatersResource {
 
     @Path("{theater}")
     public TheaterResource getTheater(@PathParam("theater") String id) {
+        if(movie != null) {
+            return new TheaterResource(uriInfo, request, idCity, parseInt(id), movie.getIdMovie());
+        }
         return new TheaterResource(uriInfo, request, idCity, parseInt(id));
     }
 }

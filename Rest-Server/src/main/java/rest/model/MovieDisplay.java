@@ -1,31 +1,35 @@
 package rest.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
+import java.io.Serializable;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement
-public class MovieDisplay {
+@XmlRootElement(name = "display")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class MovieDisplay implements Serializable {
+    @XmlAttribute(name = "id")
     private int idMovie;
+    @XmlAttribute
     private int idTheater;
     private String language;
-    // Todo: Check if type is relevant for actions
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
 
+    private String startDate;
+    private String endDate;
+
+    @XmlElementWrapper(name = "schedules")
+    @XmlElement(name = "schedule")
     private List<Schedule> schedules = new ArrayList<>();
 
-    public MovieDisplay() {}
+    @XmlTransient
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public MovieDisplay(int idMovie, int idTheater, String language, LocalDateTime startDate, LocalDateTime endDate) {
-        this.idMovie = idMovie;
-        this.idTheater = idTheater;
-        this.language = language;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+
+    public MovieDisplay() {}
 
     public int getIdMovie() {
         return idMovie;
@@ -51,24 +55,20 @@ public class MovieDisplay {
         this.language = language;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        if(startDate.isBefore(this.endDate)) {
-            this.startDate = startDate;
-        }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        if(endDate.isAfter(this.startDate)) {
-            this.endDate = endDate;
-        }
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public List<Schedule> getSchedules() {
@@ -77,5 +77,9 @@ public class MovieDisplay {
 
     public void setSchedules(List<Schedule> schedules) {
         this.schedules = schedules;
+    }
+
+    public static DateFormat getDateFormat() {
+        return dateFormat;
     }
 }

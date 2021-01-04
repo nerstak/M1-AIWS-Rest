@@ -1,17 +1,28 @@
 package rest.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
-@XmlRootElement
-public class Schedule {
+@XmlRootElement(name = "schedule")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Schedule implements Serializable {
+    @XmlTransient
     private int idMovie;
+    @XmlTransient
     private int idTheater;
-    private LocalTime time;
-    private DayOfWeek dayOfWeek;
 
-    public Schedule(int idMovie) {}
+    private String time;
+    private String dayOfWeek;
+
+    private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    public Schedule() {
+    }
 
     public int getIdMovie() {
         return idMovie;
@@ -29,19 +40,23 @@ public class Schedule {
         this.idTheater = idTheater;
     }
 
-    public LocalTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-    public DayOfWeek getDayOfWeek() {
+    public String getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+    public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public static DateFormat getDateFormat() {
+        return dateFormat;
     }
 }

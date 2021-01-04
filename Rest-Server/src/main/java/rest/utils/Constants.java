@@ -63,4 +63,8 @@ public class Constants {
 
     // Movie displaying
     public static final String RES_MOVIE_DISPLAY_SELECT_ID = "SELECT * FROM movie_display WHERE id_movie = ? AND id_theater = ?";
+
+    // Schedules
+    public static final String RES_SCHEDULES_SELECT_ID = "SELECT * FROM schedule WHERE id_movie = ? AND id_theater = ?";
+
 }
