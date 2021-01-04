@@ -34,6 +34,12 @@ public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
         return null;
     }
 
+    /**
+     * Select MovieDisplay for Movie in Theater
+     * @param idMovie id of Movie
+     * @param idTheater id of Theater
+     * @return MovieDisplay
+     */
     public MovieDisplay selectID(int idMovie, int idTheater) {
         try {
             // Query
@@ -57,6 +63,12 @@ public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
         return null;
     }
 
+    /**
+     * Extract MovieDisplay from ResultSet
+     * @param rs ResultSet
+     * @return MovieDisplay
+     * @throws SQLException Exception
+     */
     private MovieDisplay extractObj(ResultSet rs) throws SQLException {
         MovieDisplay md = new MovieDisplay();
 

@@ -1,8 +1,6 @@
 package rest.dao;
 
-import rest.model.Actor;
 import rest.model.Manager;
-import rest.model.Movie;
 import rest.utils.Constants;
 
 import java.sql.PreparedStatement;
@@ -10,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ManagerDAO  extends DaoModel implements Dao<Manager>{
+public class ManagerDAO extends DaoModel implements Dao<Manager>{
     @Override
     public boolean insert(Manager manager) {
         try {
@@ -70,6 +68,11 @@ public class ManagerDAO  extends DaoModel implements Dao<Manager>{
         return null;
     }
 
+    /**
+     * Select Manager by username
+     * @param username Username
+     * @return Manager (may be null)
+     */
     public Manager selectUsername(String username) {
         try {
             // Query
@@ -90,6 +93,12 @@ public class ManagerDAO  extends DaoModel implements Dao<Manager>{
         return null;
     }
 
+    /**
+     * Extract a Manager from a ResultSet
+     * @param rs ResultSet
+     * @return Manager
+     * @throws SQLException Exception
+     */
     private Manager extractObj(ResultSet rs) throws SQLException {
         Manager m = new Manager();
 

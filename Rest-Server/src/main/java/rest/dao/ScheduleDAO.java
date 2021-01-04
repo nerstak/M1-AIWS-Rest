@@ -38,6 +38,12 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
         return null;
     }
 
+    /**
+     * Select all schedules of Movie in a Theater
+     * @param idMovie id of Movie
+     * @param idTheater id of Theater
+     * @return List of Schedules
+     */
     public List<Schedule> selectAll(int idMovie, int idTheater) {
         List<Schedule> schedules = new ArrayList<>();
 
@@ -62,6 +68,12 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
         return schedules;
     }
 
+    /**
+     * Extract Schedule from ResultSet
+     * @param rs ResultSet
+     * @return Schedule
+     * @throws SQLException Exception
+     */
     private Schedule extractObj(ResultSet rs) throws SQLException {
         Schedule s = new Schedule();
 

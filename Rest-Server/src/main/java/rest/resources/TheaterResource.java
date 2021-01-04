@@ -44,21 +44,23 @@ public class TheaterResource {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Theater getTheater() {
-        Theater m = theaterDAO.selectID(idTheater);
-        if (m == null || m.getIdCity() != idCity)
+        Theater t = theaterDAO.selectID(idTheater);
+        if (t == null || t.getIdCity() != idCity)
             throw new RuntimeException("Get: Theater with idCity " + idCity + " and idTheater " + idTheater + " not found");
-        return m;
+        return t;
     }
 
     @DELETE
     @Secured
     public Response deleteTheater(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        Theater m = theaterDAO.selectID(idTheater);
+        Theater t = theaterDAO.selectID(idTheater);
         Manager manager = JWTToken.generateManager(JWTToken.extractToken(authorizationHeader));
 
-        if(m == null || m.getIdCity() != idCity) return Response.status(Response.Status.NOT_FOUND).build();
+        // Checking that theater is in the selected city
+        if(t == null || t.getIdCity() != idCity) return Response.status(Response.Status.NOT_FOUND).build();
 
-        if(manager == null || m.getId() != manager.getIdTheater())  return Response.status(Response.Status.UNAUTHORIZED).build();
+        // Checking that the manager is linked to the theater
+        if(manager == null || t.getId() != manager.getIdTheater())  return Response.status(Response.Status.UNAUTHORIZED).build();
 
         if(!theaterDAO.delete(theaterDAO.selectID(idTheater))) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -76,7 +78,9 @@ public class TheaterResource {
         Response res;
         res = Response.noContent().build();
 
+        // Inserting theater
         if(theaterDAO.insert(theaterWithManager.getTheater())) {
+            // Inserting manager if theater insertion was successful
             theaterWithManager.getManager().setIdTheater(theaterWithManager.getTheater().getId());
             managerDAO.insert(theaterWithManager.getManager());
         } else {
@@ -88,11 +92,13 @@ public class TheaterResource {
     @Path("/schedules")
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public MovieDisplay getSchedules() {
+    public Response getSchedules() {
         if(movie != null) {
-            return movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
+            MovieDisplay md = movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
+            return Response.ok().entity(md).build();
         } else {
-            throw new RuntimeException("No movie selected");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+            //throw new RuntimeException("No movie selected");
         }
     }
 }

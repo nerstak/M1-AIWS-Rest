@@ -8,6 +8,7 @@ public class Constants {
 
     /* Errors */
     public static final String ERROR_CONNECTION_ERROR = "Error during authentication";
+    public static final String ERROR_REQUEST_INCORRECT = "No data corresponding to request was found";
 
     /* Resources */
     // Movie
