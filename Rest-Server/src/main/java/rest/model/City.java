@@ -7,7 +7,6 @@ import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 public class City implements Serializable {
     @XmlAttribute
     private int idCity;

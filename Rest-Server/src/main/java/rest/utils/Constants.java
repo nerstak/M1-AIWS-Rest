@@ -8,6 +8,7 @@ public class Constants {
 
     /* Errors */
     public static final String ERROR_CONNECTION_ERROR = "Error during authentication";
+    public static final String ERROR_REQUEST_INCORRECT = "No data corresponding to request was found";
 
     /* Resources */
     // Movie
@@ -35,18 +36,36 @@ public class Constants {
     public static final String RES_CITY_INSERT = "INSERT INTO city(name_city) VALUES (?) RETURNING id_city";
     public static final String RES_CITY_SELECT_ID = "SELECT * FROM city WHERE id_city = ?";
     public static final String RES_CITY_DELETE = "DELETE FROM city WHERE id_city = ?";
+    public static final String RES_CITY_SELECT_MOVIE = "SELECT DISTINCT city.id_city, city.name_city FROM city " +
+            "    INNER JOIN theater t on city.id_city = t.id_city " +
+            "    INNER JOIN movie_display mv ON mv.id_theater = t.id_theater " +
+            "    WHERE id_movie = ? AND city.id_city = ?";
     public static final String RES_CITY_SELECT_NAME = "SELECT * FROM city WHERE name_city = ?";
     public static final String RES_CITIES_SELECT_ALL = "SELECT * FROM city";
+    public static final String RES_CITIES_SELECT_MOVIE = "SELECT DISTINCT city.id_city, city.name_city FROM city " +
+            "    INNER JOIN theater t on city.id_city = t.id_city " +
+            "    INNER JOIN movie_display mv ON mv.id_theater = t.id_theater " +
+            "    WHERE id_movie = ?";
 
-    // Movie Theater
+    // Theater
     public static final String RES_THEATER_INSERT = "INSERT INTO theater(id_city, name_theater) VALUES (?, ?) RETURNING id_theater";
     public static final String RES_THEATER_DELETE = "DELETE FROM theater WHERE id_theater = ?";
     public static final String RES_THEATER_SELECT_ID = "SELECT * FROM theater WHERE id_theater = ?";
     public static final String RES_THEATERS_SELECT_ALL = "SELECT * FROM theater";
     public static final String RES_THEATERS_SELECT_ALL_CITY = "SELECT * FROM theater WHERE id_city = ?";
+    public static final String RES_THEATERS_SELECT_MOVIE = "SELECT theater.id_city, theater.id_theater, theater.name_theater FROM theater " +
+            "    INNER JOIN movie_display md ON theater.id_theater = md.id_theater " +
+            "    WHERE id_city = ? AND id_movie = ?";
 
     // Manager
     public static final String RES_MANAGER_INSERT = "INSERT INTO manager(id_theater, username, password) VALUES (?, ?, ?) RETURNING id_manager";
     public static final String RES_MANAGER_SELECT_ID = "SELECT * FROM manager WHERE id_manager = ?";
     public static final String RES_MANAGER_SELECT_USERNAME = "SELECT * FROM manager WHERE username = ?";
+
+    // Movie displaying
+    public static final String RES_MOVIE_DISPLAY_SELECT_ID = "SELECT * FROM movie_display WHERE id_movie = ? AND id_theater = ?";
+
+    // Schedules
+    public static final String RES_SCHEDULES_SELECT_ID = "SELECT * FROM schedule WHERE id_movie = ? AND id_theater = ?";
+
 }

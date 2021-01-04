@@ -13,6 +13,7 @@ import javax.ws.rs.core.*;
 import javax.xml.bind.JAXBElement;
 
 import static rest.utils.Constants.ERROR_CONNECTION_ERROR;
+import static rest.utils.Constants.ERROR_REQUEST_INCORRECT;
 
 @Path("/auth")
 public class Authentication {
@@ -29,6 +30,11 @@ public class Authentication {
     public Response authenticate(JAXBElement<Manager> m) {
         AuthResponse res = new AuthResponse();
         Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
+
+        if(mDB == null) {
+            res.setError(ERROR_REQUEST_INCORRECT);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+        }
 
         if(mDB.getPassword().equals(m.getValue().getPassword())) {
             res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));

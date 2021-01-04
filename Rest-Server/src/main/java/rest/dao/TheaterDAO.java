@@ -1,5 +1,6 @@
 package rest.dao;
 
+import rest.model.Movie;
 import rest.model.Theater;
 import rest.utils.Constants;
 
@@ -102,6 +103,32 @@ public class TheaterDAO extends DaoModel implements Dao<Theater> {
         try {
             PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_ALL_CITY);
             ps.setInt(1, idCity);
+            ResultSet rs = ps.executeQuery();
+            while(rs != null && rs.next()) {
+                Theater t = extractObj(rs);
+
+                theaters.add(t);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return theaters;
+    }
+
+    /**
+     * Select all MovieTheaters from a city displaying a movie
+     * @param idCity City
+     * @param idMovie Movie
+     * @return List of MovieTheaters
+     */
+    public List<Theater> selectAllFromCityMovie(int idCity, int idMovie) {
+        List<Theater> theaters = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATERS_SELECT_MOVIE);
+            ps.setInt(1, idCity);
+            ps.setInt(2, idMovie);
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 Theater t = extractObj(rs);

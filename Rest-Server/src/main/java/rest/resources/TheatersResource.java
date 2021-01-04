@@ -1,6 +1,8 @@
 package rest.resources;
 
+import rest.dao.MovieDAO;
 import rest.dao.TheaterDAO;
+import rest.model.Movie;
 import rest.model.Theater;
 
 import javax.ws.rs.GET;
@@ -22,9 +24,10 @@ public class TheatersResource {
     private Request request;
 
     private int idCity;
+    private Movie movie;
 
 
-    private TheaterDAO theaterDAO = new TheaterDAO();
+    private static TheaterDAO theaterDAO = new TheaterDAO();
 
     public TheatersResource() {
     }
@@ -35,22 +38,39 @@ public class TheatersResource {
         this.idCity = idCity;
     }
 
+    public TheatersResource(UriInfo uriInfo, Request request, int idCity, int idMovie) {
+        this.uriInfo = uriInfo;
+        this.request = request;
+        this.idCity = idCity;
+        this.movie = new MovieDAO().selectID(idMovie);;
+    }
+
+    private List<Theater> selectAll(int idCity) {
+        if(movie != null) {
+            return theaterDAO.selectAllFromCityMovie(idCity,movie.getIdMovie());
+        }
+        return theaterDAO.selectAllFromCity(idCity);
+    }
+
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Theater> getTheaters() {
-        return theaterDAO.selectAllFromCity(idCity);
+        return selectAll(idCity);
     }
 
     @GET
     @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCount() {
-        int count = theaterDAO.selectAllFromCity(idCity).size();
+        int count = selectAll(idCity).size();
         return String.valueOf(count);
     }
 
     @Path("{theater}")
     public TheaterResource getTheater(@PathParam("theater") String id) {
+        if(movie != null) {
+            return new TheaterResource(uriInfo, request, idCity, parseInt(id), movie.getIdMovie());
+        }
         return new TheaterResource(uriInfo, request, idCity, parseInt(id));
     }
 }
