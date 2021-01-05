@@ -2,10 +2,8 @@ package rest.model;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

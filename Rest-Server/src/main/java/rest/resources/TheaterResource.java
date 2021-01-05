@@ -4,10 +4,14 @@ import rest.dao.*;
 import rest.model.*;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
+import rest.utils.WebException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.xml.bind.JAXBElement;
+
+import static rest.utils.Constants.ERROR_DELETE;
+import static rest.utils.Constants.ERROR_NOT_FOUND;
 
 public class TheaterResource {
     @Context
@@ -46,7 +50,7 @@ public class TheaterResource {
     public Theater getTheater() {
         Theater t = theaterDAO.selectID(idTheater);
         if (t == null || t.getIdCity() != idCity)
-            throw new RuntimeException("Get: Theater with idCity " + idCity + " and idTheater " + idTheater + " not found");
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         return t;
     }
 
@@ -57,13 +61,15 @@ public class TheaterResource {
         Manager manager = JWTToken.generateManager(JWTToken.extractToken(authorizationHeader));
 
         // Checking that theater is in the selected city
-        if(t == null || t.getIdCity() != idCity) return Response.status(Response.Status.NOT_FOUND).build();
+        if(t == null || t.getIdCity() != idCity)
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
 
         // Checking that the manager is linked to the theater
-        if(manager == null || t.getId() != manager.getIdTheater())  return Response.status(Response.Status.UNAUTHORIZED).build();
+        if(manager == null || t.getId() != manager.getIdTheater())
+            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_DELETE);
 
         if(!theaterDAO.delete(theaterDAO.selectID(idTheater))) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_DELETE);
         }
         return Response.status(Response.Status.OK).build();
     }
@@ -84,7 +90,7 @@ public class TheaterResource {
             theaterWithManager.getManager().setIdTheater(theaterWithManager.getTheater().getId());
             managerDAO.insert(theaterWithManager.getManager());
         } else {
-            res = Response.status(Response.Status.BAD_REQUEST).build();
+            throw new WebException(Response.Status.BAD_REQUEST, "Error while creating theater");
         }
         return res;
     }
@@ -93,12 +99,12 @@ public class TheaterResource {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response getSchedules() {
+        MovieDisplay md;
         if(movie != null) {
-            MovieDisplay md = movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
+            md = movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
             return Response.ok().entity(md).build();
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-            //throw new RuntimeException("No movie selected");
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         }
     }
 }
