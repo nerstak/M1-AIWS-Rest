@@ -27,10 +27,10 @@ public class MovieResource {
     public MovieResource() {
     }
 
-    public MovieResource(UriInfo uriInfo, Request request, String id) {
+    public MovieResource(UriInfo uriInfo, Request request, int id) {
         this.uriInfo = uriInfo;
         this.request = request;
-        this.id = Integer.parseInt(id);
+        this.id = id;
     }
 
     @GET
