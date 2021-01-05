@@ -1,9 +1,12 @@
-package rest.model;
+package rest.model.utils;
 
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
+/**
+ * Error response
+ */
 @XmlRootElement (name = "error")
 public class AppException implements Serializable {
     private int statusCode;
@@ -13,8 +16,8 @@ public class AppException implements Serializable {
     public AppException() {
     }
 
-    public AppException(String error, Response.Status status) {
-        this.details = error;
+    public AppException(String details, Response.Status status) {
+        this.details = details;
         this.statusCode = status.getStatusCode();
         this.reason = status.getReasonPhrase();
     }
