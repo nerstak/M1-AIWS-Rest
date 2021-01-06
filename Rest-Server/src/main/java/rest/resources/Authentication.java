@@ -30,27 +30,8 @@ public class Authentication {
     ManagerDAO managerDAO = new ManagerDAO();
 
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
-    public Response authenticate(JAXBElement<Manager> m) {
-        AuthResponse res = new AuthResponse();
-        Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
-
-        if(mDB == null) {
-            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_NOT_FOUND);
-        }
-
-        if(mDB.getPassword().equals(m.getValue().getPassword())) {
-            res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
-            return Response.ok().entity(res).build();
-        } else {
-            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_CONNECTION_ERROR);
-        }
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response authenticate(Manager manager) {
         AuthResponse res = new AuthResponse();
 
