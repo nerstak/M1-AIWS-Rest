@@ -35,6 +35,20 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
 
     @Override
     public Schedule selectID(int id) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_SCHEDULE_SELECT_ID);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            // Result
+            if(rs != null && rs.next()) {
+                return extractObj(rs);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 
@@ -77,6 +91,7 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
     private Schedule extractObj(ResultSet rs) throws SQLException {
         Schedule s = new Schedule();
 
+        s.setIdSchedule(rs.getInt("id_schedule"));
         s.setIdMovie(rs.getInt("id_movie"));
         s.setIdTheater(rs.getInt("id_theater"));
         s.setDayOfWeek(DayOfWeek.of(rs.getInt("day_of_week")).toString());

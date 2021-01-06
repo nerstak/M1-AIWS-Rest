@@ -1,9 +1,6 @@
 package rest.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,17 +8,29 @@ import java.text.SimpleDateFormat;
 @XmlRootElement(name = "schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Schedule implements Serializable {
+    @XmlAttribute
+    private int idSchedule;
+    private String time;
+    private String dayOfWeek;
+
     @XmlTransient
     private int idMovie;
     @XmlTransient
     private int idTheater;
 
-    private String time;
-    private String dayOfWeek;
+
 
     private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public Schedule() {
+    }
+
+    public int getIdSchedule() {
+        return idSchedule;
+    }
+
+    public void setIdSchedule(int idSchedule) {
+        this.idSchedule = idSchedule;
     }
 
     public int getIdMovie() {
