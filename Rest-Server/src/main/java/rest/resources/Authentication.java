@@ -51,32 +51,22 @@ public class Authentication {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response authenticate(String jsonString) {
+    public Response authenticate(Manager manager) {
         AuthResponse res = new AuthResponse();
-        try{
-            JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
-            JsonObject jsonObject = jsonReader.readObject();
-            jsonReader.close();
 
-            String username =  jsonObject.getString("username");
-            String password = jsonObject.getString("password");
-            Manager mDB = managerDAO.selectUsername(username);
+        Manager mDB = managerDAO.selectUsername(manager.getUsername());
 
-            if(mDB == null) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
-            }
-
-            if(mDB.getPassword().equals(password)) {
-                res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
-                return Response.ok().entity(res).build();
-            } else {
-                res.setError(ERROR_CONNECTION_ERROR);
-                return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
-            }
-
-        } catch (Exception e) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+        if(mDB == null) {
+            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_NOT_FOUND);
         }
+
+        if(mDB.getPassword().equals(manager.getPassword())) {
+            res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
+            return Response.ok().entity(res).build();
+        } else {
+            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_CONNECTION_ERROR);
+        }
+
     }
 
 

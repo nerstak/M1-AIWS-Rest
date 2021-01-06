@@ -12,6 +12,7 @@ public class Constants {
     public static final String ERROR_NOT_FOUND = "The requested resource was not found";
     public static final String ERROR_DELETE = "The requested resource could not be deleted";
     public static final String ERROR_PUT = "The resource could not be created";
+    public static final String ERROR_RESOURCE_PROVIDED = "The resource provided is not compliant";
 
     /* Resources */
     // Movie
