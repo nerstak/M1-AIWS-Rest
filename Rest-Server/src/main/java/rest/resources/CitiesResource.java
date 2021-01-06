@@ -4,16 +4,16 @@ import rest.dao.CityDAO;
 import rest.dao.MovieDAO;
 import rest.model.City;
 import rest.model.Movie;
+import rest.utils.WebException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.List;
+
+import static rest.utils.Constants.ERROR_NOT_FOUND;
 
 @Path("/cities")
 public class CitiesResource {
@@ -51,10 +51,17 @@ public class CitiesResource {
     }
 
     @Path("{city}")
-    public CityResource getCity(@PathParam("city") String id) {
-        if(movie != null) {
-            return new CityResource(uriInfo, request, Integer.parseInt(id), movie.getIdMovie());
-        }
-        return new CityResource(uriInfo, request, Integer.parseInt(id));
+    public CityResource getCity(@PathParam("city") String idString) {
+        try  {
+            int id = Integer.parseInt(idString);
+            if(cityDAO.selectID(id) != null) {
+                if(movie != null) {
+                    return new CityResource(uriInfo, request, id, movie.getIdMovie());
+                }
+                return new CityResource(uriInfo, request, id);
+            }
+        } catch (NumberFormatException ignored) {}
+
+        throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
     }
 }

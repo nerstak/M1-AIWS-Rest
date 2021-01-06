@@ -5,10 +5,13 @@ import rest.dao.MovieDAO;
 import rest.model.City;
 import rest.model.Movie;
 import rest.resources.filter.Secured;
+import rest.utils.WebException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.xml.bind.JAXBElement;
+
+import static rest.utils.Constants.*;
 
 public class CityResource {
     @Context
@@ -49,7 +52,7 @@ public class CityResource {
     public City getCity() {
         City c = select(idCity);
         if (c == null)
-            throw new RuntimeException("Get: City with " + idCity + " not found");
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         return c;
     }
 
@@ -58,12 +61,13 @@ public class CityResource {
     public Response deleteCity() {
         City c = select(idCity);
 
-        if(c == null) return Response.status(Response.Status.NOT_FOUND).build();
+        if(c == null) throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
+
 
         if(!cityDAO.delete(cityDAO.selectID(idCity))) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_DELETE);
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.ok().build();
     }
 
     @PUT
@@ -75,9 +79,9 @@ public class CityResource {
 
     private Response putAndGetResponse(City city) {
         Response res;
-        res = Response.noContent().build();
+        res = Response.ok().build();
 
-        cityDAO.insert(city);
+        if(!cityDAO.insert(city)) throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_PUT);
 
         return res;
     }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @XmlRootElement(name = "theater")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Theater implements Serializable {
+public class Theater implements Serializable  {
     @XmlAttribute
     private int id;
     private String name;
