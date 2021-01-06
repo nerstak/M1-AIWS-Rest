@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "actor")
+@XmlRootElement(name = "manager")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Manager {
     @XmlAttribute(name = "id")
