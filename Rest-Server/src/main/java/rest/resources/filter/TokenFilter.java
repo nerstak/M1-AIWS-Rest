@@ -1,6 +1,7 @@
 package rest.resources.filter;
 
 
+import rest.model.utils.AppException;
 import rest.utils.JWTToken;
 
 import javax.annotation.Priority;
@@ -8,9 +9,12 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+
+import static rest.utils.Constants.ERROR_AUTH_REQUIRED;
 
 /**
  * Filter for "Secured" annotation
@@ -19,7 +23,7 @@ import java.io.IOException;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class TokenFilter implements ContainerRequestFilter {
-    private static final String REALM = "example";
+    private static final String REALM = "Active actions on resources";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Override
@@ -71,7 +75,10 @@ public class TokenFilter implements ContainerRequestFilter {
                 Response.status(Response.Status.UNAUTHORIZED)
                         .header(HttpHeaders.WWW_AUTHENTICATE,
                                 AUTHENTICATION_SCHEME + " realm=\"" + REALM + "\"")
-                        .build());
+                        .entity(new AppException(ERROR_AUTH_REQUIRED, Response.Status.UNAUTHORIZED))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+        );
     }
 
     /**

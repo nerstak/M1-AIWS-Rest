@@ -4,10 +4,15 @@ import rest.dao.ActorDAO;
 import rest.dao.MovieDAO;
 import rest.model.Actor;
 import rest.model.Movie;
+import rest.resources.filter.Secured;
+import rest.utils.WebException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.xml.bind.JAXBElement;
+
+import static rest.utils.Constants.ERROR_NOT_FOUND;
+import static rest.utils.Constants.ERROR_PUT;
 
 public class MovieResource {
     @Context
@@ -22,10 +27,10 @@ public class MovieResource {
     public MovieResource() {
     }
 
-    public MovieResource(UriInfo uriInfo, Request request, String id) {
+    public MovieResource(UriInfo uriInfo, Request request, int id) {
         this.uriInfo = uriInfo;
         this.request = request;
-        this.id = Integer.parseInt(id);
+        this.id = id;
     }
 
     @GET
@@ -33,7 +38,7 @@ public class MovieResource {
     public Movie getMovie() {
         Movie m = movieDAO.selectID(id);
         if (m == null)
-            throw new RuntimeException("Get: Movie with " + id + " not found");
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         return m;
     }
 
@@ -51,6 +56,7 @@ public class MovieResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
+    @Secured
     public Response putMovie(JAXBElement<Movie> movie) {
         return putAndGetResponse(movie.getValue());
     }
@@ -59,11 +65,15 @@ public class MovieResource {
         Response res;
         res = Response.noContent().build();
 
-        movieDAO.insert(movie);
-        for (Actor a: movie.getActors()) {
-            actorDAO.insert(a);
-            movieDAO.addActorToMovie(movie, a);
+        if(movieDAO.insert(movie)) {
+            for (Actor a: movie.getActors()) {
+                actorDAO.insert(a);
+                movieDAO.addActorToMovie(movie, a);
+            }
+        } else {
+            throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_PUT);
         }
+
         return res;
     }
 

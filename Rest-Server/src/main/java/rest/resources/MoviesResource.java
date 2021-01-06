@@ -2,16 +2,16 @@ package rest.resources;
 
 import rest.dao.MovieDAO;
 import rest.model.Movie;
+import rest.utils.WebException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.List;
+
+import static rest.utils.Constants.ERROR_NOT_FOUND;
 
 /**
  * Movies handling
@@ -40,7 +40,13 @@ public class MoviesResource {
     }
 
     @Path("{movie}")
-    public MovieResource getMovie(@PathParam("movie") String id) {
-        return new MovieResource(uriInfo, request, id);
+    public MovieResource getMovie(@PathParam("movie") String idString) {
+        try {
+            int id = Integer.parseInt(idString);
+            if(movieDAO.selectID(id) != null) {
+                return new MovieResource(uriInfo, request, id);
+            }
+        } catch (NumberFormatException ignored) { }
+        throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
     }
 }

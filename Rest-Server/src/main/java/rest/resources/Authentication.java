@@ -5,6 +5,7 @@ import rest.dao.ManagerDAO;
 import rest.model.Manager;
 import rest.model.utils.AuthResponse;
 import rest.utils.JWTToken;
+import rest.utils.WebException;
 
 import javax.json.*;
 import javax.ws.rs.Consumes;
@@ -14,11 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import javax.xml.bind.JAXBElement;
 
-
 import java.io.StringReader;
 
-import static rest.utils.Constants.ERROR_CONNECTION_ERROR;
-import static rest.utils.Constants.ERROR_REQUEST_INCORRECT;
+
+import static rest.utils.Constants.*;
 
 @Path("/auth")
 public class Authentication {
@@ -37,16 +37,14 @@ public class Authentication {
         Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
 
         if(mDB == null) {
-            res.setError(ERROR_REQUEST_INCORRECT);
-            return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_NOT_FOUND);
         }
 
         if(mDB.getPassword().equals(m.getValue().getPassword())) {
             res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
             return Response.ok().entity(res).build();
         } else {
-            res.setError(ERROR_CONNECTION_ERROR);
-            return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
+            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_CONNECTION_ERROR);
         }
     }
 
@@ -65,7 +63,6 @@ public class Authentication {
             Manager mDB = managerDAO.selectUsername(username);
 
             if(mDB == null) {
-                res.setError(ERROR_REQUEST_INCORRECT);
                 return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
             }
 
@@ -78,7 +75,6 @@ public class Authentication {
             }
 
         } catch (Exception e) {
-            res.setError(ERROR_REQUEST_INCORRECT);
             return Response.status(Response.Status.UNAUTHORIZED).entity(res).build();
         }
     }
