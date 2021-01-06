@@ -36,7 +36,10 @@ type alias Model =
 
 init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model url key []
+    ( Model url key 
+        [ { url = Route.toString Route.Top, label = text "Homepage" }
+        , { url = Route.toString Route.NotFound, label = text "Not found" }
+        ]
     , Cmd.none
     )
 
@@ -72,9 +75,9 @@ view :
 view { page, toMsg } model =
     { title = page.title
     , body =
-        [ column [ padding 20, spacing 20, height fill ]
+        [ column [ padding 20, spacing 20, height fill, width fill]
             [ viewHeader
-            , column [ height fill, width fill ] page.body
+            , column [ height fill, width fill, explain <| Debug.todo ] <| List.map (mapBodyLinks toMsg) model.body
             ]
         ]
     }
@@ -95,6 +98,14 @@ viewHeaderLinks =
         , mouseOver 
             [ Background.color purple ]
         ]
+
+mapBodyLinks : (Msg -> msg) -> { url : String, label : Element Msg } -> Element msg
+mapBodyLinks toMsg { url, label } =
+    viewHeaderLinks
+        { url = url
+        , label = map toMsg label
+        }
+
 
 purple : Color
 purple =
