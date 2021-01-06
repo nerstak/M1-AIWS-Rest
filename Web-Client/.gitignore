@@ -6,3 +6,5 @@ src/Spa/Generated
 
 # MacOS weird stuff
 .DS_Store
+
+package-lock.json
