@@ -30,12 +30,13 @@ type alias Flags =
 type alias Model =
     { url : Url
     , key : Key
+    , body : List { url : String, label : Element Msg }
     }
 
 
 init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model url key
+    ( Model url key []
     , Cmd.none
     )
 
@@ -73,7 +74,7 @@ view { page, toMsg } model =
     , body =
         [ column [ padding 20, spacing 20, height fill ]
             [ viewHeader
-            , column [ height fill ] page.body
+            , column [ height fill, width fill ] page.body
             ]
         ]
     }
