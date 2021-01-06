@@ -66,13 +66,17 @@ public class TheatersResource {
     }
 
     @Path("{theater}")
-    public TheaterResource getTheater(@PathParam("theater") int id) {
-        if(theaterDAO.selectID(id) != null) {
-            if(movie != null) {
-                return new TheaterResource(uriInfo, request, idCity, id, movie.getIdMovie());
+    public TheaterResource getTheater(@PathParam("theater") String idString) {
+        try {
+            int id = Integer.parseInt(idString);
+            if(theaterDAO.selectID(id) != null) {
+                if(movie != null) {
+                    return new TheaterResource(uriInfo, request, idCity, id, movie.getIdMovie());
+                }
+                return new TheaterResource(uriInfo, request, idCity, id);
             }
-            return new TheaterResource(uriInfo, request, idCity, id);
-        }
+        } catch (NumberFormatException ignored) {}
+
         throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
     }
 }

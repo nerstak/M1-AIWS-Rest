@@ -8,7 +8,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.core.MediaType;
 
-// Should be replacing 404, but doesn't seems to work
 
 @Provider
 public class NotFoundMapper implements ExceptionMapper<NotFoundException> {

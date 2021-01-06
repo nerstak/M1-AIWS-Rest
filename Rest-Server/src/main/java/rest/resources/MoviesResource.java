@@ -40,10 +40,13 @@ public class MoviesResource {
     }
 
     @Path("{movie}")
-    public MovieResource getMovie(@PathParam("movie") int id) {
-        if(movieDAO.selectID(id) != null) {
-            return new MovieResource(uriInfo, request, id);
-        }
+    public MovieResource getMovie(@PathParam("movie") String idString) {
+        try {
+            int id = Integer.parseInt(idString);
+            if(movieDAO.selectID(id) != null) {
+                return new MovieResource(uriInfo, request, id);
+            }
+        } catch (NumberFormatException ignored) { }
         throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
     }
 }

@@ -51,13 +51,17 @@ public class CitiesResource {
     }
 
     @Path("{city}")
-    public CityResource getCity(@PathParam("city") int id) {
-        if(cityDAO.selectID(id) != null) {
-            if(movie != null) {
-                return new CityResource(uriInfo, request, id, movie.getIdMovie());
+    public CityResource getCity(@PathParam("city") String idString) {
+        try  {
+            int id = Integer.parseInt(idString);
+            if(cityDAO.selectID(id) != null) {
+                if(movie != null) {
+                    return new CityResource(uriInfo, request, id, movie.getIdMovie());
+                }
+                return new CityResource(uriInfo, request, id);
             }
-            return new CityResource(uriInfo, request, id);
-        }
+        } catch (NumberFormatException ignored) {}
+
         throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
     }
 }
