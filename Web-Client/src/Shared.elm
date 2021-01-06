@@ -11,9 +11,12 @@ module Shared exposing
 import Browser.Navigation exposing (Key)
 import Element exposing (..)
 import Element.Font as Font
+import Element.Border as Border
+import Element.Background as Background
 import Spa.Document exposing (Document)
 import Spa.Generated.Route as Route
 import Url exposing (Url)
+import Element.Input exposing (button)
 
 
 
@@ -69,11 +72,29 @@ view { page, toMsg } model =
     { title = page.title
     , body =
         [ column [ padding 20, spacing 20, height fill ]
-            [ row [ spacing 20 ]
-                [ link [ Font.color (rgb 0 0.25 0.5), Font.underline ] { url = Route.toString Route.Top, label = text "Homepage" }
-                , link [ Font.color (rgb 0 0.25 0.5), Font.underline ] { url = Route.toString Route.NotFound, label = text "Not found" }
-                ]
+            [ viewHeader
             , column [ height fill ] page.body
             ]
         ]
     }
+
+viewHeader : Element msg
+viewHeader =
+    row [ spacing 20 ]
+        [ viewHeaderLinks { url = Route.toString Route.Top, label = text "Homepage" }
+        , viewHeaderLinks { url = Route.toString Route.NotFound, label = text "Not found" }
+        ]
+
+viewHeaderLinks : { url : String, label : Element msg } -> Element msg
+viewHeaderLinks =
+    link
+        [ padding 10
+        , Border.width 1
+        , Border.rounded 5
+        , mouseOver 
+            [ Background.color purple ]
+        ]
+
+purple : Color
+purple =
+    rgb255 238 20 238
