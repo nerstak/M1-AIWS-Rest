@@ -48,7 +48,7 @@ public class CityResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public City getCity() {
         City c = select(idCity);
         if (c == null)
@@ -72,12 +72,8 @@ public class CityResource {
 
     @PUT
     @Secured
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response putCity(JAXBElement<City> city) {
-        return putAndGetResponse(city.getValue());
-    }
-
-    private Response putAndGetResponse(City city) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response putCity(City city) {
         Response res;
         res = Response.ok().build();
 

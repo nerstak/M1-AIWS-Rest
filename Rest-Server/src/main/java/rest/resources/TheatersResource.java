@@ -52,7 +52,7 @@ public class TheatersResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<Theater> getTheaters() {
         return selectAll(idCity);
     }
