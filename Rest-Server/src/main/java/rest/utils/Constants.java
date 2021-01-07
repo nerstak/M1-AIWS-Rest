@@ -72,6 +72,8 @@ public class Constants {
     // Schedules
     public static final String RES_SCHEDULES_SELECT_ID = "SELECT * FROM schedule WHERE id_movie = ? AND id_theater = ?";
     public static final String RES_SCHEDULE_SELECT_ID = "SELECT * FROM schedule WHERE id_schedule = ?";
+    public static final String RES_SCHEDULE_DELETE = "DELETE FROM schedule WHERE id_schedule = ?";
+    public static final String RES_SCHEDULE_INSERT = "INSERT INTO schedule(id_movie, id_theater, time_day, day_of_week) VALUES (?,?,?,?) RETURNING id_schedule";
 
 
 }

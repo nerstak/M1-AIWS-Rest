@@ -1,7 +1,5 @@
 package rest.dao;
 
-import rest.model.City;
-import rest.model.MovieDisplay;
 import rest.model.Schedule;
 import rest.utils.Constants;
 
@@ -15,11 +13,40 @@ import java.util.List;
 public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
     @Override
     public boolean insert(Schedule schedule) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_SCHEDULE_INSERT);
+            ps.setInt(1, schedule.getIdMovie());
+            ps.setInt(2, schedule.getIdTheater());
+            ps.setTime(3, schedule.getTimeFormatted());
+            ps.setInt(4, schedule.getDayOfWeekFormatted()-1);
+
+            // Result
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs != null && rs.next()) {
+                schedule.setIdSchedule(rs.getInt(1));
+                return true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean delete(Schedule schedule) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_DELETE);
+            ps.setInt(1, schedule.getId());
+
+            // Result
+            int r = ps.executeUpdate();
+            return r > 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 

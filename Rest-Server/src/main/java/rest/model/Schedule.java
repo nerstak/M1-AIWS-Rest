@@ -2,8 +2,11 @@ package rest.model;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 
 @XmlRootElement(name = "schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -25,7 +28,7 @@ public class Schedule implements Serializable {
     public Schedule() {
     }
 
-    public int getIdSchedule() {
+    public int getId() {
         return idSchedule;
     }
 
@@ -53,12 +56,20 @@ public class Schedule implements Serializable {
         return time;
     }
 
+    public Time getTimeFormatted() {
+        return new Time(Long.parseLong(time));
+    }
+
     public void setTime(String time) {
         this.time = time;
     }
 
     public String getDayOfWeek() {
         return dayOfWeek;
+    }
+
+    public int getDayOfWeekFormatted() {
+        return DayOfWeek.valueOf(dayOfWeek).getValue();
     }
 
     public void setDayOfWeek(String dayOfWeek) {
