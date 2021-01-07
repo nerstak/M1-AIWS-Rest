@@ -12,7 +12,6 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AuthResponse implements Serializable {
     private String token;
-    private String error;
 
     public AuthResponse() {
     }
@@ -23,13 +22,5 @@ public class AuthResponse implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 }

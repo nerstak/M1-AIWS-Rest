@@ -49,7 +49,7 @@ public class TheaterResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Theater getTheater() {
         Theater t = theaterDAO.selectID(idTheater);
         if (t == null || t.getIdCity() != idCity)
@@ -78,12 +78,8 @@ public class TheaterResource {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response putTheater(JAXBElement<TheaterWithManager> theaterWithManager) {
-        return putAndGetResponse(theaterWithManager.getValue());
-    }
-
-    private Response putAndGetResponse(TheaterWithManager theaterWithManager) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response putTheater(TheaterWithManager theaterWithManager) {
         Response res;
         res = Response.noContent().build();
 
@@ -98,9 +94,10 @@ public class TheaterResource {
         return res;
     }
 
+
     @Path("/schedules")
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getSchedules() {
         MovieDisplay md;
         if(movie != null) {

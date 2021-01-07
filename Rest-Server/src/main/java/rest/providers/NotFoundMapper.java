@@ -1,12 +1,13 @@
 package rest.providers;
 
-import rest.model.utils.AppException;
+import rest.utils.WebException;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import javax.ws.rs.core.MediaType;
+
+import static rest.utils.Constants.ERROR_NOT_FOUND;
 
 /**
  * Exception for 404
@@ -15,10 +16,6 @@ import javax.ws.rs.core.MediaType;
 public class NotFoundMapper implements ExceptionMapper<NotFoundException> {
     @Override
     public Response toResponse(NotFoundException ex) {
-        return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity(new AppException(ex.getMessage(), Response.Status.NOT_FOUND))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .build();
+        return WebException.createException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
     }
 }
