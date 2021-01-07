@@ -95,9 +95,13 @@ cityToUrlInfo theater =
                       { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fbubbles%2F2x%2Fcity.png&f=1&nofb=1"
                       , description = "logo"
                       }
-        ,   text "bonjour"
+        ,   theaterName theater
         ]
     }
+
+theaterName : Theater -> Element msg
+theaterName theater =
+    el [width fill, Font.center] <| text (String.toUpper theater.name)
 
 httpErrorToString : Http.Error -> String
 httpErrorToString error =
@@ -145,7 +149,7 @@ getCities idCity =
     Http.request
         { method = "GET"
         , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/cities/" ++ String.fromInt idCity
+        , url = "http://localhost:8080/Project/rest/cities/" ++ String.fromInt idCity ++ "/theaters"
         , body = Http.emptyBody
         , expect = Http.expectJson (RemoteData.fromResult >> GotTheaters) theatersDecoder
         , timeout = Nothing
