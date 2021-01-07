@@ -121,7 +121,7 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
         s.setIdSchedule(rs.getInt("id_schedule"));
         s.setIdMovie(rs.getInt("id_movie"));
         s.setIdTheater(rs.getInt("id_theater"));
-        s.setDayOfWeek(DayOfWeek.of(rs.getInt("day_of_week")+1).toString());
+        s.setDayOfWeek(DayOfWeek.of(rs.getInt("day_of_week")).toString());
         s.setTime(Schedule.getDateFormat().format(rs.getTimestamp("time_day").getTime()));
 
         return s;

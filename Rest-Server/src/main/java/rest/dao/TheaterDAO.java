@@ -132,7 +132,6 @@ public class TheaterDAO extends DaoModel implements Dao<Theater> {
             ResultSet rs = ps.executeQuery();
             while(rs != null && rs.next()) {
                 Theater t = extractObj(rs);
-                t.setSchedules(new ScheduleDAO().selectAll(idMovie, t.getId()));
 
                 theaters.add(t);
             }

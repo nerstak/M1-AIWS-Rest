@@ -47,9 +47,8 @@ CREATE TABLE schedule
 	id_movie INTEGER NOT NULL,
 	id_theater INTEGER NOT NULL,
 	time_day TIME NOT NULL,
-	-- The day of the week (0 - 6; Sunday is 0) 
-	day_of_week INTEGER NOT NULL--,
-	--PRIMARY KEY (id_movie, id_theater)
+	-- We are using ISO 8601 for day of week numbering
+	day_of_week INTEGER NOT NULL
 );
 
 CREATE TABLE actor 
