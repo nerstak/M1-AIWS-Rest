@@ -14,6 +14,9 @@ import javax.xml.bind.JAXBElement;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
 import static rest.utils.Constants.ERROR_PUT;
 
+/**
+ * Movie Resource
+ */
 public class MovieResource {
     @Context
     private UriInfo uriInfo;

@@ -13,6 +13,9 @@ import javax.xml.bind.JAXBElement;
 import static rest.utils.Constants.ERROR_DELETE;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
 
+/**
+ * Theater Resource
+ */
 public class TheaterResource {
     @Context
     private UriInfo uriInfo;

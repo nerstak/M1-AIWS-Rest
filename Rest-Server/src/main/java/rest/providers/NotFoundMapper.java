@@ -8,7 +8,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.core.MediaType;
 
-
+/**
+ * Exception for 404
+ */
 @Provider
 public class NotFoundMapper implements ExceptionMapper<NotFoundException> {
     @Override
