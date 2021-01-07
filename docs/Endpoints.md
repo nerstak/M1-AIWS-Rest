@@ -7,6 +7,22 @@
 **Methods**:
 
 - GET: Public
+  
+  - Response:
+    
+    - ```xml
+      <movies>
+          <movie idMovie="ID_OF_MOVIE">
+              <duration>Duration of movie</duration>
+              <direction>Name of director</direction>
+              <minimumAge>Minimum age</minimumAge>
+              <title>Title of movie</title>
+              <actors>
+                  <actor id="ID_OF_ACTOR">Actor name</actor>
+              </actors>
+         </movie>
+      </movies>
+      ```
 
 - POST: Authencation required
   
@@ -16,8 +32,8 @@
     
     - ```xml
       <movie>
-          <direction>Name of director</direction>
           <duration>Duration of movie</duration>
+          <direction>Name of director</direction>
           <minimumAge>Minimum age</minimumAge>
           <title>Title of movie</title>
           <actors>
@@ -45,6 +61,18 @@
 **Methods**:
 
 - GET: Public
+  - Response:
+    - ```xml
+      <movie idMovie="ID_OF_MOVIE">
+          <duration>Duration of movie</duration>
+          <direction>Name of director</direction>
+          <minimumAge>Minimum age</minimumAge>
+          <title>Title of movie</title>
+          <actors>
+              <actor id="ID_OF_ACTOR">Actor name</actor>
+          </actors>
+      </movie>
+      ```
 - DELETE: Authencation required
   - Header: "Authorization" (Bearer JWT)
 
@@ -57,6 +85,21 @@
 **Methods**: 
 
 - GET: Public
+  
+  - Response:
+    
+    - ```xml
+      <cities>
+          <city idCity="ID_OF_CITY">
+              <name>Name of city</name>
+              <theaters>
+                  <theater id="ID_OF_THEATER" idCity="ID_OF_CITY">
+                      <name>Name of theater</name>
+                  </theater>
+              </theaters>
+          </city>
+      </cities>
+      ```
 
 - POST: Public
   
@@ -82,6 +125,17 @@
 **Methods**:
 
 - GET: Public
+  - Response:
+    - ```xml
+      <city idCity="ID_OF_CITY">
+          <name>Name of city</name>
+          <theaters>
+                  <theater id="ID_OF_THEATER" idCity="ID_OF_CITY">
+                      <name>Name of theater</name>
+                  </theater>
+          </theaters>  
+      </city>
+      ```
 - DELETE: Authencation required
   - Header: "Authorization" (Bearer JWT)
 
@@ -94,6 +148,16 @@
 **Methods**:
 
 - GET: Public
+  
+  - Response:
+    
+    - ```xml
+      <theaters> 
+          <theater id="ID_OF_THEATER" idCity="ID_OF_CITY">
+              <name>Name of theater</name>
+          </theater>
+      </theaters>
+      ```
 
 - POST: Public
   
@@ -133,6 +197,12 @@
 **Methods**:
 
 - GET: Public
+  - Reponse:
+    - ```xml
+      <theater id="ID_OF_THEATER" idCity="ID_OF_CITY">
+          <name>Name of theater</name>
+      </theater>
+      ```
 - DELETE: Authencation required
   - Header: "Authorization" (Bearer JWT)
 
@@ -151,17 +221,34 @@
 **Methods**:
 
 - POST: Public
+  
   - Body:
+    
     - ```xml
       <manager>
           <username>Username</username>
           <password>Password</password>
       </manager>
       ```
+    
     - ```json
       {
           "username": "Username",
           "password": "Password"
+      }
+      ```
+  
+  - Response:
+    
+    - ```xml
+      <authResponse>
+          <token>tokenPart1.tokenPart2.tokenPart3</token>
+      </authResponse>
+      ```
+    
+    - ```json
+      {
+        "token": "tokenPart1.tokenPart2.tokenPart3"
       }
       ```
 

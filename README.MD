@@ -1,4 +1,4 @@
-# M1-AIWS-Project - Information Provider on Cinema (I2S)
+# M1-AIWS-Project - Information Provider on Cinema
 
 ## Table of contents
 
