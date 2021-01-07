@@ -98,7 +98,8 @@ viewHeader : Element msg
 viewHeader =
     row [ spacing 20 ]
         [ viewHeaderLinks { url = Route.toString Route.Top, label = text "Home" }
-        , viewHeaderLinks { url = Route.toString Route.NotFound, label = text "Not found" }
+        , viewHeaderLinks { url = Route.toString Route.Top, label = text "Cities" }
+        , viewHeaderLinks { url = Route.toString Route.Movies, label = text "Movies" }
         ]
 
 viewHeaderLinks : { url : String, label : Element msg } -> Element msg

@@ -1,5 +1,6 @@
 module Pages.Movies exposing (Params, Model, Msg, page)
 
+import Element.Font as Font
 import Shared
 import Spa.Document exposing (Document)
 import Spa.Page as Page exposing (Page)
@@ -81,23 +82,52 @@ updateSuccess movies model =
 movieToUrlInfo : Movie -> UrlInfo
 movieToUrlInfo movie =
     { url = Route.toString <| Route.Movies__IdMovie_Int__Cities { idMovie = movie.id }
-    , label = movieToElement movie
+    , label = column [ height fill, width fill]
+        [   movieTitle movie
+        ,   movieSubTitle movie
+        ,   movieActors movie
+        ]
     }
 
-movieToElement : Movie -> Element msg
-movieToElement movie =
-    text <|
-        "id: " ++ String.fromInt movie.id ++
-        "\nduration: " ++ movie.duration ++
-        "\ndirection: " ++ movie.direction ++
-        "\nminimumAge: " ++ String.fromInt movie.minimumAge ++
-        "\ntitle: " ++ movie.title ++
-        "\nactors: " ++ (List.foldl (++) "" <| List.map actorToString movie.actors)
+movieTitle : Movie -> Element msg
+movieTitle movie =
+   row [width fill] [
+    link [ width fill, Font.center, Font.bold]
+              { url = ""
+              , label = text ""
+              },
+    link [ width fill, Font.center, Font.bold]
+           { url = ""
+           , label = text (String.toUpper movie.title)
+           },
+    link [ width fill, Font.alignRight, Font.color cgBlue]
+               { url = ""
+               , label = text ("+" ++ (String.fromInt movie.minimumAge))
+               }
+   ]
+
+movieSubTitle : Movie -> Element msg
+movieSubTitle movie =
+     link [ width fill, Font.center, Font.italic, Font.color grey]
+            { url = ""
+            , label = text <|
+                                "\n" ++ movie.duration ++
+                                " | " ++ movie.direction
+            }
+
+
+movieActors : Movie -> Element msg
+movieActors movie =
+     link [ width fill, Font.center, Font.color orange]
+            { url = ""
+            , label = text <|
+                              (List.foldl (++) "" <| List.map actorToString movie.actors)
+            }
+
 
 actorToString : Actor -> String
 actorToString actor =
-    "id: " ++ String.fromInt actor.id ++
-    "\nname: " ++ actor.name
+    "\n" ++ actor.name
 
 httpErrorToString : Http.Error -> String
 httpErrorToString error =
@@ -189,3 +219,19 @@ actorDecoder =
     Decode.succeed Actor
         |> required "id" Decode.int
         |> required "value" Decode.string
+
+grey : Color
+grey =
+    rgb255 240 235 216
+
+shadowBlue : Color
+shadowBlue =
+    rgb255 116 140 171
+
+orange : Color
+orange =
+    rgb255 255 130 0
+
+cgBlue : Color
+cgBlue =
+    rgb255 173 241 210
