@@ -87,3 +87,5 @@ TO COMPLETE
 - `/rest/cities/{idCity}/theaters` Actions related to theaters in a city
 
 - `/rest/cities/{idCity}/theaters/{idTheater}` Actions related to a theater in a city
+
+- `/rest/auth` Actions related to authentication

@@ -46,6 +46,7 @@ public class MovieResource {
     }
 
     @DELETE
+    @Secured
     public Response deleteMovie() {
         Movie m = movieDAO.selectID(id);
 

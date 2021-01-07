@@ -74,7 +74,6 @@ public class CityResource {
     }
 
     @PUT
-    @Secured
     @Consumes(MediaType.APPLICATION_XML)
     public Response putCity(JAXBElement<City> city) {
         return putAndGetResponse(city.getValue());
