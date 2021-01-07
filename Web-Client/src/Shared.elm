@@ -77,17 +77,6 @@ view { page, toMsg } model =
     , body =
         [ column [ padding 20, spacing 50, height fill, width fill]
             [ viewHeader
-            , image
-                  [ centerX
-                  , centerY
-                  , width
-                        (fill
-                            |> maximum 200
-                        )
-                  ]
-                  { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F660%2F143%2Foriginal%2Fvector-movie-theater-icons.jpg&f=1&nofb=1"
-                  , description = "logo"
-                  }
             , column [ height fill, width fill, spacing 10 ] <| List.map (mapBodyLinks toMsg) model.body
             ]
         ]
@@ -97,7 +86,7 @@ viewHeader : Element msg
 viewHeader =
     row [ spacing 20 ]
         [ viewHeaderLinks { url = Route.toString Route.Top, label = text "Home" }
-        , viewHeaderLinks { url = Route.toString Route.Top, label = text "Cities" }
+        , viewHeaderLinks { url = Route.toString Route.Cities, label = text "Cities" }
         , viewHeaderLinks { url = Route.toString Route.Movies, label = text "Movies" }
         ]
 

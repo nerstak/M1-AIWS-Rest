@@ -83,7 +83,21 @@ movieToUrlInfo : Movie -> UrlInfo
 movieToUrlInfo movie =
     { url = Route.toString <| Route.Movies__IdMovie_Int__Cities { idMovie = movie.id }
     , label = column [ height fill, width fill]
-        [   movieTitle movie
+        [
+          image
+          [ centerX
+          , centerY
+          , spacing 10
+          , width
+                (fill
+                    |> maximum 200
+                )
+          ]
+          { src = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fdesignbolts%2Ffree-multimedia%2F1024%2FFilm-icon.png&f=1&nofb=1"
+          , description = "logo"
+          }
+        , el [] <| text "\n"
+        ,   movieTitle movie
         ,   movieSubTitle movie
         ,   movieActors movie
         ]
@@ -91,19 +105,10 @@ movieToUrlInfo movie =
 
 movieTitle : Movie -> Element msg
 movieTitle movie =
-   row [width fill] [
-    link [ width fill, Font.center, Font.bold]
-              { url = ""
-              , label = text ""
-              },
-    link [ width fill, Font.center, Font.bold]
-           { url = ""
-           , label = text (String.toUpper movie.title)
-           },
-    link [ width fill, Font.alignRight, Font.color cgBlue]
-               { url = ""
-               , label = text ("+" ++ (String.fromInt movie.minimumAge))
-               }
+   row [width fill]
+   [    el [ width fill, Font.center, Font.bold] <| text ""
+   ,    el [ width fill, Font.center, Font.bold] <| text (String.toUpper movie.title)
+   ,    el [ width fill, Font.center, Font.bold] <| text ("+" ++ (String.fromInt movie.minimumAge))
    ]
 
 movieSubTitle : Movie -> Element msg
@@ -131,7 +136,7 @@ actorToString actor =
 
 httpErrorToString : Http.Error -> String
 httpErrorToString error =
-    (case error of
+    case error of
         Http.BadUrl _ ->
             "The provided url is not valid"
         Http.Timeout ->
@@ -141,8 +146,7 @@ httpErrorToString error =
         Http.BadStatus code ->
             "Error " ++ (String.fromInt code) ++ " - An error occured"
         Http.BadBody info ->
-            "The body of the response was not valid: \n" ++ info)
-    ++ "\nClick to retry!"
+            "The body of the response was not valid: \n" ++ info
 
 save : Model -> Shared.Model -> Shared.Model
 save model shared =
