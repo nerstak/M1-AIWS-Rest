@@ -94,8 +94,8 @@ public class TheaterResource {
         return res;
     }
 
-
-    @Path("/schedules")
+    /*
+    @Path("schedules")
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getSchedules() {
@@ -103,6 +103,16 @@ public class TheaterResource {
         if(movie != null) {
             md = movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
             return Response.ok().entity(md).build();
+        } else {
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
+        }
+    }*/
+
+
+    @Path("schedules")
+    public SchedulesResource getSchedules() {
+        if(movie != null) {
+            return new SchedulesResource(uriInfo, request, idTheater, movie.getIdMovie());
         } else {
             throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         }

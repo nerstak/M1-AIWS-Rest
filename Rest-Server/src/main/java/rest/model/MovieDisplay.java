@@ -19,6 +19,7 @@ public class MovieDisplay implements Serializable {
     private String startDate;
     private String endDate;
 
+    //TODO delete this?
     @XmlElementWrapper(name = "schedules")
     @XmlElement(name = "schedule")
     private List<Schedule> schedules = new ArrayList<>();
