@@ -3,15 +3,15 @@ package rest.resources;
 import rest.dao.ScheduleDAO;
 import rest.model.Manager;
 import rest.model.Schedule;
-import rest.model.Theater;
-import rest.model.TheaterWithManager;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
 import rest.utils.WebException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
-import java.util.List;
 
 import static rest.utils.Constants.ERROR_DELETE;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
@@ -29,7 +29,7 @@ public class ScheduleResource {
 
     private static final ScheduleDAO scheduleDAO = new ScheduleDAO();
 
-    public ScheduleResource(){};
+    public ScheduleResource(){}
 
     public ScheduleResource(UriInfo uriInfo, Request request, int idTheater, int idMovie, int idSchedule) {
         this.uriInfo = uriInfo;

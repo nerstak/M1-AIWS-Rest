@@ -1,6 +1,5 @@
 package rest.dao;
 
-import rest.model.Movie;
 import rest.model.Theater;
 import rest.utils.Constants;
 
@@ -46,11 +45,6 @@ public class TheaterDAO extends DaoModel implements Dao<Theater> {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return false;
-    }
-
-    @Override
-    public boolean update(Theater theater) {
         return false;
     }
 

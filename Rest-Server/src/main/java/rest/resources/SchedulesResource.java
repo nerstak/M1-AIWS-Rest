@@ -28,7 +28,7 @@ public class SchedulesResource {
     private static final ScheduleDAO scheduleDAO = new ScheduleDAO();
     private static final MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
 
-    public SchedulesResource(){};
+    public SchedulesResource(){}
 
     public SchedulesResource(UriInfo uriInfo, Request request, int idTheater, int idMovie) {
         this.uriInfo = uriInfo;

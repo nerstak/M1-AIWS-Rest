@@ -59,11 +59,6 @@ public class MovieDAO extends DaoModel implements Dao<Movie> {
     }
 
     @Override
-    public boolean update(Movie movie) {
-        return false;
-    }
-
-    @Override
     public Movie selectID(int id) {
         try {
             // Query

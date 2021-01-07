@@ -27,8 +27,8 @@ public class TheatersResource {
     private Movie movie;
 
 
-    private static TheaterDAO theaterDAO = new TheaterDAO();
-    private static ManagerDAO managerDAO = new ManagerDAO();
+    private static final TheaterDAO theaterDAO = new TheaterDAO();
+    private static final ManagerDAO managerDAO = new ManagerDAO();
 
     public TheatersResource() {
     }
@@ -43,7 +43,7 @@ public class TheatersResource {
         this.uriInfo = uriInfo;
         this.request = request;
         this.idCity = idCity;
-        this.movie = new MovieDAO().selectID(idMovie);;
+        this.movie = new MovieDAO().selectID(idMovie);
     }
 
     private List<Theater> selectAll(int idCity) {

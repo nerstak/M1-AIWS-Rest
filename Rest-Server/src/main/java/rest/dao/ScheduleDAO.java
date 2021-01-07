@@ -73,11 +73,6 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
     }
 
     @Override
-    public boolean update(Schedule schedule) {
-        return false;
-    }
-
-    @Override
     public List<Schedule> selectAll() {
         return null;
     }

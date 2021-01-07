@@ -50,11 +50,6 @@ public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
     }
 
     @Override
-    public boolean update(MovieDisplay movieDisplaying) {
-        return false;
-    }
-
-    @Override
     public List<MovieDisplay> selectAll() {
         return null;
     }

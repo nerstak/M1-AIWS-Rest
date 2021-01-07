@@ -1,7 +1,10 @@
 package rest.resources;
 
-import rest.dao.*;
-import rest.model.*;
+import rest.dao.MovieDAO;
+import rest.dao.TheaterDAO;
+import rest.model.Manager;
+import rest.model.Movie;
+import rest.model.Theater;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
 import rest.utils.WebException;
@@ -25,7 +28,7 @@ public class TheaterResource {
     private int idTheater;
     private Movie movie;
 
-    private static TheaterDAO theaterDAO = new TheaterDAO();
+    private static final TheaterDAO theaterDAO = new TheaterDAO();
 
 
     public TheaterResource() {

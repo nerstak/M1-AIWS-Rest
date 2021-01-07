@@ -2,7 +2,6 @@ package rest.model;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,7 +22,7 @@ public class Schedule implements Serializable {
 
 
 
-    private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public Schedule() {
     }

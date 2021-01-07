@@ -1,8 +1,6 @@
 package rest.providers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import rest.model.utils.AppException;
 import rest.utils.WebException;
 
 import javax.ws.rs.core.Response;

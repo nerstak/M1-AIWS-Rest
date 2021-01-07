@@ -20,7 +20,7 @@ public class MovieDisplay implements Serializable {
     private String endDate;
 
     @XmlTransient
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
     public MovieDisplay() {}

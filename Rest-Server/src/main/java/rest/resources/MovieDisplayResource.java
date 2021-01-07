@@ -4,7 +4,6 @@ import rest.dao.MovieDisplayDAO;
 import rest.dao.ScheduleDAO;
 import rest.model.Manager;
 import rest.model.MovieDisplay;
-import rest.model.Schedule;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
 import rest.utils.WebException;
@@ -13,17 +12,16 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import static rest.utils.Constants.*;
-import static rest.utils.Constants.ERROR_POST;
 
 public class MovieDisplayResource {
     @Context
-    private UriInfo uriInfo;
+    private final UriInfo uriInfo;
     @Context
-    private Request request;
-    private int idMovie;
-    private int idTheater;
+    private final Request request;
+    private final int idMovie;
+    private final int idTheater;
 
-    private static MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
+    private static final MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
     private static final ScheduleDAO scheduleDAO = new ScheduleDAO();
 
 

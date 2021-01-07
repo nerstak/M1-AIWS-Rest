@@ -5,7 +5,10 @@ import rest.model.Movie;
 import rest.resources.filter.Secured;
 import rest.utils.WebException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 
 import static rest.utils.Constants.ERROR_NOT_FOUND;
