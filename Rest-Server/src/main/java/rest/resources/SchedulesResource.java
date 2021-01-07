@@ -53,7 +53,7 @@ public class SchedulesResource {
         try {
             int id = Integer.parseInt(idString);
             if(scheduleDAO.selectID(id) != null) {
-                return new ScheduleResource(uriInfo, request,idMovie,idTheater, id);
+                return new ScheduleResource(uriInfo, request,idTheater,idMovie, id);
             }
         } catch (NumberFormatException ignored) { }
         throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
