@@ -19,7 +19,8 @@ public abstract class DaoModel {
     private Properties properties;
     private InputStream input;
 
-    private String dbUrl = "jdbc:postgresql://localhost:5432/aiws_db";
+    //private String dbUrl = "jdbc:postgresql://localhost:5432/aiws_db";
+    private String dbUrl = "jdbc:postgresql://wildfly-postgres:5432/aiws_db";
     private String dbUser = "admin_rest";
     private String dbPwd = "admin_rest";
 
