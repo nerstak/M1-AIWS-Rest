@@ -77,6 +77,7 @@ view { page, toMsg } model =
     , body =
         [ column [ padding 20, spacing 50, height fill, width fill]
             [ viewHeader
+            , column [ height fill, width fill] page.body
             , column [ height fill, width fill, spacing 10 ] <| List.map (mapBodyLinks toMsg) model.body
             ]
         ]
