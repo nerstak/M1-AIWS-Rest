@@ -38,7 +38,8 @@ type alias Model =
     { idMovie : Int
     , idCity : Int
     , idTheater : Int
-    , body : List UrlInfo
+    , display : List UrlInfo
+    , schedules : List UrlInfo
     }
 
 type alias UrlInfo =
@@ -52,9 +53,13 @@ init shared { params } =
         { idMovie = params.idMovie
         , idCity = params.idCity
         , idTheater = params.idTheater
-        , body = [] 
+        , display = []
+        , schedules = [] 
         }
-    , getSchedules params.idMovie params.idCity params.idTheater
+    , Cmd.batch
+        [ getSchedules params.idMovie params.idCity params.idTheater
+        , getDisplay params.idMovie params.idCity params.idTheater
+        ]
     )
 
 
@@ -64,6 +69,7 @@ init shared { params } =
 
 type Msg
     = GotSchedules (WebData Schedules)
+    | GotDisplay (WebData Display)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -71,20 +77,24 @@ update msg model =
     case msg of
         GotSchedules data ->
             updateGotSchedules data model
+        GotDisplay data ->
+            updateGotDisplay data model
+
+-- updateGotSchedules
 
 updateGotSchedules : WebData Schedules -> Model -> ( Model, Cmd Msg )
 updateGotSchedules data model =
     case data of
         Success schedules ->
-            updateSuccess schedules model
+            updateSuccessGotSchedules schedules model
         Failure error ->
-            updateFailure error model
+            updateFailureGotSchedules error model
         _ ->
             (model, Cmd.none)
 
-updateSuccess : Schedules -> Model -> ( Model, Cmd Msg )
-updateSuccess schedules model =
-    ( { model | body = List.map (scheduleToUrlInfo model.idMovie model.idCity model.idTheater) schedules.schedules}, Cmd.none )
+updateSuccessGotSchedules : Schedules -> Model -> ( Model, Cmd Msg )
+updateSuccessGotSchedules schedules model =
+    ( { model | schedules = List.map (scheduleToUrlInfo model.idMovie model.idCity model.idTheater) schedules}, Cmd.none )
 
 scheduleToUrlInfo : Int -> Int -> Int -> Schedule -> UrlInfo
 scheduleToUrlInfo idMovie idCity idTheater schedule =
@@ -119,9 +129,9 @@ schedulesDayOfWeek : Schedule -> Element msg
 schedulesDayOfWeek schedule =
     el [width fill, Font.center] <| text (String.toUpper schedule.dayOfWeek)
 
-updateFailure : Http.Error -> Model -> ( Model, Cmd Msg )
-updateFailure error model =
-    ({ model | body =
+updateFailureGotSchedules : Http.Error -> Model -> ( Model, Cmd Msg )
+updateFailureGotSchedules error model =
+    ({ model | schedules =
         [ { url = Route.toString Route.Movies
           , label = text <| httpErrorToString error
           } ]
@@ -142,15 +152,81 @@ httpErrorToString error =
             "The body of the response was not valid: \n" ++ info)
     ++ "\nClick to retry!"
 
+-- updateGotDisplay
+
+updateGotDisplay : WebData Display -> Model -> ( Model, Cmd Msg )
+updateGotDisplay data model =
+    case data of
+        Success display ->
+            updateSuccessGotDisplay display model
+        Failure error ->
+            updateFailureGotDisplay error model
+        _ ->
+            (model, Cmd.none)
+
+updateSuccessGotDisplay : Display -> Model -> ( Model, Cmd Msg )
+updateSuccessGotDisplay display model =
+    ( { model | display = [ displayToUrlInfo model.idMovie model.idCity model.idTheater display ] }, Cmd.none )
+
+displayToUrlInfo : Int -> Int -> Int -> Display -> UrlInfo
+displayToUrlInfo idMovie idCity idTheater display =
+    { url = Route.toString <| Route.Movies__IdMovie_Int__Cities__IdCity_Int__Theaters__IdTheater_Int__Schedule
+        { idMovie = idMovie
+        , idCity = idCity
+        , idTheater = idTheater
+        }
+    , label = column [ height fill, width fill, spacing 15]
+        [    image
+                      [ centerX
+                      , centerY
+                      , spacing 10
+                      , width
+                            (fill
+                                |> maximum 200
+                            )
+                      ]
+                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F1310%2FPNG%2F512%2Fcity_86340.png&f=1&nofb=1"
+                      , description = "logo"
+                      }
+        ,   displayLanguage display
+        ,   displayStartDate display
+        ,   displayEndDate display
+        ]
+    }
+
+displayLanguage : Display -> Element msg
+displayLanguage display =
+    el [width fill, Font.center] <| text (String.toUpper display.language)
+
+displayStartDate : Display -> Element msg
+displayStartDate display =
+    el [width fill, Font.center] <| text (String.toUpper display.startDate)
+
+displayEndDate : Display -> Element msg
+displayEndDate display =
+    el [width fill, Font.center] <| text (String.toUpper display.endDate)
+
+updateFailureGotDisplay : Http.Error -> Model -> ( Model, Cmd Msg )
+updateFailureGotDisplay error model =
+    ({ model | display =
+        [ { url = Route.toString Route.Movies
+          , label = text <| httpErrorToString error
+          } ]
+     }, Cmd.none)
+
+-- SAVE
+
 save : Model -> Shared.Model -> Shared.Model
 save model shared =
-    { shared | body = model.body }
+    { shared | body = model.display ++ model.schedules }
 
+-- LOAD
 
 load : Shared.Model -> Model -> ( Model, Cmd Msg )
 load shared model =
     ( model, Cmd.none )
 
+-- SUBSCRIPTION
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -168,6 +244,8 @@ view model =
     }
 
 -- HTTP
+
+-- getSchedules
 
 getSchedules : Int -> Int -> Int -> Cmd Msg
 getSchedules idMovie idCity idTheater =
@@ -188,33 +266,54 @@ getSchedules idMovie idCity idTheater =
         }
 
 type alias Schedules =
-    {  schedules : List Schedule
-    }
+    List Schedule
 
 
 schedulesDecoder : Decoder Schedules
 schedulesDecoder =
-    Decode.succeed Schedules
-        |> required "schedules" (Decode.list scheduleDecoder)
+    Decode.list scheduleDecoder
 
 type alias Schedule =
     { time : String
     , dayOfWeek : String
-    , idMovie : Int
-    , idTheater : Int
-    , id : Int
-    , dayOfWeekFormatted : String
-    , timeFormatted : String
     }
 
 
 scheduleDecoder : Decoder Schedule
 scheduleDecoder =
     Decode.succeed Schedule
-        |> required "language" Decode.string
+        |> required "time" Decode.string
         |> required "dayOfWeek" Decode.string
-        |> required "idMovie" Decode.int
-        |> required "idTheater" Decode.int
-        |> required "id" Decode.int
-        |> required "dayOfWeekFormatted" Decode.string
-        |> required "timeFormatted" Decode.string
+
+-- getDisplay
+
+getDisplay : Int -> Int -> Int -> Cmd Msg
+getDisplay idMovie idCity idTheater =
+    Http.request
+        { method = "GET"
+        , headers = [ Http.header "Accept" "application/json"]
+        , url = "http://localhost:8080/Project/rest/movies/"
+            ++ String.fromInt idMovie
+            ++ "/cities/"
+            ++ String.fromInt idCity
+            ++ "/theaters/"
+            ++ String.fromInt idTheater
+            ++ "/display"
+        , body = Http.emptyBody
+        , expect = Http.expectJson (RemoteData.fromResult >> GotDisplay) displayDecoder
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+type alias Display =
+    { language : String
+    , startDate : String
+    , endDate : String
+    }
+
+displayDecoder : Decoder Display
+displayDecoder =
+    Decode.succeed Display
+        |> required "language" Decode.string
+        |> required "startDate" Decode.string
+        |> required "endDate" Decode.string
