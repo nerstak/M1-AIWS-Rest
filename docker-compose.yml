@@ -1,0 +1,39 @@
+services:
+  wildfly:
+    image: jboss/wildfly:21.0.0.Final.Postgres
+    build: ./wildfly
+    networks:
+      - wildfly
+    restart: always
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    environment:
+      DB_HOST: wildfly-postgres
+      DB_NAME: aiws_db
+      DB_USER: admin_rest
+      DB_PASS: admin_rest
+      DS_NAME: Project
+      JNDI_NAME: java:jboss/datasources/Project
+    volumes:
+      - ./Rest-Server/target/Rest-Server-1.0-SNAPSHOT.war:/opt/jboss/wildfly/standalone/deployments/Project.war
+
+    depends_on:
+      - wildfly-postgres
+
+  wildfly-postgres:
+    image: postgres:13
+    networks:
+      - wildfly
+    restart: always
+    volumes:
+        - ./database/wildfly-postgres/data:/var/lib/postgresql/data
+        - ./database/scripts/Rest_DB.sql:/docker-entrypoint-initdb.d/1.Rest_DB.sql
+        - ./database/scripts/Populate.sql:/docker-entrypoint-initdb.d/2.Populate.sql
+    environment:
+        POSTGRES_DB: aiws_db
+        POSTGRES_USER: admin_rest
+        POSTGRES_PASSWORD: admin_rest
+
+networks:
+  wildfly:
