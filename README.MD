@@ -1,4 +1,4 @@
-# M1-AIWS-Project - Information Provider on Cinema
+# M1-AIWS-Project - Information provider on Cinemas
 
 ## Table of contents
 
@@ -8,9 +8,7 @@
 
 - [Installation](#Installation)
 
-- [Tests](#Tests)
-
-- [Use of the website](#use_of_the_website)
+- [Endpoints](#Endpoints)
 
 ## Informations
 
