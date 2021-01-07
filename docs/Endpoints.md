@@ -302,7 +302,7 @@
           <schedules>
               <schedule>
                   <time>HH:mm:SS</time>
-                  <dayOfWeek>MONDAY</dayOfWeek>
+                  <dayOfWeek>Day of week</dayOfWeek>
               </schedule>
           </schedules>
       </display>
@@ -361,4 +361,14 @@
       }
       ```
 
- 
+## Error
+
+Errors will either return a classic webpage, or a json object:
+
+```json
+{
+    "statusCode": Code,
+    "reason": "Reason of error",
+    "details": "Details on error"
+}
+```
