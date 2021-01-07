@@ -23,11 +23,11 @@ public abstract class DaoModel {
     private String dbUser = "admin_rest";
     private String dbPwd = "admin_rest";
 
-    protected Connection conn;
+    protected static Connection conn;
     protected Statement stmt;
 
     public DaoModel() {
-        init();
+        if(conn == null) init();
     }
 
     /**
@@ -63,6 +63,14 @@ public abstract class DaoModel {
             //input = new FileInputStream(DB_PROPERTIES);
             properties.load(input);
         } catch (IOException e) {
+            Logger.getLogger(DaoModel.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void close() {
+        try {
+            if(conn != null) conn.close();
+        } catch (SQLException e) {
             Logger.getLogger(DaoModel.class.getName()).log(Level.SEVERE, null, e);
         }
     }
