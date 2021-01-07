@@ -112,15 +112,15 @@
       ```
     
     - ```json
-          {
-      "theater": {
-              "idCity": "ID_OF_CITY",
-              "name": "Name of new Theater"
-          },
-          "manager": {
-              "username": "Username",
-              "password": "Password"
-          }
+      {
+          "theater": {
+              "idCity": "ID_OF_CITY",
+              "name": "Name of new Theater"
+          },
+          "manager": {
+              "username": "Username",
+      "password": "Password"
+          }
       }
       ```
 
