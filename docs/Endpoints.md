@@ -366,8 +366,32 @@
           "endDate": "YYYY-MM-DD"
       }
       ```
+
 - DELETE: Authentication required
+  
   - Header: "Authorization" (Bearer JWT)
+
+- POST: Authentication required
+  
+  - Header: "Authorization" (Bearer JWT)
+  
+  - Body:
+    
+    - ```xml
+      <display>
+          <language>Langage of movie display</language>
+          <startDate>YYYY-MM-DD</startDate>
+          <endDate>YYYY-MM-DD</endDate>
+      </display>
+      ```
+    
+    - ```json
+      {
+          "language": "Langage of movie display",
+          "startDate": "YYYY-MM-DD",
+          "endDate": "YYYY-MM-DD"
+      }
+      ```
 
 ## /auth
 
