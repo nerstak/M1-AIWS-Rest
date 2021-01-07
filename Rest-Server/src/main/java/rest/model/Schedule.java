@@ -56,8 +56,8 @@ public class Schedule implements Serializable {
         return time;
     }
 
-    public Time getTimeFormatted() {
-        return new Time(Long.parseLong(time));
+    public Time getTimeFormatted() throws NumberFormatException {
+        return Time.valueOf(time);
     }
 
     public void setTime(String time) {
@@ -68,7 +68,7 @@ public class Schedule implements Serializable {
         return dayOfWeek;
     }
 
-    public int getDayOfWeekFormatted() {
+    public int getDayOfWeekFormatted() throws IllegalArgumentException {
         return DayOfWeek.valueOf(dayOfWeek).getValue();
     }
 

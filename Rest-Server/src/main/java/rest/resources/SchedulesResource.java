@@ -1,17 +1,18 @@
 package rest.resources;
 
+import rest.dao.MovieDisplayDAO;
 import rest.dao.ScheduleDAO;
+import rest.model.Manager;
 import rest.model.Schedule;
+import rest.resources.filter.Secured;
+import rest.utils.JWTToken;
 import rest.utils.WebException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 
-import static rest.utils.Constants.ERROR_NOT_FOUND;
+import static rest.utils.Constants.*;
 
 
 public class SchedulesResource {
@@ -57,5 +58,27 @@ public class SchedulesResource {
             }
         } catch (NumberFormatException ignored) { }
         throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
+    }
+
+    @POST
+    @Secured
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response putSchedule(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,Schedule schedule) {
+        Response res;
+        res = Response.noContent().build();
+
+        Manager manager = JWTToken.generateManager(JWTToken.extractToken(authorizationHeader));
+
+        // Checking that the manager is linked to the theater
+        if(schedule== null || manager == null || idTheater != manager.getIdTheater())
+            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_AUTH_REQUIRED);
+
+        schedule.setIdTheater(idTheater);
+        schedule.setIdMovie(idMovie);
+
+        if(new MovieDisplayDAO().selectID(idMovie, idTheater) == null || !scheduleDAO.insert(schedule)) {
+            throw new WebException(Response.Status.BAD_REQUEST, ERROR_PUT);
+        }
+        return res;
     }
 }

@@ -69,27 +69,4 @@ public class ScheduleResource {
         }
         return Response.status(Response.Status.OK).build();
     }
-
-
-    @PUT
-    @Secured
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response putSchedule(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,Schedule schedule) {
-        Response res;
-        res = Response.noContent().build();
-
-        Manager manager = JWTToken.generateManager(JWTToken.extractToken(authorizationHeader));
-
-        // Checking that the manager is linked to the theater
-        if(schedule== null || manager == null || idTheater != manager.getIdTheater())
-            throw new WebException(Response.Status.UNAUTHORIZED, ERROR_DELETE);
-
-        schedule.setIdTheater(idTheater);
-        schedule.setIdMovie(idMovie);
-
-        if(!scheduleDAO.insert(schedule)) {
-            throw new WebException(Response.Status.BAD_REQUEST, "Error while creating theater");
-        }
-        return res;
-    }
 }

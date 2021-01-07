@@ -10,7 +10,7 @@ import java.util.List;
 @XmlRootElement(name = "display")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MovieDisplay implements Serializable {
-    @XmlAttribute(name = "id")
+    @XmlAttribute
     private int idMovie;
     @XmlAttribute
     private int idTheater;
@@ -18,11 +18,6 @@ public class MovieDisplay implements Serializable {
 
     private String startDate;
     private String endDate;
-
-    //TODO delete this?
-    @XmlElementWrapper(name = "schedules")
-    @XmlElement(name = "schedule")
-    private List<Schedule> schedules = new ArrayList<>();
 
     @XmlTransient
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,14 +63,6 @@ public class MovieDisplay implements Serializable {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public List<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(List<Schedule> schedules) {
-        this.schedules = schedules;
     }
 
     public static DateFormat getDateFormat() {

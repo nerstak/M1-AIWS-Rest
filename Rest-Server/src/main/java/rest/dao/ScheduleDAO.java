@@ -19,7 +19,7 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
             ps.setInt(1, schedule.getIdMovie());
             ps.setInt(2, schedule.getIdTheater());
             ps.setTime(3, schedule.getTimeFormatted());
-            ps.setInt(4, schedule.getDayOfWeekFormatted()-1);
+            ps.setInt(4, schedule.getDayOfWeekFormatted());
 
             // Result
             ps.execute();
@@ -28,7 +28,7 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
                 schedule.setIdSchedule(rs.getInt(1));
                 return true;
             }
-        } catch (SQLException throwables) {
+        } catch (SQLException|IllegalArgumentException throwables) {
             throwables.printStackTrace();
         }
         return false;
@@ -97,7 +97,7 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
             ResultSet rs = ps.executeQuery();
 
             // Result
-            if(rs != null && rs.next()) {
+            while (rs != null && rs.next()) {
                 Schedule s = extractObj(rs);
                 schedules.add(s);
             }

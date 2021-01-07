@@ -51,9 +51,7 @@ public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
 
             // Result
             if(rs != null && rs.next()) {
-                MovieDisplay md = extractObj(rs);
-                md.setSchedules(new ScheduleDAO().selectAll(idMovie,idTheater));
-                return md;
+                return extractObj(rs);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
