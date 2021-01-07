@@ -38,8 +38,7 @@ init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
     ( Model url key 
         [ { url = Route.toString Route.Top, label =  text "Cities" }
-        , { url = Route.toString Route.NotFound, label = text "Movies" }
-        , { url = Route.toString Route.NotFound, label = text "Theaters" }
+        , { url = Route.toString Route.Movies, label = text "Movies" }
         ]
     , Cmd.none
     )
