@@ -104,26 +104,14 @@ scheduleToUrlInfo idMovie idCity idTheater schedule =
         , idTheater = idTheater
         }
     , label = column [ height fill, width fill, spacing 15]
-        [    image
-                      [ centerX
-                      , centerY
-                      , spacing 10
-                      , width
-                            (fill
-                                |> maximum 200
-                            )
-                      ]
-                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F1310%2FPNG%2F512%2Fcity_86340.png&f=1&nofb=1"
-                      , description = "logo"
-                      }
+        [   schedulesDayOfWeek schedule
         ,   schedulesTime schedule
-        ,   schedulesDayOfWeek schedule
         ]
     }
 
 schedulesTime : Schedule -> Element msg
 schedulesTime schedule =
-    el [width fill, Font.center] <| text (String.toUpper schedule.time)
+    el [width fill, Font.center, Font.size 15] <| text (String.toUpper schedule.time)
 
 schedulesDayOfWeek : Schedule -> Element msg
 schedulesDayOfWeek schedule =
@@ -185,26 +173,21 @@ displayToUrlInfo idMovie idCity idTheater display =
                                 |> maximum 200
                             )
                       ]
-                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F1310%2FPNG%2F512%2Fcity_86340.png&f=1&nofb=1"
+                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.searchpng.com%2Fwp-content%2Fuploads%2F2019%2F02%2FPopcorn-Clipart-PNG-Image-1024x1024.png&f=1&nofb=1"
                       , description = "logo"
                       }
+        ,   displayDate display
         ,   displayLanguage display
-        ,   displayStartDate display
-        ,   displayEndDate display
         ]
     }
 
 displayLanguage : Display -> Element msg
 displayLanguage display =
-    el [width fill, Font.center] <| text (String.toUpper display.language)
+    el [width fill, Font.center, Font.size 15] <| text (String.toUpper display.language)
 
-displayStartDate : Display -> Element msg
-displayStartDate display =
-    el [width fill, Font.center] <| text (String.toUpper display.startDate)
-
-displayEndDate : Display -> Element msg
-displayEndDate display =
-    el [width fill, Font.center] <| text (String.toUpper display.endDate)
+displayDate : Display -> Element msg
+displayDate display =
+    el [width fill, Font.center] <| text (String.toUpper (display.endDate ++ " → " ++ display.endDate))
 
 updateFailureGotDisplay : Http.Error -> Model -> ( Model, Cmd Msg )
 updateFailureGotDisplay error model =
