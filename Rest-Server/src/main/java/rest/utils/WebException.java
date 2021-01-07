@@ -11,9 +11,13 @@ import javax.ws.rs.core.Response;
  */
 public class WebException extends WebApplicationException {
     public WebException(Response.Status status, String message) {
-        super(Response.status(status)
+        super(createException(status, message));
+    }
+
+    public static Response createException(Response.Status status, String message) {
+        return Response.status(status)
                 .entity(new AppException(message, status))
                 .type(MediaType.APPLICATION_JSON)
-                .build());
+                .build();
     }
 }

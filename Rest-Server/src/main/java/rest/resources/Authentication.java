@@ -1,5 +1,6 @@
 package rest.resources;
 
+
 import rest.dao.ManagerDAO;
 import rest.model.Manager;
 import rest.model.utils.AuthResponse;
@@ -11,10 +12,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
-import javax.xml.bind.JAXBElement;
 
-import static rest.utils.Constants.*;
+import static rest.utils.Constants.ERROR_CONNECTION_ERROR;
+import static rest.utils.Constants.ERROR_NOT_FOUND;
 
+/**
+ * Authentication resource
+ */
 @Path("/auth")
 public class Authentication {
     @Context
@@ -22,24 +26,26 @@ public class Authentication {
     @Context
     private Request request;
 
-    ManagerDAO managerDAO = new ManagerDAO();
+    private static final ManagerDAO managerDAO = new ManagerDAO();
 
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
-    public Response authenticate(JAXBElement<Manager> m) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response authenticate(Manager manager) {
         AuthResponse res = new AuthResponse();
-        Manager mDB = managerDAO.selectUsername(m.getValue().getUsername());
+
+        Manager mDB = managerDAO.selectUsername(manager.getUsername());
 
         if(mDB == null) {
             throw new WebException(Response.Status.UNAUTHORIZED, ERROR_NOT_FOUND);
         }
 
-        if(mDB.getPassword().equals(m.getValue().getPassword())) {
+        if(mDB.getPassword().equals(manager.getPassword())) {
             res.setToken(JWTToken.create(mDB.getIdManager(), mDB.getUsername()));
             return Response.ok().entity(res).build();
         } else {
             throw new WebException(Response.Status.UNAUTHORIZED, ERROR_CONNECTION_ERROR);
         }
+
     }
 }

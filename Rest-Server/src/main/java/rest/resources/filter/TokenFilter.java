@@ -66,7 +66,7 @@ public class TokenFilter implements ContainerRequestFilter {
 
     /**
      * Abort authentication
-     * @param requestContext Contet
+     * @param requestContext Context
      */
     private void abortWithUnauthorized(ContainerRequestContext requestContext) {
         // Abort the filter chain with a 401 status code response

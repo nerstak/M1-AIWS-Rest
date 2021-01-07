@@ -1,19 +1,21 @@
 package rest.resources;
 
-import rest.dao.ActorDAO;
 import rest.dao.MovieDAO;
-import rest.model.Actor;
 import rest.model.Movie;
 import rest.resources.filter.Secured;
 import rest.utils.WebException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
-import javax.xml.bind.JAXBElement;
 
 import static rest.utils.Constants.ERROR_NOT_FOUND;
-import static rest.utils.Constants.ERROR_PUT;
 
+/**
+ * Movie Resource
+ */
 public class MovieResource {
     @Context
     private UriInfo uriInfo;
@@ -22,7 +24,6 @@ public class MovieResource {
     private int id;
 
     private static final MovieDAO movieDAO = new MovieDAO();
-    private static final ActorDAO actorDAO = new ActorDAO();
 
     public MovieResource() {
     }
@@ -34,7 +35,7 @@ public class MovieResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Movie getMovie() {
         Movie m = movieDAO.selectID(id);
         if (m == null)
@@ -43,6 +44,7 @@ public class MovieResource {
     }
 
     @DELETE
+    @Secured
     public Response deleteMovie() {
         Movie m = movieDAO.selectID(id);
 
@@ -52,29 +54,6 @@ public class MovieResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.status(Response.Status.OK).build();
-    }
-
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    @Secured
-    public Response putMovie(JAXBElement<Movie> movie) {
-        return putAndGetResponse(movie.getValue());
-    }
-
-    private Response putAndGetResponse(Movie movie) {
-        Response res;
-        res = Response.noContent().build();
-
-        if(movieDAO.insert(movie)) {
-            for (Actor a: movie.getActors()) {
-                actorDAO.insert(a);
-                movieDAO.addActorToMovie(movie, a);
-            }
-        } else {
-            throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_PUT);
-        }
-
-        return res;
     }
 
     @Path("cities")

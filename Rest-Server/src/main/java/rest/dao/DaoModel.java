@@ -19,16 +19,16 @@ public abstract class DaoModel {
     private Properties properties;
     private InputStream input;
 
-    //private String dbUrl = "jdbc:postgresql://localhost:5432/aiws_db";
-    private String dbUrl = "jdbc:postgresql://wildfly-postgres:5432/aiws_db";
-    private String dbUser = "admin_rest";
-    private String dbPwd = "admin_rest";
+    //private final String dbUrl = "jdbc:postgresql://localhost:5432/aiws_db";
+    private final String dbUrl = "jdbc:postgresql://wildfly-postgres:5432/aiws_db";
+    private final String dbUser = "admin_rest";
+    private final String dbPwd = "admin_rest";
 
-    protected Connection conn;
+    protected static Connection conn;
     protected Statement stmt;
 
     public DaoModel() {
-        init();
+        if(conn == null) init();
     }
 
     /**
@@ -64,6 +64,14 @@ public abstract class DaoModel {
             //input = new FileInputStream(DB_PROPERTIES);
             properties.load(input);
         } catch (IOException e) {
+            Logger.getLogger(DaoModel.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void close() {
+        try {
+            if(conn != null) conn.close();
+        } catch (SQLException e) {
             Logger.getLogger(DaoModel.class.getName()).log(Level.SEVERE, null, e);
         }
     }

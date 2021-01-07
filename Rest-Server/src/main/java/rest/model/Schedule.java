@@ -1,27 +1,38 @@
 package rest.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 
 @XmlRootElement(name = "schedule")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Schedule implements Serializable {
+    @XmlAttribute
+    private int idSchedule;
+    private String time;
+    private String dayOfWeek;
+
     @XmlTransient
     private int idMovie;
     @XmlTransient
     private int idTheater;
 
-    private String time;
-    private String dayOfWeek;
 
-    private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    private static final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public Schedule() {
+    }
+
+    public int getId() {
+        return idSchedule;
+    }
+
+    public void setIdSchedule(int idSchedule) {
+        this.idSchedule = idSchedule;
     }
 
     public int getIdMovie() {
@@ -44,12 +55,20 @@ public class Schedule implements Serializable {
         return time;
     }
 
+    public Time getTimeFormatted() throws NumberFormatException {
+        return Time.valueOf(time);
+    }
+
     public void setTime(String time) {
         this.time = time;
     }
 
     public String getDayOfWeek() {
         return dayOfWeek;
+    }
+
+    public int getDayOfWeekFormatted() throws IllegalArgumentException {
+        return DayOfWeek.valueOf(dayOfWeek).getValue();
     }
 
     public void setDayOfWeek(String dayOfWeek) {
