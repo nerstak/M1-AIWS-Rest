@@ -3,14 +3,14 @@ package rest.model;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @XmlRootElement(name = "display")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MovieDisplay implements Serializable {
-    @XmlAttribute(name = "id")
+    @XmlAttribute
     private int idMovie;
     @XmlAttribute
     private int idTheater;
@@ -19,13 +19,8 @@ public class MovieDisplay implements Serializable {
     private String startDate;
     private String endDate;
 
-    //TODO delete this?
-    @XmlElementWrapper(name = "schedules")
-    @XmlElement(name = "schedule")
-    private List<Schedule> schedules = new ArrayList<>();
-
     @XmlTransient
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
     public MovieDisplay() {}
@@ -58,6 +53,10 @@ public class MovieDisplay implements Serializable {
         return startDate;
     }
 
+    public Date getStartDateFormatted() throws ParseException {
+        return dateFormat.parse(startDate);
+    }
+
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
@@ -66,16 +65,12 @@ public class MovieDisplay implements Serializable {
         return endDate;
     }
 
+    public Date getEndDateFormatted() throws ParseException {
+        return dateFormat.parse(endDate);
+    }
+
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public List<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(List<Schedule> schedules) {
-        this.schedules = schedules;
     }
 
     public static DateFormat getDateFormat() {

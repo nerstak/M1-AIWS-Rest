@@ -1,14 +1,16 @@
 package rest.resources;
 
-import rest.dao.*;
-import rest.model.*;
+import rest.dao.MovieDAO;
+import rest.dao.TheaterDAO;
+import rest.model.Manager;
+import rest.model.Movie;
+import rest.model.Theater;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
 import rest.utils.WebException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.xml.bind.JAXBElement;
 
 import static rest.utils.Constants.ERROR_DELETE;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
@@ -26,9 +28,8 @@ public class TheaterResource {
     private int idTheater;
     private Movie movie;
 
-    private static TheaterDAO theaterDAO = new TheaterDAO();
-    private static ManagerDAO managerDAO = new ManagerDAO();
-    private static MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
+    private static final TheaterDAO theaterDAO = new TheaterDAO();
+
 
     public TheaterResource() {
     }
@@ -77,42 +78,19 @@ public class TheaterResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    @PUT
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response putTheater(TheaterWithManager theaterWithManager) {
-        Response res;
-        res = Response.noContent().build();
-
-        // Inserting theater
-        if(theaterDAO.insert(theaterWithManager.getTheater())) {
-            // Inserting manager if theater insertion was successful
-            theaterWithManager.getManager().setIdTheater(theaterWithManager.getTheater().getId());
-            managerDAO.insert(theaterWithManager.getManager());
-        } else {
-            throw new WebException(Response.Status.BAD_REQUEST, "Error while creating theater");
-        }
-        return res;
-    }
-
-    /*
-    @Path("schedules")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getSchedules() {
-        MovieDisplay md;
-        if(movie != null) {
-            md = movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
-            return Response.ok().entity(md).build();
-        } else {
-            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
-        }
-    }*/
-
-
     @Path("schedules")
     public SchedulesResource getSchedules() {
         if(movie != null) {
             return new SchedulesResource(uriInfo, request, idTheater, movie.getIdMovie());
+        } else {
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
+        }
+    }
+
+    @Path("display")
+    public MovieDisplayResource getMovieDisplay() {
+        if(movie != null) {
+            return new MovieDisplayResource(uriInfo, request, idTheater, movie.getIdMovie());
         } else {
             throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         }

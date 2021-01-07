@@ -38,11 +38,6 @@ public class ManagerDAO extends DaoModel implements Dao<Manager>{
     }
 
     @Override
-    public boolean update(Manager manager) {
-        return false;
-    }
-
-    @Override
     public List<Manager> selectAll() {
         return null;
     }

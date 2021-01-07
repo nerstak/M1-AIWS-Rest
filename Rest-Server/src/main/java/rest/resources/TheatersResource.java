@@ -1,15 +1,14 @@
 package rest.resources;
 
+import rest.dao.ManagerDAO;
 import rest.dao.MovieDAO;
 import rest.dao.TheaterDAO;
 import rest.model.Movie;
 import rest.model.Theater;
+import rest.model.TheaterWithManager;
 import rest.utils.WebException;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 
@@ -28,7 +27,8 @@ public class TheatersResource {
     private Movie movie;
 
 
-    private static TheaterDAO theaterDAO = new TheaterDAO();
+    private static final TheaterDAO theaterDAO = new TheaterDAO();
+    private static final ManagerDAO managerDAO = new ManagerDAO();
 
     public TheatersResource() {
     }
@@ -43,7 +43,7 @@ public class TheatersResource {
         this.uriInfo = uriInfo;
         this.request = request;
         this.idCity = idCity;
-        this.movie = new MovieDAO().selectID(idMovie);;
+        this.movie = new MovieDAO().selectID(idMovie);
     }
 
     private List<Theater> selectAll(int idCity) {
@@ -80,5 +80,22 @@ public class TheatersResource {
         } catch (NumberFormatException ignored) {}
 
         throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
+    }
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response postTheater(TheaterWithManager theaterWithManager) {
+        Response res;
+        res = Response.noContent().build();
+
+        // Inserting theater
+        if(theaterDAO.insert(theaterWithManager.getTheater())) {
+            // Inserting manager if theater insertion was successful
+            theaterWithManager.getManager().setIdTheater(theaterWithManager.getTheater().getId());
+            managerDAO.insert(theaterWithManager.getManager());
+        } else {
+            throw new WebException(Response.Status.BAD_REQUEST, "Error while creating theater");
+        }
+        return res;
     }
 }

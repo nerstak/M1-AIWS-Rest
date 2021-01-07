@@ -50,11 +50,6 @@ public class CityDAO extends DaoModel implements Dao<City> {
     }
 
     @Override
-    public boolean update(City city) {
-        return false;
-    }
-
-    @Override
     public List<City> selectAll() {
         List<City> cities = new ArrayList<>();
 

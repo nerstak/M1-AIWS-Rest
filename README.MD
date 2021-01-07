@@ -78,6 +78,8 @@ TO COMPLETE
 
 - `/rest/movies/{idMovie}/cities/{idCity}/theaters/{idTheater}/schedules/{idSchedule}` Actions related to a schedule of a theater in a city playing a movie
 
+- `/rest/movies/{idMovie}/cities/{idCity}/theaters/{idTheater}/display` Actions related to global informations of a theater in a city playing a movie
+
 - `/rest/cities` Actions related to cities
 
 - `/rest/cities/{idCity}` Actions related to a city

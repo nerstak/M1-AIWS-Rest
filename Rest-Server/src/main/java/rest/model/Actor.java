@@ -15,11 +15,6 @@ public class Actor implements Serializable {
     public Actor() {
     }
 
-    public Actor(String name, int idActor) {
-        this.name = name;
-        this.idActor = idActor;
-    }
-
     public String getName() {
         return name;
     }

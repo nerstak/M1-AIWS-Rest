@@ -45,11 +45,6 @@ public class ActorDAO extends DaoModel implements Dao<Actor> {
     }
 
     @Override
-    public boolean update(Actor actor) {
-        return false;
-    }
-
-    @Override
     public List<Actor> selectAll() {
         return null;
     }

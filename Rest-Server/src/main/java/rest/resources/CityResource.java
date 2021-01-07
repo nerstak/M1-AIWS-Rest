@@ -7,11 +7,14 @@ import rest.model.Movie;
 import rest.resources.filter.Secured;
 import rest.utils.WebException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
-import javax.xml.bind.JAXBElement;
 
-import static rest.utils.Constants.*;
+import static rest.utils.Constants.ERROR_DELETE;
+import static rest.utils.Constants.ERROR_NOT_FOUND;
 
 /**
  * City Resource
@@ -71,18 +74,6 @@ public class CityResource {
             throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_DELETE);
         }
         return Response.ok().build();
-    }
-
-    @PUT
-    @Secured
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response putCity(City city) {
-        Response res;
-        res = Response.ok().build();
-
-        if(!cityDAO.insert(city)) throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_PUT);
-
-        return res;
     }
 
     @Path("theaters")

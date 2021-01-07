@@ -41,7 +41,7 @@
       ]
       ```
 
-- POST: Authencation required
+- POST: Authentication required
   
   - Header: "Authorization" (Bearer JWT)
   
@@ -109,7 +109,7 @@
       }
       ```
       
-      - DELETE: Authencation required
+      - DELETE: Authentication required
   
   - Header: "Authorization" (Bearer JWT)
 
@@ -199,7 +199,7 @@
               }]
        }
       ```
-- DELETE: Authencation required
+- DELETE: Authentication required
   - Header: "Authorization" (Bearer JWT)
 
 ## /cities/{idCity}/theaters
@@ -269,12 +269,15 @@
 **Methods**:
 
 - GET: Public
+  
   - Reponse:
+    
     - ```xml
       <theater id="ID_OF_THEATER" idCity="ID_OF_CITY">
           <name>Name of theater</name>
       </theater>
       ```
+    
     - ```json
       {
           "id":ID_OF_THEATER,
@@ -282,8 +285,9 @@
           "idCity": ID_OF_CITY
       }
       ```
-      
-      - DELETE: Authencation required
+
+- DELETE: Authentication required
+  
   - Header: "Authorization" (Bearer JWT)
 
 ## /movies/{idMovie}/cities/{idCity}/theaters/{idTheater}/schedules
@@ -295,31 +299,97 @@
 - GET: Public
   - Response
     - ```xml
-      <display id="ID_OF_MOVIE" idTheater="ID_OF_THEATER">
-          <language>Langage of movie</language>
+      <schedules>
+          <schedule>
+          <time>HH:mm:SS</time>
+          <dayOfWeek>Day of week</dayOfWeek>
+          </schedule>
+      </schedules>
+      ```
+    - ```json
+      [
+          {
+              "idSchedule": ID_OF_SCHEDULE,
+              "time": "HH:mm:SS",
+              "dayOfWeek": "Day of week"
+          }
+      ]
+      ```
+
+## /movies/{idMovie}/cities/{idCity}/theaters/{idTheater}/schedules/{idSchedule}
+
+**Produces:** XML or JSON of informations on a schedule
+
+**Methods**:
+
+- GET: Public
+  
+  - Response
+    
+    - ```xml
+      <schedule>
+          <time>HH:mm:SS</time>
+          <dayOfWeek>Day of week</dayOfWeek>
+      </schedule>
+      ```
+    
+    - ```json
+      {
+          "idSchedule": ID_OF_SCHEDULE,
+          "time": "HH:mm:SS",
+          "dayOfWeek": "Day of week"
+      }
+      ```
+
+## /movies/{idMovie}/cities/{idCity}/theaters/{idTheater}/display
+
+**Produces:** XML or JSON of informations on a display
+
+**Methods**:
+
+- GET: Public
+  
+  - Response
+    - ```xml
+      <display idMovie="ID_OF_MOVIE" idTheater="ID_OF_THEATER">
+          <language>Langage of movie display</language>
           <startDate>YYYY-MM-DD</startDate>
           <endDate>YYYY-MM-DD</endDate>
-          <schedules>
-              <schedule>
-                  <time>HH:mm:SS</time>
-                  <dayOfWeek>Day of week</dayOfWeek>
-              </schedule>
-          </schedules>
       </display>
       ```
     - ```json
       {
+          "idMovie": ID_OF_MOVIE,
           "idTheater": ID_OF_THEATER,
-          "language": "Langage of movie",
+          "language": "Langage of movie display",
           "startDate": "YYYY-MM-DD",
-          "endDate": "YYYY-MM-DD",
-          "id": ID_OF_MOVIE,
-          "schedule": [
-              {
-                  "time": "HH:mm:SS",
-                  "dayOfWeek": "Day of week"
-              }
-          ]
+          "endDate": "YYYY-MM-DD"
+      }
+      ```
+
+- DELETE: Authentication required
+  
+  - Header: "Authorization" (Bearer JWT)
+
+- POST: Authentication required
+  
+  - Header: "Authorization" (Bearer JWT)
+  
+  - Body:
+    
+    - ```xml
+      <display>
+          <language>Langage of movie display</language>
+          <startDate>YYYY-MM-DD</startDate>
+          <endDate>YYYY-MM-DD</endDate>
+      </display>
+      ```
+    
+    - ```json
+      {
+          "language": "Langage of movie display",
+          "startDate": "YYYY-MM-DD",
+          "endDate": "YYYY-MM-DD"
       }
       ```
 

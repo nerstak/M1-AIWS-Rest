@@ -12,32 +12,25 @@ public interface Dao<T> {
      * @param t New element
      * @return Assertion
      */
-    public boolean insert(T t);
+    boolean insert(T t);
 
     /**
      * Delete an element
      * @param t Element to delete
      * @return Assertion
      */
-    public boolean delete(T t);
-
-    /**
-     * Update an element
-     * @param t Element to update
-     * @return Assertion
-     */
-    public boolean update(T t);
+    boolean delete(T t);
 
     /**
      * Select all elements
      * @return List of elements
      */
-    public List<T> selectAll();
+    List<T> selectAll();
 
     /**
      * Select a single element
      * @param id Id of element
      * @return Element (may be null)
      */
-    public T selectID(int id);
+    T selectID(int id);
 }
