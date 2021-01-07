@@ -33,7 +33,7 @@
           "minimumAge": "Minimum age",
           "title": "Title of movie",
           "actors": [
-              "actor": "Actor name"
+              {"actor": "Actor name"}
           ]
       }
       ```
