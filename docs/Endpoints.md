@@ -23,6 +23,23 @@
          </movie>
       </movies>
       ```
+    - ```json
+      [
+          {
+              "idMovie":ID_OF_MOVIE,
+              "duration": "Duration of movie",
+              "direction": "Name of director",
+              "minimumAge": Minimum age,
+              "title": "Title of movie",
+              "actor": [
+                  {
+                      "value": "Actor name",
+                      "id": ID_OF_ACTOR
+                  }
+              ]
+          }
+      ]
+      ```
 
 - POST: Authencation required
   
@@ -48,8 +65,8 @@
           "duration": "Duration of movie",
           "minimumAge": "Minimum age",
           "title": "Title of movie",
-          "actors": [
-              {"actor": "Actor name"}
+          "actor": [
+              {"value": "Actor name"}
           ]
       }
       ```
@@ -61,7 +78,9 @@
 **Methods**:
 
 - GET: Public
+  
   - Response:
+    
     - ```xml
       <movie idMovie="ID_OF_MOVIE">
           <duration>Duration of movie</duration>
@@ -73,7 +92,25 @@
           </actors>
       </movie>
       ```
-- DELETE: Authencation required
+    
+    - ```json
+      {
+          "idMovie":ID_OF_MOVIE,
+          "duration": "Duration of movie",
+          "direction": "Name of director",
+          "minimumAge": Minimum age,
+          "title": "Title of movie",
+          "actor": [
+              {
+                  "value": "Actor name",
+                  "id": ID_OF_ACTOR
+              }
+          ]
+      }
+      ```
+      
+      - DELETE: Authencation required
+  
   - Header: "Authorization" (Bearer JWT)
 
 ## /cities
@@ -99,6 +136,20 @@
               </theaters>
           </city>
       </cities>
+      ```
+    - ```json
+      [
+          {
+          "idCity": 1,
+          "name": "Name of city",
+          "theater": [
+              {
+                  "id": ID_OF_THEATER,
+                  "name": "Name of theater",
+                  "idCity": ID_OF_CITY
+              }]
+          }
+      ]
       ```
 
 - POST: Public
@@ -136,6 +187,18 @@
           </theaters>  
       </city>
       ```
+    - ```json
+      {
+          "idCity": 1,
+          "name": "Name of city",
+          "theater": [
+              {
+                  "id": ID_OF_THEATER,
+                  "name": "Name of theater",
+                  "idCity": ID_OF_CITY
+              }]
+       }
+      ```
 - DELETE: Authencation required
   - Header: "Authorization" (Bearer JWT)
 
@@ -157,6 +220,15 @@
               <name>Name of theater</name>
           </theater>
       </theaters>
+      ```
+    - ```json
+      [
+          {
+              "id": ID_OF_THEATER,
+              "name": "Name of theater",
+              "idCity": ID_OF_CITY
+          }
+      ]
       ```
 
 - POST: Public
@@ -203,7 +275,15 @@
           <name>Name of theater</name>
       </theater>
       ```
-- DELETE: Authencation required
+    - ```json
+      {
+          "id":ID_OF_THEATER,
+          "name": "Name of theater",
+          "idCity": ID_OF_CITY
+      }
+      ```
+      
+      - DELETE: Authencation required
   - Header: "Authorization" (Bearer JWT)
 
 ## /movies/{idMovie}/cities/{idCity}/theaters/{idTheater}/schedules
@@ -213,6 +293,35 @@
 **Methods**:
 
 - GET: Public
+  - Response
+    - ```xml
+      <display id="ID_OF_MOVIE" idTheater="ID_OF_THEATER">
+          <language>Langage of movie</language>
+          <startDate>YYYY-MM-DD</startDate>
+          <endDate>YYYY-MM-DD</endDate>
+          <schedules>
+              <schedule>
+                  <time>HH:mm:SS</time>
+                  <dayOfWeek>MONDAY</dayOfWeek>
+              </schedule>
+          </schedules>
+      </display>
+      ```
+    - ```json
+      {
+          "idTheater": ID_OF_THEATER,
+          "language": "Langage of movie",
+          "startDate": "YYYY-MM-DD",
+          "endDate": "YYYY-MM-DD",
+          "id": ID_OF_MOVIE,
+          "schedule": [
+              {
+                  "time": "HH:mm:SS",
+                  "dayOfWeek": "Day of week"
+              }
+          ]
+      }
+      ```
 
 ## /auth
 
