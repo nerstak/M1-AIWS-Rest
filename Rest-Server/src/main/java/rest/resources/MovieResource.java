@@ -14,6 +14,9 @@ import javax.xml.bind.JAXBElement;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
 import static rest.utils.Constants.ERROR_PUT;
 
+/**
+ * Movie Resource
+ */
 public class MovieResource {
     @Context
     private UriInfo uriInfo;
@@ -34,7 +37,7 @@ public class MovieResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Movie getMovie() {
         Movie m = movieDAO.selectID(id);
         if (m == null)
@@ -43,6 +46,7 @@ public class MovieResource {
     }
 
     @DELETE
+    @Secured
     public Response deleteMovie() {
         Movie m = movieDAO.selectID(id);
 
@@ -55,13 +59,9 @@ public class MovieResource {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Secured
-    public Response putMovie(JAXBElement<Movie> movie) {
-        return putAndGetResponse(movie.getValue());
-    }
-
-    private Response putAndGetResponse(Movie movie) {
+    public Response putMovie(Movie movie) {
         Response res;
         res = Response.noContent().build();
 
@@ -73,7 +73,6 @@ public class MovieResource {
         } else {
             throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_PUT);
         }
-
         return res;
     }
 

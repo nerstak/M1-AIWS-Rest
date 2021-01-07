@@ -15,6 +15,9 @@ import java.util.List;
 
 import static rest.utils.Constants.ERROR_NOT_FOUND;
 
+/**
+ * Cities resource
+ */
 @Path("/cities")
 public class CitiesResource {
     @Context
@@ -37,7 +40,7 @@ public class CitiesResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<City> getCities() {
         return selectAll;
     }
