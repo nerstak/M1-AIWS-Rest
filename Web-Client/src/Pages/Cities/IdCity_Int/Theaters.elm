@@ -1,4 +1,4 @@
-module Pages.Cities exposing (Params, Model, Msg, page)
+module Pages.Cities.IdCity_Int.Theaters exposing (Params, Model, Msg, page)
 
 import Element.Font as Font
 import Shared
@@ -30,7 +30,7 @@ page =
 
 
 type alias Params =
-    ()
+    { idCity : Int }
 
 
 type alias Model =
@@ -44,7 +44,7 @@ type alias UrlInfo =
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
 init shared { params } =
-    ( { body = [] }, getCities )
+    ( { body = [] }, getCities params.idCity)
 
 
 
@@ -52,20 +52,20 @@ init shared { params } =
 
 
 type Msg
-    = GotCities (WebData Cities)
+    = GotTheaters (WebData Theaters)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotCities data ->
-            updateGotCities data model
+        GotTheaters data ->
+            updateGotTheaters data model
 
-updateGotCities : WebData Cities -> Model -> ( Model, Cmd Msg )
-updateGotCities data model =
+updateGotTheaters : WebData Theaters -> Model -> ( Model, Cmd Msg )
+updateGotTheaters data model =
     case data of
-        Success cities ->
-            updateSuccess cities model
+        Success theaters ->
+            updateSuccess theaters model
         Failure error ->
             ({ model | body =
                 [ { url = Route.toString Route.Cities
@@ -75,13 +75,13 @@ updateGotCities data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccess : Cities -> Model -> ( Model, Cmd Msg )
-updateSuccess cities model =
-    ( { model | body = List.map cityToUrlInfo cities }, Cmd.none )
+updateSuccess : Theaters -> Model -> ( Model, Cmd Msg )
+updateSuccess theaters model =
+    ( { model | body = List.map cityToUrlInfo theaters }, Cmd.none )
 
-cityToUrlInfo : City -> UrlInfo
-cityToUrlInfo city =
-    { url = Route.toString <| Route.Cities__IdCity_Int__Theaters { idCity = city.id }
+cityToUrlInfo : Theater -> UrlInfo
+cityToUrlInfo theater =
+    { url = Route.toString <| Route.Cities__IdCity_Int__Theaters { idCity = theater.id }
     , label = column [ height fill, width fill, spacing 15]
         [    image
                       [ centerX
@@ -92,26 +92,12 @@ cityToUrlInfo city =
                                 |> maximum 200
                             )
                       ]
-                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F1310%2FPNG%2F512%2Fcity_86340.png&f=1&nofb=1"
+                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fbubbles%2F2x%2Fcity.png&f=1&nofb=1"
                       , description = "logo"
                       }
-        ,   cityName city
-        ,   cityTheaters city
+        ,   text "bonjour"
         ]
     }
-
-cityName : City -> Element msg
-cityName city =
-    el [width fill, Font.center] <| text (String.toUpper city.name)
-
-cityTheaters : City -> Element msg
-cityTheaters city =
-     el [ width fill, Font.center, Font.color orange]
-             <| text (List.foldl (++) "" <| List.map theaterToString city.theater)
-
-theaterToString : Theater -> String
-theaterToString theater =
-    "\n" ++ theater.name
 
 httpErrorToString : Http.Error -> String
 httpErrorToString error =
@@ -148,43 +134,30 @@ subscriptions model =
 
 view : Model -> Document Msg
 view model =
-    { title = "Cities"
+    { title = "Cities.IdCity_Int.Theaters"
     , body = []
     }
 
 -- HTTP
 
-getCities : Cmd Msg
-getCities =
+getCities : Int -> Cmd Msg
+getCities idCity =
     Http.request
         { method = "GET"
         , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/cities"
+        , url = "http://localhost:8080/Project/rest/cities/" ++ String.fromInt idCity
         , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotCities) citiesDecoder
+        , expect = Http.expectJson (RemoteData.fromResult >> GotTheaters) theatersDecoder
         , timeout = Nothing
         , tracker = Nothing
         }
 
-type alias Cities =
-    List City
+type alias Theaters =
+    List Theater
 
-citiesDecoder : Decoder Cities
-citiesDecoder =
-    Decode.list cityDecoder
-
-type alias City =
-    { id : Int
-    , name : String
-    , theater : List Theater
-    }
-
-cityDecoder : Decoder City
-cityDecoder =
-    Decode.succeed City
-        |> required "idCity" Decode.int
-        |> required "name" Decode.string
-        |> required "theater" (Decode.list theaterDecoder)
+theatersDecoder : Decoder Theaters
+theatersDecoder =
+    Decode.list theaterDecoder
 
 type alias Theater =
     { id : Int
@@ -195,10 +168,6 @@ type alias Theater =
 theaterDecoder : Decoder Theater
 theaterDecoder =
     Decode.succeed Theater
-        |> required "id" Decode.int
-        |> required "name" Decode.string
         |> required "idCity" Decode.int
-
-orange : Color
-orange =
-    rgb255 255 130 0
+        |> required "name" Decode.string
+        |> required "id" Decode.int
