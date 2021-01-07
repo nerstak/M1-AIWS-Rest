@@ -67,11 +67,7 @@ updateGotMovies data model =
         Success movies ->
             updateSuccess movies model
         Failure error ->
-            ({ model | body =
-                [ { url = Route.toString Route.Movies
-                  , label = text <| httpErrorToString error
-                  } ]
-             }, Cmd.none)
+            updateFailure error model
         _ ->
             (model, Cmd.none)
         
@@ -133,6 +129,14 @@ movieActors movie =
 actorToString : Actor -> String
 actorToString actor =
     "\n" ++ actor.name
+
+updateFailure : Http.Error -> Model -> ( Model, Cmd Msg )
+updateFailure error model =
+    ({ model | body =
+        [ { url = Route.toString Route.Movies
+          , label = text <| httpErrorToString error
+          } ]
+     }, Cmd.none)
 
 httpErrorToString : Http.Error -> String
 httpErrorToString error =
