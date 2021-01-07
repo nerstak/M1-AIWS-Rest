@@ -13,9 +13,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.List;
 
-import static java.lang.Integer.parseInt;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
 
+/**
+ * Theaters Resource
+ */
 public class TheatersResource {
     @Context
     private UriInfo uriInfo;

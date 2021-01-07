@@ -15,6 +15,9 @@ import javax.xml.bind.JAXBElement;
 
 import static rest.utils.Constants.*;
 
+/**
+ * Authentication resource
+ */
 @Path("/auth")
 public class Authentication {
     @Context

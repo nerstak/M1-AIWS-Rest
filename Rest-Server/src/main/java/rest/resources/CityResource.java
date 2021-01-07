@@ -13,6 +13,9 @@ import javax.xml.bind.JAXBElement;
 
 import static rest.utils.Constants.*;
 
+/**
+ * City Resource
+ */
 public class CityResource {
     @Context
     private UriInfo uriInfo;

@@ -15,6 +15,9 @@ import java.util.List;
 
 import static rest.utils.Constants.ERROR_NOT_FOUND;
 
+/**
+ * Cities resource
+ */
 @Path("/cities")
 public class CitiesResource {
     @Context
