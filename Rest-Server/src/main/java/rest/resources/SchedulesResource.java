@@ -25,6 +25,7 @@ public class SchedulesResource {
     private int idMovie;
 
     private static final ScheduleDAO scheduleDAO = new ScheduleDAO();
+    private static final MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
 
     public SchedulesResource(){};
 
@@ -63,7 +64,7 @@ public class SchedulesResource {
     @POST
     @Secured
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response putSchedule(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,Schedule schedule) {
+    public Response postSchedule(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader,Schedule schedule) {
         Response res;
         res = Response.noContent().build();
 
@@ -76,8 +77,8 @@ public class SchedulesResource {
         schedule.setIdTheater(idTheater);
         schedule.setIdMovie(idMovie);
 
-        if(new MovieDisplayDAO().selectID(idMovie, idTheater) == null || !scheduleDAO.insert(schedule)) {
-            throw new WebException(Response.Status.BAD_REQUEST, ERROR_PUT);
+        if(movieDisplayDAO.selectID(idMovie, idTheater) == null || !scheduleDAO.insert(schedule)) {
+            throw new WebException(Response.Status.BAD_REQUEST, ERROR_POST);
         }
         return res;
     }

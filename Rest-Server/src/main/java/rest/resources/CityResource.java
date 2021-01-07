@@ -73,18 +73,6 @@ public class CityResource {
         return Response.ok().build();
     }
 
-    @PUT
-    @Secured
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response putCity(City city) {
-        Response res;
-        res = Response.ok().build();
-
-        if(!cityDAO.insert(city)) throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_PUT);
-
-        return res;
-    }
-
     @Path("theaters")
     public TheatersResource getTheaters() {
         if(movie != null) {

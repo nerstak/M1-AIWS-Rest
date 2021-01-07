@@ -8,7 +8,6 @@ import rest.utils.WebException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.xml.bind.JAXBElement;
 
 import static rest.utils.Constants.ERROR_DELETE;
 import static rest.utils.Constants.ERROR_NOT_FOUND;
@@ -76,24 +75,6 @@ public class TheaterResource {
         }
         return Response.status(Response.Status.OK).build();
     }
-
-    @PUT
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response putTheater(TheaterWithManager theaterWithManager) {
-        Response res;
-        res = Response.noContent().build();
-
-        // Inserting theater
-        if(theaterDAO.insert(theaterWithManager.getTheater())) {
-            // Inserting manager if theater insertion was successful
-            theaterWithManager.getManager().setIdTheater(theaterWithManager.getTheater().getId());
-            managerDAO.insert(theaterWithManager.getManager());
-        } else {
-            throw new WebException(Response.Status.BAD_REQUEST, "Error while creating theater");
-        }
-        return res;
-    }
-
 
     @Path("display")
     @GET
