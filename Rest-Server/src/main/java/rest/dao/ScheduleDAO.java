@@ -1,5 +1,6 @@
 package rest.dao;
 
+import rest.model.MovieDisplay;
 import rest.model.Schedule;
 import rest.utils.Constants;
 
@@ -38,8 +39,29 @@ public class ScheduleDAO extends DaoModel implements Dao<Schedule> {
     public boolean delete(Schedule schedule) {
         try {
             // Query
-            PreparedStatement ps = conn.prepareStatement(Constants.RES_THEATER_DELETE);
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_SCHEDULE_DELETE);
             ps.setInt(1, schedule.getId());
+
+            // Result
+            int r = ps.executeUpdate();
+            return r > 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Delete all schedules corresponding to movieDisplaying
+     * @param movieDisplaying Movie displaying
+     * @return Assertion
+     */
+    public boolean delete(MovieDisplay movieDisplaying) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_SCHEDULE_DISPLAY_DELETE_DISPLAY);
+            ps.setInt(1, movieDisplaying.getIdMovie());
+            ps.setInt(2, movieDisplaying.getIdTheater());
 
             // Result
             int r = ps.executeUpdate();

@@ -3,6 +3,7 @@ package rest.resources;
 import rest.dao.MovieDisplayDAO;
 import rest.dao.ScheduleDAO;
 import rest.model.Manager;
+import rest.model.MovieDisplay;
 import rest.model.Schedule;
 import rest.resources.filter.Secured;
 import rest.utils.JWTToken;
@@ -39,6 +40,10 @@ public class SchedulesResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<Schedule> getSchedules() {
+        MovieDisplay md = movieDisplayDAO.selectID(idMovie,idTheater);
+        if(md == null)
+            throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
+
         return scheduleDAO.selectAll(idMovie,idTheater);
     }
 

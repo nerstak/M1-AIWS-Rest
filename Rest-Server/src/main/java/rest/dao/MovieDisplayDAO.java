@@ -6,16 +6,46 @@ import rest.utils.Constants;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 public class MovieDisplayDAO extends DaoModel implements Dao<MovieDisplay> {
     @Override
-    public boolean insert(MovieDisplay movieDisplaying) {
+    public boolean insert(MovieDisplay movieDisplay) {
+        try {
+            // Query
+            int i = 1;
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_DISPLAY_INSERT);
+            ps.setInt(i++, movieDisplay.getIdMovie());
+            ps.setInt(i++, movieDisplay.getIdTheater());
+            ps.setString(i++, movieDisplay.getLanguage());
+            ps.setDate(i++, new java.sql.Date(movieDisplay.getStartDateFormatted().getTime()));
+            ps.setDate(i, new java.sql.Date(movieDisplay.getEndDateFormatted().getTime()));
+
+
+            ps.execute();
+
+            return true;
+        } catch (SQLException| ParseException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean delete(MovieDisplay movieDisplaying) {
+        try {
+            // Query
+            PreparedStatement ps = conn.prepareStatement(Constants.RES_MOVIE_DISPLAY_DELETE);
+            ps.setInt(1, movieDisplaying.getIdMovie());
+            ps.setInt(2, movieDisplaying.getIdTheater());
+
+            // Result
+            int r = ps.executeUpdate();
+            return r > 0;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return false;
     }
 

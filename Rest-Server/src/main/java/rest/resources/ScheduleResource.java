@@ -53,7 +53,7 @@ public class ScheduleResource {
     @DELETE
     @Secured
     public Response deleteSchedule(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        Schedule s = scheduleDAO.selectID(idTheater);
+        Schedule s = scheduleDAO.selectID(idSchedule);
         Manager manager = JWTToken.generateManager(JWTToken.extractToken(authorizationHeader));
 
         // Checking that schedule is in the correct theater and movie

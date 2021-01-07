@@ -26,8 +26,7 @@ public class TheaterResource {
     private Movie movie;
 
     private static TheaterDAO theaterDAO = new TheaterDAO();
-    private static ManagerDAO managerDAO = new ManagerDAO();
-    private static MovieDisplayDAO movieDisplayDAO = new MovieDisplayDAO();
+
 
     public TheaterResource() {
     }
@@ -76,24 +75,19 @@ public class TheaterResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    @Path("display")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getDisplay() {
-        MovieDisplay md;
+    @Path("schedules")
+    public SchedulesResource getSchedules() {
         if(movie != null) {
-            md = movieDisplayDAO.selectID(movie.getIdMovie(),idTheater);
-            return Response.ok().entity(md).build();
+            return new SchedulesResource(uriInfo, request, idTheater, movie.getIdMovie());
         } else {
             throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         }
     }
 
-
-    @Path("schedules")
-    public SchedulesResource getSchedules() {
+    @Path("display")
+    public MovieDisplayResource getMovieDisplay() {
         if(movie != null) {
-            return new SchedulesResource(uriInfo, request, idTheater, movie.getIdMovie());
+            return new MovieDisplayResource(uriInfo, request, idTheater, movie.getIdMovie());
         } else {
             throw new WebException(Response.Status.NOT_FOUND, ERROR_NOT_FOUND);
         }

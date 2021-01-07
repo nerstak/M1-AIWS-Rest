@@ -3,9 +3,9 @@ package rest.model;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @XmlRootElement(name = "display")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -53,12 +53,20 @@ public class MovieDisplay implements Serializable {
         return startDate;
     }
 
+    public Date getStartDateFormatted() throws ParseException {
+        return dateFormat.parse(startDate);
+    }
+
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
     public String getEndDate() {
         return endDate;
+    }
+
+    public Date getEndDateFormatted() throws ParseException {
+        return dateFormat.parse(endDate);
     }
 
     public void setEndDate(String endDate) {
