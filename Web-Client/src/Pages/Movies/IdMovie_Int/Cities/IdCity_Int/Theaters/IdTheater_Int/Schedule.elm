@@ -188,28 +188,33 @@ getSchedules idMovie idCity idTheater =
         }
 
 type alias Schedules =
-    { language : String
-    , startDate : String
-    , endDate : String
-    , schedules : List Schedule
+    {  schedules : List Schedule
     }
 
 
 schedulesDecoder : Decoder Schedules
 schedulesDecoder =
     Decode.succeed Schedules
-        |> required "language" Decode.string
-        |> required "startDate" Decode.string
-        |> required "endDate" Decode.string
-        |> required "schedule" (Decode.list scheduleDecoder)
+        |> required "schedules" (Decode.list scheduleDecoder)
 
 type alias Schedule =
     { time : String
     , dayOfWeek : String
+    , idMovie : Int
+    , idTheater : Int
+    , id : Int
+    , dayOfWeekFormatted : String
+    , timeFormatted : String
     }
+
 
 scheduleDecoder : Decoder Schedule
 scheduleDecoder =
     Decode.succeed Schedule
-        |> required "time" Decode.string
+        |> required "language" Decode.string
         |> required "dayOfWeek" Decode.string
+        |> required "idMovie" Decode.int
+        |> required "idTheater" Decode.int
+        |> required "id" Decode.int
+        |> required "dayOfWeekFormatted" Decode.string
+        |> required "timeFormatted" Decode.string

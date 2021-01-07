@@ -184,7 +184,7 @@ cityDecoder =
     Decode.succeed City
         |> required "idCity" Decode.int
         |> required "name" Decode.string
-        |> required "theater" (Decode.list theaterDecoder)
+        |> required "theaters" (Decode.list theaterDecoder)
 
 type alias Theater =
     { id : Int

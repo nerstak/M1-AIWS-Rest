@@ -215,7 +215,7 @@ movieDecoder =
         |> required "direction" Decode.string
         |> required "minimumAge" Decode.int
         |> required "title" Decode.string
-        |> required "actor" (Decode.list actorDecoder)
+        |> required "actors" (Decode.list actorDecoder)
 
 type alias Actor =
     { id : Int
@@ -225,8 +225,8 @@ type alias Actor =
 actorDecoder : Decoder Actor
 actorDecoder =
     Decode.succeed Actor
-        |> required "id" Decode.int
-        |> required "value" Decode.string
+        |> required "idActor" Decode.int
+        |> required "name" Decode.string
 
 grey : Color
 grey =
