@@ -22,7 +22,7 @@ Built with
 
 - Java
 - Jax-RS, Jersey, Jackson, Json Web Tokens
-- ELM
+- Elm
 
 IDE 
 
@@ -66,7 +66,13 @@ Select the `test` environment and set the url current value to the path to the r
 
 ### REST server and Postgres
 
-Run `docker-compose up -d`.
+Run the following commands:
+```
+cd Rest-Server
+mvn package
+cd ..
+docker-compose up -d
+```
 
 ### ELM client
 
