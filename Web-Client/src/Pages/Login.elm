@@ -122,7 +122,7 @@ save model shared =
 
 load : Shared.Model -> Model -> ( Model, Cmd Msg )
 load shared model =
-    ( model, Cmd.none )
+    ( { model | token = Ok shared.token }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
