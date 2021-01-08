@@ -58,7 +58,19 @@ This project enables any users to access distant resources. It is possible to:
 
 ## Installation
 
-TO COMPLETE
+### Postman
+
+Import the files `docs/Application Web Service.postman_collection.json` and `docs/test.postman_environment.json` in Postman.
+
+Select the `test` environment and set the url current value to the path to the rest application (eg: `localhost:8080/Rest-Server-1.0-SNAPSHOT`).
+
+### REST server and Postgres
+
+Run `docker-compose up -d`.
+
+### ELM client
+
+In folder Web-Client, run `npm start`. The website is at `localhost:8000`.
 
 ## Endpoints
 

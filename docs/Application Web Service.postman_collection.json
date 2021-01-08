@@ -1,0 +1,433 @@
+{
+	"info": {
+		"_postman_id": "7011ac17-3855-4c73-b954-2db94fc67f49",
+		"name": "Application Web Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "Get movie",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/movies/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"movies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"duration\": \"2h42\",\r\n        \"direction\": \"James Cameron\",\r\n        \"minimumAge\": 12,\r\n        \"title\": \"Avatar\",\r\n        \"actor\": [\r\n              {\"value\": \"Sam Worthington\"}\r\n          ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/movies/5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"movies",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete movie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rest/movies/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"movies",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authentification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<manager>\r\n\t<username>UGC_Paris_Manager</username>\r\n\t<password>password</password>\r\n\t</manager>\r\n",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete theater",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rest/cities/1/theaters/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"cities",
+								"1",
+								"theaters",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add city",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<city>\r\n    <name>Nantes</name>\r\n</city>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/cities",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post theater",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<newTheater>\r\n    <theater idCity=\"1\">\r\n        <name>The Grand Theater</name>\r\n    </theater>\r\n    <manager>\r\n        <username>Grand_Theater</username>\r\n        <password>password</password>\r\n    </manager>\r\n</newTheater>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/cities/1/theaters",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"cities",
+								"1",
+								"theaters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get display",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/movies/1/cities/1/theaters/2/display",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"movies",
+								"1",
+								"cities",
+								"1",
+								"theaters",
+								"2",
+								"display"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post display",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<display>\r\n    <language>VF</language>\r\n    <startDate>2020-12-16</startDate>\r\n    <endDate>2021-01-27</endDate>\r\n</display>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/movies/2/cities/1/theaters/2/display",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"movies",
+								"2",
+								"cities",
+								"1",
+								"theaters",
+								"2",
+								"display"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete display",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"time\": \"19:25:03\",\"dayOfWeek\": \"MONDAY\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rest/movies/2/cities/1/theaters/2/display",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rest",
+								"movies",
+								"2",
+								"cities",
+								"1",
+								"theaters",
+								"2",
+								"display"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post schedules",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "<schedule>\r\n    <time>15:00:00</time>\r\n    <dayOfWeek>THURSDAY</dayOfWeek>\r\n</schedule>",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/Rest_Server_war_exploded/rest/movies/2/cities/1/theaters/2/schedules",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"Rest_Server_war_exploded",
+								"rest",
+								"movies",
+								"2",
+								"cities",
+								"1",
+								"theaters",
+								"2",
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
