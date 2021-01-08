@@ -68,7 +68,6 @@ public class CitiesResource {
     }
 
     @POST
-    @Secured
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response postCity(City city) {
         Response res;
