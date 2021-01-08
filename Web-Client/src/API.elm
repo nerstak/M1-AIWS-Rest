@@ -143,6 +143,33 @@ postAuth username password toMsg =
         , tracker = Nothing
         }
 
+postDisplay : Int -> Int -> Int -> String -> String -> String -> Token -> (WebData PostResponse -> msg) -> Cmd msg
+postDisplay idMovie idCity idTheater language startDate endDate token toMsg =
+    Http.request
+        { method = "POST"
+        , headers =
+            [ Http.header "Accept" "application/json"
+            , Http.header "Authorization" <| "Bearer " ++ tokenToString token
+            ]
+        , url = "http://localhost:8080/Project/rest/movies/"
+            ++ String.fromInt idMovie
+            ++ "/cities/"
+            ++ String.fromInt idCity
+            ++ "/theaters/"
+            ++ String.fromInt idTheater
+            ++ "/display"
+        , body = Http.jsonBody <|
+            Encode.object
+                [ ( "language", Encode.string language )
+                , ( "startDate", Encode.string startDate )
+                , ( "endDate", Encode.string endDate )
+                ]
+        , expect = Http.expectJson (RemoteData.fromResult >> toMsg) postResponseDecoder
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
 -- DECODERS
 
 -- movies
@@ -278,6 +305,16 @@ displayDecoder =
 tokenDecoder : Decoder Token
 tokenDecoder =
     Decode.map Token <| Decode.field "token" Decode.string
+
+-- postResponse
+
+type alias PostResponse =
+    Maybe String
+
+postResponseDecoder : Decoder PostResponse
+postResponseDecoder =
+    Decode.maybe (Decode.field "reason" Decode.string)
+    
 
 -- TYPES
 

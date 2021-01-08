@@ -12,6 +12,7 @@ import Element exposing (..)
 import Element.Font as Font
 import Spa.Generated.Route as Route
 import API
+import API
 
 
 page : Page Params Model Msg
@@ -35,14 +36,15 @@ type alias Params =
 
 
 type alias Model =
-    {   idMovie : Int
-    ,   idCity : Int
-    ,   idTheater : Int
-    ,   display : List UrlInfo
-    ,   schedules : List UrlInfo
-    ,   inputValues : Form.View.Model InputValues
-    ,   token : Result String API.Token
-    ,   body : List UrlInfo
+    { idMovie : Int
+    , idCity : Int
+    , idTheater : Int
+    , display : List UrlInfo
+    , schedules : List UrlInfo
+    , inputValues : Form.View.Model InputValues
+    , token : Result String API.Token
+    , response : API.PostResponse
+    , body : List UrlInfo
     }
 
 type alias UrlInfo =
@@ -65,6 +67,7 @@ init shared { params } =
             , schedules = []
             }
        , token = Ok shared.token
+       , response = Nothing
        , body = []
         }
     , Cmd.batch
@@ -81,6 +84,7 @@ init shared { params } =
 type Msg
     = GotSchedules (WebData API.Schedules)
     | GotDisplay (WebData API.Display)
+    | GotPostResponse (WebData API.PostResponse)
     | FormChanged (Form.View.Model InputValues)
     | AddSchedule OutputValues
 
@@ -90,13 +94,27 @@ update msg model =
     case msg of
         GotSchedules data ->
             updateGotSchedules data model
+
         GotDisplay data ->
             updateGotDisplay data model
+
         FormChanged newForm ->
-                            ( { model | inputValues = newForm }, Cmd.none )
+            ( { model | inputValues = newForm }, Cmd.none )
 
         AddSchedule outputValues ->
-                    ( model, Cmd.none )
+            let
+                token =
+                    case model.token of
+                        Ok resultToken ->
+                            resultToken
+                        Err _ ->
+                            API.emptyToken
+            in
+            ( model, API.postDisplay model.idMovie model.idCity model.idTheater outputValues.language outputValues.startDate outputValues.endDate token GotPostResponse)
+
+        GotPostResponse response ->
+            updateGotPostResponse response model
+
 
 -- updateGotSchedules
 
@@ -223,6 +241,18 @@ updateFailureGotDisplay error model =
           } ]
      }, Cmd.none)
 
+-- updateGotPostResponse
+updateGotPostResponse : WebData API.PostResponse -> Model -> ( Model, Cmd Msg )
+updateGotPostResponse data model =
+    case data of
+        Success response ->
+            ( { model | response = response }, Cmd.none)
+        Failure error ->
+            ( { model | response = Just <| httpErrorToString error }, Cmd.none)
+        _ ->
+            (model, Cmd.none)
+
+
 -- SAVE
 
 save : Model -> Shared.Model -> Shared.Model
@@ -252,11 +282,12 @@ view model =
     , body =
     [ el [ centerX ] <| html <| Form.View.asHtml
         { onChange = FormChanged
-        , action = "Post new schedule"
+        , action = "Post new display"
         , loading = "Adding..."
         , validation = Form.View.ValidateOnSubmit
         }
         (Form.map AddSchedule displayForm) model.inputValues
+    , el [ centerX ] <| text <| Maybe.withDefault "" model.response
     ]
     }
 

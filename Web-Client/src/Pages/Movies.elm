@@ -48,16 +48,17 @@ type alias UrlInfo =
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
 init shared { params } =
-    ( { body = []
-     , inputValues = Form.View.idle
-                   { name = ""
-                   , pegi = ""
-                   , duration = ""
-                   , realisator = ""
-                   , actors = []
-                   }
-               , token = Ok shared.token
-     }
+    (
+        { body = []
+        , inputValues = Form.View.idle
+            { name = ""
+            , pegi = ""
+            , duration = ""
+            , realisator = ""
+            , actors = []
+            }
+        , token = Ok shared.token
+        }
     , API.getMovies GotMovies
     )
 
