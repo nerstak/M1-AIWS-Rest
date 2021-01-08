@@ -1,5 +1,7 @@
 module Pages.Movies.IdMovie_Int.Cities.IdCity_Int.Theaters.IdTheater_Int.Schedule exposing (Params, Model, Msg, page)
 
+import Form exposing (Form)
+import Form.View
 import Shared
 import Spa.Document exposing (Document)
 import Spa.Page as Page exposing (Page)
@@ -38,6 +40,9 @@ type alias Model =
     , idTheater : Int
     , display : List UrlInfo
     , schedules : List UrlInfo
+    ,   inputValues : Form.View.Model InputValues
+    ,   token : Result String String
+    ,   body : List UrlInfo
     }
 
 type alias UrlInfo =
@@ -52,7 +57,16 @@ init shared { params } =
         , idCity = params.idCity
         , idTheater = params.idTheater
         , display = []
-        , schedules = [] 
+        , schedules = []
+         , inputValues = Form.View.idle
+           { time = ""
+               , dayOfWeek = ""
+               , language = ""
+               , startDate = ""
+               , endDate = ""
+               }
+       , token = Err ""
+       , body = []
         }
     , Cmd.batch
         [ API.getSchedules params.idMovie params.idCity params.idTheater GotSchedules
@@ -68,6 +82,9 @@ init shared { params } =
 type Msg
     = GotSchedules (WebData API.Schedules)
     | GotDisplay (WebData API.Display)
+    | GotToken (WebData String)
+    | FormChanged (Form.View.Model InputValues)
+    | AddSchedule OutputValues
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -77,6 +94,13 @@ update msg model =
             updateGotSchedules data model
         GotDisplay data ->
             updateGotDisplay data model
+        FormChanged newForm ->
+                            ( { model | inputValues = newForm }, Cmd.none )
+        GotToken data ->
+                    updateGotToken data model
+
+        AddSchedule outputValues ->
+                    ( model, API.postAuth outputValues.time outputValues.time GotToken )
 
 -- updateGotSchedules
 
@@ -90,9 +114,31 @@ updateGotSchedules data model =
         _ ->
             (model, Cmd.none)
 
+updateGotToken : WebData API.Token -> Model -> ( Model, Cmd Msg )
+updateGotToken data model =
+    case data of
+        Success token ->
+            updateSuccessToken token model
+        Failure error ->
+            updateFailure error model
+        _ ->
+            (model, Cmd.none)
+
 updateSuccessGotSchedules : API.Schedules -> Model -> ( Model, Cmd Msg )
 updateSuccessGotSchedules schedules model =
     ( { model | schedules = List.map (scheduleToUrlInfo model.idMovie model.idCity model.idTheater) schedules}, Cmd.none )
+
+updateSuccessToken : String -> Model -> ( Model, Cmd Msg )
+updateSuccessToken token model =
+    ( { model | token = Ok token }, Cmd.none )
+
+updateFailure : Http.Error -> Model -> ( Model, Cmd Msg )
+updateFailure error model =
+    ({ model | body =
+        [ { url = Route.toString Route.Movies
+          , label = text <| httpErrorToString error
+          } ]
+     }, Cmd.none)
 
 scheduleToUrlInfo : Int -> Int -> Int -> API.Schedule -> UrlInfo
 scheduleToUrlInfo idMovie idCity idTheater schedule =
@@ -221,5 +267,107 @@ subscriptions model =
 view : Model -> Document Msg
 view model =
     { title = "Movies.IdMovie_Int.Cities.IdCity_Int.Theaters.IdTheater_Int.Schedule"
-    , body = []
+    , body =
+    [ el [ centerX ] <| html <| Form.View.asHtml
+        { onChange = FormChanged
+        , action = "Post new schedule"
+        , loading = "Adding..."
+        , validation = Form.View.ValidateOnSubmit
+        }
+        (Form.map AddSchedule scheduleForm) model.inputValues
+    , el [ centerX ] <| text <| Maybe.withDefault "" <| Result.toMaybe model.token
+    ]
     }
+
+-- FORM
+
+type alias InputValues =
+    { time : String
+    , dayOfWeek : String
+    , language : String
+    , startDate : String
+    , endDate : String
+    }
+
+-- usefull if output values are different, here it's more architectural than utilitarian
+type alias OutputValues =
+    { time : String
+    , dayOfWeek : String
+    , language : String
+    , startDate : String
+    , endDate : String
+    }
+
+scheduleForm : Form InputValues OutputValues
+scheduleForm =
+    Form.succeed OutputValues
+        |> Form.append timeField
+        |> Form.append dayOfWeekField
+        |> Form.append languageField
+        |> Form.append startDateField
+        |> Form.append endDateField
+
+timeField : Form { r | time : String } String
+timeField =
+    Form.textField
+        { parser = Ok
+        , value = .time
+        , update = \value values -> { values | time = value }
+        , error = always Nothing
+        , attributes =
+            { label = "Time"
+            , placeholder = "Time"
+            }
+        }
+
+dayOfWeekField : Form { r | dayOfWeek : String } String
+dayOfWeekField =
+    Form.textField
+        { parser = Ok
+        , value = .dayOfWeek
+        , update = \value values -> { values | dayOfWeek = value }
+        , error = always Nothing
+        , attributes =
+            { label = "Day of week"
+            , placeholder = "Day of week"
+            }
+        }
+
+languageField : Form { r | language : String } String
+languageField =
+    Form.textField
+        { parser = Ok
+        , value = .language
+        , update = \value values -> { values | language = value }
+        , error = always Nothing
+        , attributes =
+            { label = "Language"
+            , placeholder = "Language"
+            }
+        }
+
+startDateField : Form { r | startDate : String } String
+startDateField =
+    Form.textField
+        { parser = Ok
+        , value = .startDate
+        , update = \value values -> { values | startDate = value }
+        , error = always Nothing
+        , attributes =
+            { label = "Start date"
+            , placeholder = "Start date"
+            }
+        }
+
+endDateField : Form { r | endDate : String } String
+endDateField =
+    Form.textField
+        { parser = Ok
+        , value = .endDate
+        , update = \value values -> { values | endDate = value }
+        , error = always Nothing
+        , attributes =
+            { label = "End date"
+            , placeholder = "End date"
+            }
+        }

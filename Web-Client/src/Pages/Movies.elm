@@ -218,7 +218,7 @@ view model =
     , body =
         [ el [ centerX ] <| html <| Form.View.asHtml
             { onChange = FormChanged
-            , action = "Add"
+            , action = "Post new movie"
             , loading = "Adding..."
             , validation = Form.View.ValidateOnSubmit
             }
