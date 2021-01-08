@@ -35,19 +35,19 @@ type alias Params =
 
 
 type alias Model =
-    { idMovie : Int
-    , idCity : Int
-    , idTheater : Int
-    , display : List UrlInfo
-    , schedules : List UrlInfo
+    {   idMovie : Int
+    ,   idCity : Int
+    ,   idTheater : Int
+    ,   display : List UrlInfo
+    ,   schedules : List UrlInfo
     ,   inputValues : Form.View.Model InputValues
-    ,   token : Result String String
+    ,   token : Result String API.Token
     ,   body : List UrlInfo
     }
 
 type alias UrlInfo =
-    { url : String
-    , label : Element Shared.Msg
+    {   url : String
+    ,   label : Element Shared.Msg
     }
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
@@ -58,14 +58,13 @@ init shared { params } =
         , idTheater = params.idTheater
         , display = []
         , schedules = []
-         , inputValues = Form.View.idle
-           { time = ""
-               , dayOfWeek = ""
-               , language = ""
-               , startDate = ""
-               , endDate = ""
-               }
-       , token = Err ""
+        , inputValues = Form.View.idle
+            { language = ""
+            , startDate = ""
+            , endDate = ""
+            , schedules = []
+            }
+       , token = Ok shared.token
        , body = []
         }
     , Cmd.batch
@@ -82,7 +81,6 @@ init shared { params } =
 type Msg
     = GotSchedules (WebData API.Schedules)
     | GotDisplay (WebData API.Display)
-    | GotToken (WebData String)
     | FormChanged (Form.View.Model InputValues)
     | AddSchedule OutputValues
 
@@ -96,11 +94,9 @@ update msg model =
             updateGotDisplay data model
         FormChanged newForm ->
                             ( { model | inputValues = newForm }, Cmd.none )
-        GotToken data ->
-                    updateGotToken data model
 
         AddSchedule outputValues ->
-                    ( model, API.postAuth outputValues.time outputValues.time GotToken )
+                    ( model, Cmd.none )
 
 -- updateGotSchedules
 
@@ -114,23 +110,9 @@ updateGotSchedules data model =
         _ ->
             (model, Cmd.none)
 
-updateGotToken : WebData API.Token -> Model -> ( Model, Cmd Msg )
-updateGotToken data model =
-    case data of
-        Success token ->
-            updateSuccessToken token model
-        Failure error ->
-            updateFailure error model
-        _ ->
-            (model, Cmd.none)
-
 updateSuccessGotSchedules : API.Schedules -> Model -> ( Model, Cmd Msg )
 updateSuccessGotSchedules schedules model =
     ( { model | schedules = List.map (scheduleToUrlInfo model.idMovie model.idCity model.idTheater) schedules}, Cmd.none )
-
-updateSuccessToken : String -> Model -> ( Model, Cmd Msg )
-updateSuccessToken token model =
-    ( { model | token = Ok token }, Cmd.none )
 
 updateFailure : Http.Error -> Model -> ( Model, Cmd Msg )
 updateFailure error model =
@@ -274,38 +256,34 @@ view model =
         , loading = "Adding..."
         , validation = Form.View.ValidateOnSubmit
         }
-        (Form.map AddSchedule scheduleForm) model.inputValues
-    , el [ centerX ] <| text <| Maybe.withDefault "" <| Result.toMaybe model.token
+        (Form.map AddSchedule displayForm) model.inputValues
     ]
     }
 
 -- FORM
 
 type alias InputValues =
-    { time : String
-    , dayOfWeek : String
-    , language : String
+    { language : String
     , startDate : String
     , endDate : String
+    , schedules : List {time : String, dayOfWeek : String}
     }
 
 -- usefull if output values are different, here it's more architectural than utilitarian
 type alias OutputValues =
-    { time : String
-    , dayOfWeek : String
-    , language : String
+    { language : String
     , startDate : String
     , endDate : String
+    , schedules : List {time : String, dayOfWeek : String}
     }
 
-scheduleForm : Form InputValues OutputValues
-scheduleForm =
+displayForm : Form InputValues OutputValues
+displayForm =
     Form.succeed OutputValues
-        |> Form.append timeField
-        |> Form.append dayOfWeekField
         |> Form.append languageField
         |> Form.append startDateField
         |> Form.append endDateField
+        |> Form.append schedulesForm
 
 timeField : Form { r | time : String } String
 timeField =
@@ -371,3 +349,29 @@ endDateField =
             , placeholder = "End date"
             }
         }
+
+type alias Schedule =
+    {time : String, dayOfWeek : String}
+
+scheduleForm : Int -> Form Schedule Schedule
+scheduleForm id =
+    Form.succeed Schedule
+            |> Form.append timeField
+            |> Form.append dayOfWeekField
+
+schedulesForm : Form { r | schedules : List Schedule } (List Schedule)
+schedulesForm =
+    Form.list
+        { default =
+            { time = "",
+            dayOfWeek = ""
+            }
+        , value = .schedules
+        , update = \value values -> { values | schedules = value }
+        , attributes =
+            { label = "Schedules"
+            , add = Just "Add schedule"
+            , delete = Just "-"
+            }
+        }
+        scheduleForm

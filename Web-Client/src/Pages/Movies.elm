@@ -38,7 +38,7 @@ type alias Params =
 type alias Model =
     { body : List UrlInfo
     ,   inputValues : Form.View.Model InputValues
-    ,   token : Result String String
+    ,   token : Result String API.Token
     }
 
 type alias UrlInfo =
@@ -56,7 +56,7 @@ init shared { params } =
                    , realisator = ""
                    , actors = []
                    }
-               , token = Err ""
+               , token = Ok shared.token
      }
     , API.getMovies GotMovies
     )
@@ -70,7 +70,6 @@ type Msg
     = FormChanged (Form.View.Model InputValues)
     | AddMovie OutputValues
     | GotMovies (WebData API.Movies)
-    | GotToken (WebData String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -83,10 +82,7 @@ update msg model =
                     ( { model | inputValues = newForm }, Cmd.none )
 
         AddMovie outputValues ->
-            ( model, API.postAuth outputValues.name outputValues.name GotToken )
-
-        GotToken data ->
-            updateGotToken data model
+            ( model, Cmd.none )
 
 updateGotMovies : WebData API.Movies -> Model -> ( Model, Cmd Msg )
 updateGotMovies data model =
@@ -97,24 +93,10 @@ updateGotMovies data model =
             updateFailure error model
         _ ->
             (model, Cmd.none)
-
-updateGotToken : WebData API.Token -> Model -> ( Model, Cmd Msg )
-updateGotToken data model =
-    case data of
-        Success token ->
-            updateSuccessToken token model
-        Failure error ->
-            updateFailure error model
-        _ ->
-            (model, Cmd.none)
         
 updateSuccess : API.Movies -> Model -> ( Model, Cmd Msg )
 updateSuccess movies model =
     ( { model | body = List.map movieToUrlInfo movies }, Cmd.none )
-
-updateSuccessToken : String -> Model -> ( Model, Cmd Msg )
-updateSuccessToken token model =
-    ( { model | token = Ok token }, Cmd.none )
 
 movieToUrlInfo : API.Movie -> UrlInfo
 movieToUrlInfo movie =
@@ -223,7 +205,6 @@ view model =
             , validation = Form.View.ValidateOnSubmit
             }
             (Form.map AddMovie moviesForm) model.inputValues
-        , el [ centerX ] <| text <| Maybe.withDefault "" <| Result.toMaybe model.token
         ]
     }
 
