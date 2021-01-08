@@ -3,6 +3,7 @@ import RemoteData exposing (WebData)
 import Http
 import Json.Decode.Pipeline exposing (required, optional, custom)
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 
 -- GET
 
@@ -40,7 +41,7 @@ getCitiesIdMovie : Int -> (WebData Cities -> msg) -> Cmd msg
 getCitiesIdMovie idMovie toMsg =
     Http.request
         { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
+        , headers = [ Http.header "Accept" "application/json" ]
         , url = "http://localhost:8080/Project/rest/movies/"
             ++ String.fromInt idMovie
             ++ "/cities"
@@ -56,7 +57,7 @@ getTheaters : Int -> (WebData Theaters -> msg) -> Cmd msg
 getTheaters idCity toMsg =
     Http.request
         { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
+        , headers = [ Http.header "Accept" "application/json" ]
         , url = "http://localhost:8080/Project/rest/cities/"
             ++ String.fromInt idCity
             ++ "/theaters"
@@ -72,7 +73,7 @@ getTheatersIdMovie : Int -> Int -> (WebData Theaters -> msg) -> Cmd msg
 getTheatersIdMovie idMovie idCity toMsg =
     Http.request
         { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
+        , headers = [ Http.header "Accept" "application/json" ]
         , url = "http://localhost:8080/Project/rest/movies/"
             ++ String.fromInt idMovie
             ++ "/cities/"
@@ -90,7 +91,7 @@ getSchedules : Int -> Int -> Int -> (WebData Schedules -> msg) -> Cmd msg
 getSchedules idMovie idCity idTheater toMsg =
     Http.request
         { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
+        , headers = [ Http.header "Accept" "application/json" ]
         , url = "http://localhost:8080/Project/rest/movies/"
             ++ String.fromInt idMovie
             ++ "/cities/"
@@ -110,7 +111,7 @@ getDisplay : Int -> Int -> Int -> (WebData Display -> msg) -> Cmd msg
 getDisplay idMovie idCity idTheater toMsg =
     Http.request
         { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
+        , headers = [ Http.header "Accept" "application/json" ]
         , url = "http://localhost:8080/Project/rest/movies/"
             ++ String.fromInt idMovie
             ++ "/cities/"
@@ -120,6 +121,24 @@ getDisplay idMovie idCity idTheater toMsg =
             ++ "/display"
         , body = Http.emptyBody
         , expect = Http.expectJson (RemoteData.fromResult >> toMsg) displayDecoder
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+-- POST
+
+postAuth : String -> String -> (WebData Token -> msg) -> Cmd msg
+postAuth username password toMsg =
+    Http.request
+        { method = "POST"
+        , headers = [ Http.header "Accept" "application/json" ]
+        , url = "http://localhost:8080/Project/rest/auth"
+        , body = Http.jsonBody <|
+            Encode.object
+                [ ( "username", Encode.string username )
+                , ( "password", Encode.string password )
+                ]
+        , expect = Http.expectJson (RemoteData.fromResult >> toMsg) tokenDecoder
         , timeout = Nothing
         , tracker = Nothing
         }
@@ -253,3 +272,12 @@ displayDecoder =
         |> required "language" Decode.string
         |> required "startDate" Decode.string
         |> required "endDate" Decode.string
+
+-- token
+
+type alias Token =
+    String
+
+tokenDecoder : Decoder Token
+tokenDecoder =
+    Decode.field "token" Decode.string
