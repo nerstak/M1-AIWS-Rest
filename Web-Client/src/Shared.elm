@@ -88,6 +88,7 @@ viewHeader token =
         [ viewHeaderLinks { url = Route.toString Route.Top, label = text "Home" }
         , viewHeaderLinks { url = Route.toString Route.Cities, label = text "Cities" }
         , viewHeaderLinks { url = Route.toString Route.Movies, label = text "Movies" }
+        , viewHeaderLinks { url = Route.toString Route.Login, label = text "Login" }
         , el [ alignRight ] <| text <| API.tokenToString token
         ]
 
