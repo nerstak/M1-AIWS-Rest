@@ -57,7 +57,7 @@ public class MovieDisplayResource {
         if(manager == null || idTheater != manager.getIdTheater())
             throw new WebException(Response.Status.UNAUTHORIZED, ERROR_DELETE);
 
-        if(!movieDisplayDAO.delete(md) || !scheduleDAO.delete(md)) {
+        if(!movieDisplayDAO.delete(md) || (scheduleDAO.selectAll(md.getIdTheater(), md.getIdMovie()).size() != 0 && !scheduleDAO.delete(md))) {
             throw new WebException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_DELETE);
         }
 
