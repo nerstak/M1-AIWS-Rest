@@ -1,5 +1,6 @@
 module Pages.Movies.IdMovie_Int.Cities exposing (Params, Model, Msg, page)
 
+import Colors
 import Shared
 import Spa.Document exposing (Document)
 import Spa.Page as Page exposing (Page)
@@ -104,7 +105,7 @@ cityName city =
 
 cityTheaters : City -> Element msg
 cityTheaters city =
-     el [ width fill, Font.center, Font.color orange]
+     el [ width fill, Font.center, Font.color Colors.orange]
              <| text (List.foldl (++) "" <| List.map theaterToString city.theaters)
 
 theaterToString : Theater -> String
@@ -203,7 +204,3 @@ theaterDecoder =
     Decode.succeed Theater
         |> required "id" Decode.int
         |> required "name" Decode.string
-
-orange : Color
-orange =
-    rgb255 255 130 0

@@ -1,5 +1,6 @@
 module Pages.Movies exposing (Params, Model, Msg, page)
 
+import Colors
 import Element.Font as Font
 import Shared
 import Spa.Document exposing (Document)
@@ -109,7 +110,7 @@ movieTitle movie =
 
 movieSubTitle : Movie -> Element msg
 movieSubTitle movie =
-     link [ width fill, Font.center, Font.italic, Font.color grey]
+     link [ width fill, Font.center, Font.italic, Font.color Colors.grey]
             { url = ""
             , label = text <|
                                 "\n" ++ movie.duration ++
@@ -119,7 +120,7 @@ movieSubTitle movie =
 
 movieActors : Movie -> Element msg
 movieActors movie =
-     link [ width fill, Font.center, Font.color orange]
+     link [ width fill, Font.center, Font.color Colors.orange]
             { url = ""
             , label = text <|
                               (List.foldl (++) "" <| List.map actorToString movie.actors)
@@ -228,18 +229,3 @@ actorDecoder =
         |> required "id" Decode.int
         |> required "value" Decode.string
 
-grey : Color
-grey =
-    rgb255 240 235 216
-
-shadowBlue : Color
-shadowBlue =
-    rgb255 116 140 171
-
-orange : Color
-orange =
-    rgb255 255 130 0
-
-cgBlue : Color
-cgBlue =
-    rgb255 173 241 210

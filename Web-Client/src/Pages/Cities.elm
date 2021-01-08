@@ -11,6 +11,7 @@ import Element exposing (..)
 import Json.Decode.Pipeline exposing (required, optional, custom)
 import Json.Decode as Decode exposing (Decoder)
 import Spa.Generated.Route as Route
+import Colors
 
 
 page : Page Params Model Msg
@@ -106,7 +107,7 @@ cityName city =
 
 cityTheaters : City -> Element msg
 cityTheaters city =
-     el [ width fill, Font.center, Font.color orange]
+     el [ width fill, Font.center, Font.color Colors.orange]
              <| text (List.foldl (++) "" <| List.map theaterToString city.theater)
 
 theaterToString : Theater -> String
@@ -198,7 +199,3 @@ theaterDecoder =
         |> required "id" Decode.int
         |> required "name" Decode.string
         |> required "idCity" Decode.int
-
-orange : Color
-orange =
-    rgb255 255 130 0

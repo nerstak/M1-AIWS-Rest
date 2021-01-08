@@ -1,5 +1,6 @@
 module Pages.Top exposing (Params, Model, Msg, page)
 
+import Colors
 import Element exposing (Color, Element, centerX, centerY, column, el, explain, fill, height, image, link, maximum, padding, rgb255, spacing, text, width)
 import Element.Background as Background
 import Element.Font as Font
@@ -91,16 +92,8 @@ view model =
             {   src = "/images/top.png"
             ,   description = "logo"
             }
-        , el [width fill, Font.center, Font.color backColor, Font.italic, Font.size 40] <| text "WELCOME !"
-        , link [padding 10, Font.center, centerX, Background.color backColor, Font.color white, Font.size 17] { url = Route.toString Route.Movies, label = text "LET ME SEE !" }
+        , el [width fill, Font.center, Font.color Colors.backColor, Font.italic, Font.size 40] <| text "WELCOME !"
+        , link [padding 10, Font.center, centerX, Background.color Colors.backColor, Font.color Colors.white, Font.size 17] { url = Route.toString Route.Movies, label = text "LET ME SEE !" }
         ]
     ]
     }
-
-backColor : Color
-backColor =
-    rgb255 58 80 107
-
-white : Color
-white =
-    rgb255 255 255 255
