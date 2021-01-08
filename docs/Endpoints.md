@@ -327,7 +327,7 @@
   - Response
     
     - ```xml
-      <schedule>
+      <schedule idSchedule="ID_OF_SCHEDULE">
           <time>HH:mm:SS</time>
           <dayOfWeek>Day of week</dayOfWeek>
       </schedule>
@@ -336,6 +336,26 @@
     - ```json
       {
           "idSchedule": ID_OF_SCHEDULE,
+          "time": "HH:mm:SS",
+          "dayOfWeek": "Day of week"
+      }
+      ```
+
+- POST: Authentication required
+  
+  - Header: "Authorization" (Bearer JWT)
+  
+  - Body:
+    
+    - ```xml
+      <schedule>
+          <time>HH:mm:SS</time>
+          <dayOfWeek>Day of week</dayOfWeek>
+      </schedule>
+      ```
+    
+    - ```json
+      {
           "time": "HH:mm:SS",
           "dayOfWeek": "Day of week"
       }
