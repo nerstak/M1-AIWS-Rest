@@ -173,7 +173,7 @@ displayToUrlInfo idMovie idCity idTheater display =
                                 |> maximum 200
                             )
                       ]
-                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.searchpng.com%2Fwp-content%2Fuploads%2F2019%2F02%2FPopcorn-Clipart-PNG-Image-1024x1024.png&f=1&nofb=1"
+                      { src = "/images/schedule.png"
                       , description = "logo"
                       }
         ,   displayDate display

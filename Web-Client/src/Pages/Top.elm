@@ -88,7 +88,7 @@ view model =
                     |> maximum 500
                 )
             ]
-            {   src = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2018%2F06%2FCinema-Transparent.png&f=1&nofb=1"
+            {   src = "/images/top.png"
             ,   description = "logo"
             }
         , el [width fill, Font.center, Font.color backColor, Font.italic, Font.size 40] <| text "WELCOME !"

@@ -92,7 +92,7 @@ cityToUrlInfo theater =
                                 |> maximum 200
                             )
                       ]
-                      { src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fbubbles%2F2x%2Fcity.png&f=1&nofb=1"
+                      { src = "/images/theater.png"
                       , description = "logo"
                       }
         ,   theaterName theater

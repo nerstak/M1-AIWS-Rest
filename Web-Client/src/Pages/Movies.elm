@@ -89,7 +89,7 @@ movieToUrlInfo movie =
                     |> maximum 200
                 )
           ]
-          { src = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fdesignbolts%2Ffree-multimedia%2F1024%2FFilm-icon.png&f=1&nofb=1"
+          { src = "/images/movie.png"
           , description = "logo"
           }
         , el [] <| text "\n"
