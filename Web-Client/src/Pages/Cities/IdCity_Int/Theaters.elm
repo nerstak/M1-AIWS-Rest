@@ -8,9 +8,8 @@ import Spa.Url as Url exposing (Url)
 import Http
 import RemoteData exposing (RemoteData(..), WebData)
 import Element exposing (..)
-import Json.Decode.Pipeline exposing (required, optional, custom)
-import Json.Decode as Decode exposing (Decoder)
 import Spa.Generated.Route as Route
+import API
 
 
 page : Page Params Model Msg
@@ -44,7 +43,9 @@ type alias UrlInfo =
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
 init shared { params } =
-    ( { body = [] }, getCities params.idCity)
+    ( { body = [] }
+    , API.getTheaters params.idCity GotTheaters
+    )
 
 
 
@@ -52,7 +53,7 @@ init shared { params } =
 
 
 type Msg
-    = GotTheaters (WebData Theaters)
+    = GotTheaters (WebData API.Theaters)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -61,7 +62,7 @@ update msg model =
         GotTheaters data ->
             updateGotTheaters data model
 
-updateGotTheaters : WebData Theaters -> Model -> ( Model, Cmd Msg )
+updateGotTheaters : WebData API.Theaters -> Model -> ( Model, Cmd Msg )
 updateGotTheaters data model =
     case data of
         Success theaters ->
@@ -75,11 +76,11 @@ updateGotTheaters data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccess : Theaters -> Model -> ( Model, Cmd Msg )
+updateSuccess : API.Theaters -> Model -> ( Model, Cmd Msg )
 updateSuccess theaters model =
     ( { model | body = List.map cityToUrlInfo theaters }, Cmd.none )
 
-cityToUrlInfo : Theater -> UrlInfo
+cityToUrlInfo : API.Theater -> UrlInfo
 cityToUrlInfo theater =
     { url = Route.toString <| Route.Cities__IdCity_Int__Theaters { idCity = theater.id }
     , label = column [ height fill, width fill, spacing 15]
@@ -99,7 +100,7 @@ cityToUrlInfo theater =
         ]
     }
 
-theaterName : Theater -> Element msg
+theaterName : API.Theater -> Element msg
 theaterName theater =
     el [width fill, Font.center] <| text (String.toUpper theater.name)
 
@@ -141,37 +142,3 @@ view model =
     { title = "Cities.IdCity_Int.Theaters"
     , body = []
     }
-
--- HTTP
-
-getCities : Int -> Cmd Msg
-getCities idCity =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/cities/" ++ String.fromInt idCity ++ "/theaters"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotTheaters) theatersDecoder
-        , timeout = Nothing
-        , tracker = Nothing
-        }
-
-type alias Theaters =
-    List Theater
-
-theatersDecoder : Decoder Theaters
-theatersDecoder =
-    Decode.list theaterDecoder
-
-type alias Theater =
-    { id : Int
-    , name : String
-    , idCity : Int
-    }
-
-theaterDecoder : Decoder Theater
-theaterDecoder =
-    Decode.succeed Theater
-        |> required "idCity" Decode.int
-        |> required "name" Decode.string
-        |> required "id" Decode.int

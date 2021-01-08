@@ -8,10 +8,8 @@ import Http
 import RemoteData exposing (WebData, RemoteData(..))
 import Element exposing (..)
 import Element.Font as Font
-import Json.Decode.Pipeline exposing (required, optional, custom)
-import Json.Decode as Decode exposing (Decoder)
 import Spa.Generated.Route as Route
-import Html exposing (param)
+import API
 
 
 page : Page Params Model Msg
@@ -57,8 +55,8 @@ init shared { params } =
         , schedules = [] 
         }
     , Cmd.batch
-        [ getSchedules params.idMovie params.idCity params.idTheater
-        , getDisplay params.idMovie params.idCity params.idTheater
+        [ API.getSchedules params.idMovie params.idCity params.idTheater GotSchedules
+        , API.getDisplay params.idMovie params.idCity params.idTheater GotDisplay
         ]
     )
 
@@ -68,8 +66,8 @@ init shared { params } =
 
 
 type Msg
-    = GotSchedules (WebData Schedules)
-    | GotDisplay (WebData Display)
+    = GotSchedules (WebData API.Schedules)
+    | GotDisplay (WebData API.Display)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,7 +80,7 @@ update msg model =
 
 -- updateGotSchedules
 
-updateGotSchedules : WebData Schedules -> Model -> ( Model, Cmd Msg )
+updateGotSchedules : WebData API.Schedules -> Model -> ( Model, Cmd Msg )
 updateGotSchedules data model =
     case data of
         Success schedules ->
@@ -92,11 +90,11 @@ updateGotSchedules data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccessGotSchedules : Schedules -> Model -> ( Model, Cmd Msg )
+updateSuccessGotSchedules : API.Schedules -> Model -> ( Model, Cmd Msg )
 updateSuccessGotSchedules schedules model =
     ( { model | schedules = List.map (scheduleToUrlInfo model.idMovie model.idCity model.idTheater) schedules}, Cmd.none )
 
-scheduleToUrlInfo : Int -> Int -> Int -> Schedule -> UrlInfo
+scheduleToUrlInfo : Int -> Int -> Int -> API.Schedule -> UrlInfo
 scheduleToUrlInfo idMovie idCity idTheater schedule =
     { url = Route.toString <| Route.Movies__IdMovie_Int__Cities__IdCity_Int__Theaters__IdTheater_Int__Schedule
         { idMovie = idMovie
@@ -109,11 +107,11 @@ scheduleToUrlInfo idMovie idCity idTheater schedule =
         ]
     }
 
-schedulesTime : Schedule -> Element msg
+schedulesTime : API.Schedule -> Element msg
 schedulesTime schedule =
     el [width fill, Font.center, Font.size 15] <| text (String.toUpper schedule.time)
 
-schedulesDayOfWeek : Schedule -> Element msg
+schedulesDayOfWeek : API.Schedule -> Element msg
 schedulesDayOfWeek schedule =
     el [width fill, Font.center] <| text (String.toUpper schedule.dayOfWeek)
 
@@ -142,7 +140,7 @@ httpErrorToString error =
 
 -- updateGotDisplay
 
-updateGotDisplay : WebData Display -> Model -> ( Model, Cmd Msg )
+updateGotDisplay : WebData API.Display -> Model -> ( Model, Cmd Msg )
 updateGotDisplay data model =
     case data of
         Success display ->
@@ -152,11 +150,11 @@ updateGotDisplay data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccessGotDisplay : Display -> Model -> ( Model, Cmd Msg )
+updateSuccessGotDisplay : API.Display -> Model -> ( Model, Cmd Msg )
 updateSuccessGotDisplay display model =
     ( { model | display = [ displayToUrlInfo model.idMovie model.idCity model.idTheater display ] }, Cmd.none )
 
-displayToUrlInfo : Int -> Int -> Int -> Display -> UrlInfo
+displayToUrlInfo : Int -> Int -> Int -> API.Display -> UrlInfo
 displayToUrlInfo idMovie idCity idTheater display =
     { url = Route.toString <| Route.Movies__IdMovie_Int__Cities__IdCity_Int__Theaters__IdTheater_Int__Schedule
         { idMovie = idMovie
@@ -181,11 +179,11 @@ displayToUrlInfo idMovie idCity idTheater display =
         ]
     }
 
-displayLanguage : Display -> Element msg
+displayLanguage : API.Display -> Element msg
 displayLanguage display =
     el [width fill, Font.center, Font.size 15] <| text (String.toUpper display.language)
 
-displayDate : Display -> Element msg
+displayDate : API.Display -> Element msg
 displayDate display =
     el [width fill, Font.center] <| text (String.toUpper (display.endDate ++ " → " ++ display.endDate))
 
@@ -225,78 +223,3 @@ view model =
     { title = "Movies.IdMovie_Int.Cities.IdCity_Int.Theaters.IdTheater_Int.Schedule"
     , body = []
     }
-
--- HTTP
-
--- getSchedules
-
-getSchedules : Int -> Int -> Int -> Cmd Msg
-getSchedules idMovie idCity idTheater =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/movies/"
-            ++ String.fromInt idMovie
-            ++ "/cities/"
-            ++ String.fromInt idCity
-            ++ "/theaters/"
-            ++ String.fromInt idTheater
-            ++ "/schedules"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotSchedules) schedulesDecoder
-        , timeout = Nothing
-        , tracker = Nothing
-        }
-
-type alias Schedules =
-    List Schedule
-
-
-schedulesDecoder : Decoder Schedules
-schedulesDecoder =
-    Decode.list scheduleDecoder
-
-type alias Schedule =
-    { time : String
-    , dayOfWeek : String
-    }
-
-
-scheduleDecoder : Decoder Schedule
-scheduleDecoder =
-    Decode.succeed Schedule
-        |> required "time" Decode.string
-        |> required "dayOfWeek" Decode.string
-
--- getDisplay
-
-getDisplay : Int -> Int -> Int -> Cmd Msg
-getDisplay idMovie idCity idTheater =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/movies/"
-            ++ String.fromInt idMovie
-            ++ "/cities/"
-            ++ String.fromInt idCity
-            ++ "/theaters/"
-            ++ String.fromInt idTheater
-            ++ "/display"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotDisplay) displayDecoder
-        , timeout = Nothing
-        , tracker = Nothing
-        }
-
-type alias Display =
-    { language : String
-    , startDate : String
-    , endDate : String
-    }
-
-displayDecoder : Decoder Display
-displayDecoder =
-    Decode.succeed Display
-        |> required "language" Decode.string
-        |> required "startDate" Decode.string
-        |> required "endDate" Decode.string

@@ -8,10 +8,8 @@ import Http
 import RemoteData exposing (WebData, RemoteData(..))
 import Element exposing (..)
 import Element.Font as Font
-import Json.Decode.Pipeline exposing (required, optional, custom)
-import Json.Decode as Decode exposing (Decoder)
 import Spa.Generated.Route as Route
-import Html exposing (param)
+import API
 
 
 page : Page Params Model Msg
@@ -46,14 +44,20 @@ type alias UrlInfo =
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
 init shared { params } =
-    ( { idMovie = params.idMovie, idCity = params.idCity, body = [] }, getTheaters params.idMovie params.idCity )
+    (
+        { idMovie = params.idMovie
+        , idCity = params.idCity
+        , body = [] 
+        }
+    , API.getTheatersIdMovie params.idMovie params.idCity GotTheaters
+    )
 
 
 -- UPDATE
 
 
 type Msg
-    = GotTheaters (WebData Theaters)
+    = GotTheaters (WebData API.Theaters)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -62,7 +66,7 @@ update msg model =
         GotTheaters data ->
             updateGotTheaters data model
 
-updateGotTheaters : WebData Theaters -> Model -> ( Model, Cmd Msg )
+updateGotTheaters : WebData API.Theaters -> Model -> ( Model, Cmd Msg )
 updateGotTheaters data model =
     case data of
         Success theaters ->
@@ -72,11 +76,11 @@ updateGotTheaters data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccess : Theaters -> Model -> ( Model, Cmd Msg )
+updateSuccess : API.Theaters -> Model -> ( Model, Cmd Msg )
 updateSuccess theaters model =
     ( { model | body = List.map (theaterToUrlInfo model.idMovie model.idCity) theaters}, Cmd.none )
 
-theaterToUrlInfo : Int -> Int -> Theater -> UrlInfo
+theaterToUrlInfo : Int -> Int -> API.Theater -> UrlInfo
 theaterToUrlInfo idMovie idCity theater =
     { url = Route.toString <| Route.Movies__IdMovie_Int__Cities__IdCity_Int__Theaters__IdTheater_Int__Schedule
         { idMovie = idMovie
@@ -100,7 +104,7 @@ theaterToUrlInfo idMovie idCity theater =
         ]
     }
 
-theaterName : Theater -> Element msg
+theaterName : API.Theater -> Element msg
 theaterName theater =
     el [width fill, Font.center] <| text (String.toUpper theater.name)
 
@@ -151,35 +155,3 @@ view model =
     { title = "Movies.IdMovie_Int.Cities.IdCity_Int.Theaters"
     , body = []
     }
-
--- HTTP
-
-getTheaters : Int -> Int -> Cmd Msg
-getTheaters idMovie idCity =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/movies/" ++ String.fromInt idMovie ++ "/cities/" ++ String.fromInt idCity ++ "/theaters"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotTheaters) theatersDecoder
-        , timeout = Nothing
-        , tracker = Nothing
-        }
-
-type alias Theaters =
-    List Theater
-
-theatersDecoder : Decoder Theaters
-theatersDecoder =
-    Decode.list theaterDecoder
-
-type alias Theater =
-    { id : Int
-    , name : String
-    }
-
-theaterDecoder : Decoder Theater
-theaterDecoder =
-    Decode.succeed Theater
-        |> required "id" Decode.int
-        |> required "name" Decode.string

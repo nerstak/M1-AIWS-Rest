@@ -9,9 +9,8 @@ import Spa.Url as Url exposing (Url)
 import Http
 import RemoteData exposing (RemoteData(..), WebData)
 import Element exposing (..)
-import Json.Decode.Pipeline exposing (required, optional, custom)
-import Json.Decode as Decode exposing (Decoder)
 import Spa.Generated.Route as Route
+import API
 
 
 page : Page Params Model Msg
@@ -45,7 +44,9 @@ type alias UrlInfo =
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
 init shared { params } =
-    ( { body = [] }, getMovies )
+    ( { body = [] }
+    , API.getMovies GotMovies
+    )
 
 
 
@@ -53,7 +54,7 @@ init shared { params } =
 
 
 type Msg
-    = GotMovies (WebData Movies)
+    = GotMovies (WebData API.Movies)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -62,7 +63,7 @@ update msg model =
         GotMovies data ->
             updateGotMovies data model
 
-updateGotMovies : WebData Movies -> Model -> ( Model, Cmd Msg )
+updateGotMovies : WebData API.Movies -> Model -> ( Model, Cmd Msg )
 updateGotMovies data model =
     case data of
         Success movies ->
@@ -72,11 +73,11 @@ updateGotMovies data model =
         _ ->
             (model, Cmd.none)
         
-updateSuccess : Movies -> Model -> ( Model, Cmd Msg )
+updateSuccess : API.Movies -> Model -> ( Model, Cmd Msg )
 updateSuccess movies model =
     ( { model | body = List.map movieToUrlInfo movies }, Cmd.none )
 
-movieToUrlInfo : Movie -> UrlInfo
+movieToUrlInfo : API.Movie -> UrlInfo
 movieToUrlInfo movie =
     { url = Route.toString <| Route.Movies__IdMovie_Int__Cities { idMovie = movie.id }
     , label = column [ height fill, width fill]
@@ -100,7 +101,7 @@ movieToUrlInfo movie =
         ]
     }
 
-movieTitle : Movie -> Element msg
+movieTitle : API.Movie -> Element msg
 movieTitle movie =
    row [width fill]
    [    el [ width fill, Font.center, Font.bold] <| text ""
@@ -108,7 +109,7 @@ movieTitle movie =
    ,    el [ width fill, Font.center, Font.bold] <| text ("+" ++ (String.fromInt movie.minimumAge))
    ]
 
-movieSubTitle : Movie -> Element msg
+movieSubTitle : API.Movie -> Element msg
 movieSubTitle movie =
      link [ width fill, Font.center, Font.italic, Font.color Colors.grey]
             { url = ""
@@ -118,7 +119,7 @@ movieSubTitle movie =
             }
 
 
-movieActors : Movie -> Element msg
+movieActors : API.Movie -> Element msg
 movieActors movie =
      link [ width fill, Font.center, Font.color Colors.orange]
             { url = ""
@@ -127,7 +128,7 @@ movieActors movie =
             }
 
 
-actorToString : Actor -> String
+actorToString : API.Actor -> String
 actorToString actor =
     "\n" ++ actor.name
 
@@ -178,54 +179,4 @@ view model =
     , body = []
     }
 
--- HTTP
-
-getMovies : Cmd Msg
-getMovies =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/movies"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotMovies) moviesDecoder
-        , timeout = Nothing
-        , tracker = Nothing
-        }
-
-type alias Movies =
-    List Movie
-
-moviesDecoder : Decoder Movies
-moviesDecoder =
-    Decode.list movieDecoder
-
-type alias Movie =
-    { id : Int
-    , duration : String
-    , direction : String
-    , minimumAge : Int
-    , title : String
-    , actors : List Actor
-    }
-
-movieDecoder : Decoder Movie
-movieDecoder =
-    Decode.succeed Movie
-        |> required "idMovie" Decode.int
-        |> required "duration" Decode.string
-        |> required "direction" Decode.string
-        |> required "minimumAge" Decode.int
-        |> required "title" Decode.string
-        |> required "actor" (Decode.list actorDecoder)
-
-type alias Actor =
-    { id : Int
-    , name : String
-    }
-
-actorDecoder : Decoder Actor
-actorDecoder =
-    Decode.succeed Actor
-        |> required "id" Decode.int
-        |> required "value" Decode.string
 

@@ -8,10 +8,9 @@ import Spa.Url as Url exposing (Url)
 import Http
 import RemoteData exposing (RemoteData(..), WebData)
 import Element exposing (..)
-import Json.Decode.Pipeline exposing (required, optional, custom)
-import Json.Decode as Decode exposing (Decoder)
 import Spa.Generated.Route as Route
 import Colors
+import API
 
 
 page : Page Params Model Msg
@@ -45,7 +44,9 @@ type alias UrlInfo =
 
 init : Shared.Model -> Url Params -> ( Model, Cmd Msg )
 init shared { params } =
-    ( { body = [] }, getCities )
+    ( { body = [] }
+    , API.getCities GotCities
+    )
 
 
 
@@ -53,7 +54,7 @@ init shared { params } =
 
 
 type Msg
-    = GotCities (WebData Cities)
+    = GotCities (WebData API.Cities)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -62,7 +63,7 @@ update msg model =
         GotCities data ->
             updateGotCities data model
 
-updateGotCities : WebData Cities -> Model -> ( Model, Cmd Msg )
+updateGotCities : WebData API.Cities -> Model -> ( Model, Cmd Msg )
 updateGotCities data model =
     case data of
         Success cities ->
@@ -76,11 +77,11 @@ updateGotCities data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccess : Cities -> Model -> ( Model, Cmd Msg )
+updateSuccess : API.Cities -> Model -> ( Model, Cmd Msg )
 updateSuccess cities model =
     ( { model | body = List.map cityToUrlInfo cities }, Cmd.none )
 
-cityToUrlInfo : City -> UrlInfo
+cityToUrlInfo : API.City -> UrlInfo
 cityToUrlInfo city =
     { url = Route.toString <| Route.Cities__IdCity_Int__Theaters { idCity = city.id }
     , label = column [ height fill, width fill, spacing 15]
@@ -101,16 +102,16 @@ cityToUrlInfo city =
         ]
     }
 
-cityName : City -> Element msg
+cityName : API.City -> Element msg
 cityName city =
     el [width fill, Font.center] <| text (String.toUpper city.name)
 
-cityTheaters : City -> Element msg
+cityTheaters : API.City -> Element msg
 cityTheaters city =
      el [ width fill, Font.center, Font.color Colors.orange]
-             <| text (List.foldl (++) "" <| List.map theaterToString city.theater)
+             <| text (List.foldl (++) "" <| List.map theaterToString city.theaters)
 
-theaterToString : Theater -> String
+theaterToString : API.Theater -> String
 theaterToString theater =
     "\n" ++ theater.name
 
@@ -152,50 +153,3 @@ view model =
     { title = "Cities"
     , body = []
     }
-
--- HTTP
-
-getCities : Cmd Msg
-getCities =
-    Http.request
-        { method = "GET"
-        , headers = [ Http.header "Accept" "application/json"]
-        , url = "http://localhost:8080/Project/rest/cities"
-        , body = Http.emptyBody
-        , expect = Http.expectJson (RemoteData.fromResult >> GotCities) citiesDecoder
-        , timeout = Nothing
-        , tracker = Nothing
-        }
-
-type alias Cities =
-    List City
-
-citiesDecoder : Decoder Cities
-citiesDecoder =
-    Decode.list cityDecoder
-
-type alias City =
-    { id : Int
-    , name : String
-    , theater : List Theater
-    }
-
-cityDecoder : Decoder City
-cityDecoder =
-    Decode.succeed City
-        |> required "idCity" Decode.int
-        |> required "name" Decode.string
-        |> required "theater" (Decode.list theaterDecoder)
-
-type alias Theater =
-    { id : Int
-    , name : String
-    , idCity : Int
-    }
-
-theaterDecoder : Decoder Theater
-theaterDecoder =
-    Decode.succeed Theater
-        |> required "id" Decode.int
-        |> required "name" Decode.string
-        |> required "idCity" Decode.int
