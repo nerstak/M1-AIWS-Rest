@@ -275,9 +275,24 @@ displayDecoder =
 
 -- token
 
-type alias Token =
-    String
-
 tokenDecoder : Decoder Token
 tokenDecoder =
-    Decode.field "token" Decode.string
+    Decode.map Token <| Decode.field "token" Decode.string
+
+-- TYPES
+
+type Token
+    = Empty
+    | Token String
+
+emptyToken : Token
+emptyToken =
+    Empty
+
+tokenToString : Token -> String
+tokenToString token =
+    case token of
+        Empty ->
+            ""
+        Token string ->
+            string

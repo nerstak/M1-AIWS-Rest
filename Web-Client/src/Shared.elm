@@ -17,6 +17,7 @@ import Spa.Document exposing (Document)
 import Spa.Generated.Route as Route
 import Url exposing (Url)
 import Element.Input exposing (button)
+import API
 
 
 
@@ -31,15 +32,13 @@ type alias Model =
     { url : Url
     , key : Key
     , body : List { url : String, label : Element Msg }
+    , token : API.Token
     }
 
 
 init : Flags -> Url -> Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model url key 
-        [ { url = Route.toString Route.Top, label =  text "Cities" }
-        , { url = Route.toString Route.Movies, label = text "Movies" }
-        ]
+    ( Model url key [] API.emptyToken
     , Cmd.none
     )
 
@@ -76,19 +75,20 @@ view { page, toMsg } model =
     { title = page.title
     , body =
         [ column [ padding 20, spacing 50, height fill, width fill]
-            [ viewHeader
+            [ viewHeader model.token
             , column [ height fill, width fill] page.body
             , column [ height fill, width fill, spacing 10 ] <| List.map (mapBodyLinks toMsg) model.body
             ]
         ]
     }
 
-viewHeader : Element msg
-viewHeader =
+viewHeader : API.Token -> Element msg
+viewHeader token =
     row [ spacing 20 ]
         [ viewHeaderLinks { url = Route.toString Route.Top, label = text "Home" }
         , viewHeaderLinks { url = Route.toString Route.Cities, label = text "Cities" }
         , viewHeaderLinks { url = Route.toString Route.Movies, label = text "Movies" }
+        , el [ alignRight ] <| text <| API.tokenToString token
         ]
 
 viewHeaderLinks : { url : String, label : Element msg } -> Element msg

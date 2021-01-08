@@ -34,7 +34,7 @@ type alias Params =
 
 type alias Model =
     { inputValues : Form.View.Model InputValues
-    , token : Result String String
+    , token : Result String API.Token
     }
 
 
@@ -45,7 +45,7 @@ init shared { params } =
             { username = ""
             , password = ""
             }
-        , token = Err ""
+        , token = Ok shared.token
         }
     , Cmd.none
     )
@@ -58,7 +58,7 @@ init shared { params } =
 type Msg
     = FormChanged (Form.View.Model InputValues)
     | Login OutputValues
-    | GotToken (WebData String)
+    | GotToken (WebData API.Token)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -83,7 +83,7 @@ updateGotToken data model =
         _ ->
             (model, Cmd.none)
 
-updateSuccess : String -> Model -> ( Model, Cmd Msg )    
+updateSuccess : API.Token -> Model -> ( Model, Cmd Msg )    
 updateSuccess token model =
     ( { model | token = Ok token }, Cmd.none )
 
@@ -108,7 +108,16 @@ httpErrorToString error =
 
 save : Model -> Shared.Model -> Shared.Model
 save model shared =
-    { shared | body = [] }
+    let
+        newToken : API.Token
+        newToken =
+            case model.token of
+                Ok token ->
+                    token
+                Err _ ->
+                    shared.token
+    in
+    { shared | body = [], token = newToken }
 
 
 load : Shared.Model -> Model -> ( Model, Cmd Msg )
@@ -136,7 +145,11 @@ view model =
             , validation = Form.View.ValidateOnSubmit
             }
             (Form.map Login loginForm) model.inputValues
-        , el [ centerX ] <| text <| Maybe.withDefault "" <| Result.toMaybe model.token
+        , el [ centerX ]
+            <| text 
+            <| API.tokenToString
+            <| Maybe.withDefault API.emptyToken
+            <| Result.toMaybe model.token
         ]
     }
 
@@ -159,7 +172,7 @@ loginForm =
         |> Form.append usernameField
         |> Form.append passwordField
 
-usernameField : Form InputValues String
+usernameField : Form { r | username : String } String
 usernameField =
     Form.textField
         { parser = Ok
@@ -172,9 +185,9 @@ usernameField =
             }
         }
 
-passwordField : Form InputValues String
+passwordField : Form { r | password : String } String
 passwordField =
-    Form.textField
+    Form.passwordField
         { parser = Ok
         , value = .password
         , update = \value values -> { values | password = value }
